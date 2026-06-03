@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Jernih Aktif</title>
+    <!-- Library SheetJS untuk Ekspor Excel -->
+    <script src="https://jsdelivr.net"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f3f4f6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .kalkulator-body {
+            width: 100%;
+            max-width: 440px;
+            background: #ffffff;
+            border: 4px solid #000000;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        /* 1. DISPLAY UTAMA: BERSIH & PERHITUNGAN DIMULAI DARI ATAS */
+        .layer-jernih {
+            width: 100%;
+            border: 2px solid #000000;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 170px;
+        }
+        .teks-rumus-atas {
+            font-family: monospace;
+            font-size: 11px;
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+        }
+        .garis-pembatas {
+            border-bottom: 1px dashed #cccccc;
+            margin-bottom: 8px;
+        }
+        .indikator-edit-aktif {
+            font-size: 13px;
+            color: #0284c7;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .angka-display-utama {
+            font-size: 42px;
+            font-weight: bold;
+            color: #000000;
+            text-align: right;
+            margin-top: auto;
+        }
+
+        /* 2. PAPAN KEYBOARD FISIK (DUA BARIS DENGAN SEKAT HITAM TEBAL) */
+        .grid-keyboard {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr) 1.5fr;
+            border: 2px solid #000000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background: #000000;
+            gap: 1px;
+        }
+        .tombol-key {
+            background: #ffffff;
+            border: none;
+            padding: 20px 0;
+            font-size: 22px;
+            font-weight: bold;
+            color: #000000;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .tombol-key:active {
+            background: #f3f4f6;
+        }
+        .tombol-delet {
+            grid-column: 6;
+            grid-row: 1 / span 2;
+            color: #dc2626;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            background: #ffffff;
+            height: 100%;
+        }
+        .tombol-delet:active {
+            background: #fee2e2;
+        }
+
+        /* 3. MENU UTAMA "PILIH" DI PALING BAWAH */
+        .tombol-pilih-dropdown {
+            width: 100%;
+            padding: 18px;
+            background: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #000000;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tombol-pilih-dropdown:active {
+            background: #f9fafb;
+        }
+
+        /* 4. DROPDOWN MENU KOTAK DATA */
+        .kotak-menu-isi {
+            display: none;
+            margin-top: 15px;
+            border: 2px dashed #000000;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f9fafb;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        .kategori-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #000000;
+            margin-top: 10px;
+            display: block;
+            border-bottom: 1px solid #000000;
+            padding-bottom: 2px;
+        }
+        .baris-nilai-radio {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            margin-top: 5px;
+            border-radius: 6px;
+        }
+        .baris-nilai-radio label {
+            font-size: 13px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .baris-nilai-radio input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .tabel-excel {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .tabel-excel th, .tabel-excel td {
+            border: 1px solid #000000;
+            padding: 6px;
+            text-align: left;
+        }
+        .btn-excel {
+            width: 100%;
+            padding: 10px;
+            background: #16a34a;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .btn-ganti {
+            width: 100%;
+            padding: 11px;
+            background: #e2e8f0;
+            border: 1px solid #000000;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="kalkulator-body">
+    
+    <!-- 1. LAYER DISPLAY JERNIH -->
+    <div class="layer-jernih">
+        <div class="teks-rumus-atas">Rumus: log₁₀[ ((a/b)*(c+π)) / (∑cⁿ + ((a/b)-(c/d))/g_₍a₎) ] + [ ((g/a)+1%)/B ] * (∬dA)ⁿ</div>
+        <div class="garis-pembatas"></div>
+        <div class="indikator-edit-aktif" id="teksEditAktif">Edit Aktif: Variabel a = 10</div>
+        <div class="angka-display-utama" id="angkaLayarUtama">0.00</div>
+    </div>
+
+    <!-- 2. KEYBOARD MATRIX -->
+    <div class="grid-keyboard">
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('1')">1</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('2')">2</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('3')">3</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('4')">4</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('5')">5</button>
+        
+        <button class="tombol-key tombol-delet" onclick="fungsiHapusDelet()">DELET</button>
+        
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('6')">6</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('7')">7</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('8')">8</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('9')">9</button>
+        <button class="tombol-key" onclick="tekanAngkaKeyboard('0')">0</button>
+    </div>
+
+    <!-- 3. TOMBOL UTAMA DROPDOWN PILIH -->
+    <button class="tombol-pilih-dropdown" onclick="kontrolBukaTutupMenu()">
+        <span>PILIH</span>
+        <span id="statusPanahMenu">▼</span>
+    </button>
+
+    <!-- 4. KOTAK DATA PARAMETER & EXCEL -->
+    <div id="kotakIsiMenu" class="kotak-menu-isi">
+        <span class="kategori-title">■ Kategori a0 (Log)</span>
+        <div class="baris-nilai-radio">
+            <label for="r_log1">Nilai Log Master 1 (a: 15, b: 3)</label>
+            <input type="radio" name="grup_menu" id="r_log1" onclick="pilihRadioMenu('Log Master 1', 15, 3)">
+        </div>
+        <div class="baris-nilai-radio">
+            <label for="r_log2">Nilai Log Master 2 (a: 30, b: 5)</label>
+            <input type="radio" name="grup_menu" id="r_log2" onclick="pilihRadioMenu('Log Master 2', 30, 5)">
+        </div>
+
+        <span class="kategori-title">■ Kategori b0 (Konstanta)</span>
+        <div class="baris-nilai-radio">
+            <label for="r_konst1">Nilai Konstanta Tetap (a: 8, b: 2)</label>
+            <input type="radio" name="grup_menu" id="r_konst1" onclick="pilihRadioMenu('Konstanta Tetap', 8, 2)">
+        </div>
+
+        <span class="kategori-title" style="color: #16a34a;">■ Dokumen Rekam Excel</span>
+        <div style="overflow-x: auto;">
+            <table class="tabel-excel">
+                <thead><tr><th>Waktu</th><th>Radio Terpilih</th><th>Hasil Rumus</th></tr></thead>
+                <tbody id="bodyTabelRiwayat">
+                    <tr><td colspan="3" style="text-align:center; color:#999999;">Belum ada data rekaman klik</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn-excel" onclick="downloadFileExcel()">📥 DOWNLOAD EXCEL (.XLSX)</button>
+        <button class="btn-ganti" onclick="pindahEditVariabel()">➔ GANTI INPUT VARIABEL (A/B/C/D)</button>
+    </div>
+
+</div>
+
+<script>
+    let parameterRumus = { v_a: 10, v_b: 2, v_c: 5, v_d: 4, v_B: 3, v_int: 4, v_pow_n: 2 };
+    let listKomponen = ['v_a', 'v_b', 'v_c', 'v_d', 'v_B', 'v_int', 'v_pow_n'];
+    let indeksFokus = 0;
+    let logDataExcel = [];
+
+    function pindahEditVariabel() {
+        indeksFokus = (indeksFokus + 1) % listKomponen.length;
+        updateTeksLayarAtas();
+    }
+
+    function updateTeksLayarAtas() {
+        let labelNama = listKomponen[indeksFokus].replace('v_', 'Variabel ');
+        if(listKomponen[indeksFokus] === 'v_int') labelNama = 'Integral (∬dA)';
+        if(listKomponen[indeksFokus] === 'v_pow_n') labelNama = 'Pangkat n';
