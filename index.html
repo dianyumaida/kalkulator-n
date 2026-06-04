@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis</title>
+    <title>Kalkulator Pecahan Berlapis Sukses</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f7ebe1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .calculator { width: 360px; background-color: #ffffff; border: 2px solid #000; border-radius: 12px; padding: 20px; box-shadow: 5px 5px 0px #000000; }
         .display-container { width: 100%; height: 280px; border: 2px solid #000; margin-bottom: 15px; background-color: #fff; padding: 12px; box-sizing: border-box; text-align: left; overflow-y: auto; color: #d13438; font-weight: bold; font-size: 1.4rem; }
+        
+        /* CSS UTAMA: Memaksa pecahan bertingkat menyatu tegak lurus ke bawah secara rapi */
         .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; padding: 4px 8px; margin: 4px; }
         .num { border-bottom: 2px solid #d13438; padding-bottom: 4px; margin-bottom: 2px; }
         .den { padding-top: 4px; }
+        
         .history-item { margin-bottom: 20px; border-bottom: 1px dashed #ccc; padding-bottom: 12px; line-height: 2.2; }
         .current-line { min-height: 60px; line-height: 2.2; display: inline-block; }
         .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
@@ -27,84 +30,136 @@
 </head>
 <body>
     <div class="calculator">
-        <div id="display-screen" class="display-container"><div id="history-log"></div><div id="current-input-line" class="current-line">0</div></div>
+        <div id="display-screen" class="display-container">
+            <div id="history-log"></div>
+            <div id="current-input-line" class="current-line">0</div>
+        </div>
         <div class="operator-row">
-            <button onclick="window.tekanOperator('+')">+</button><button onclick="window.tekanOperator('-')">-</button>
-            <button onclick="window.tekanOperator('*')">×</button><button onclick="window.tekanOperator(':')">:</button>
+            <button onclick="window.tekanOperator('+')">+</button>
+            <button onclick="window.tekanOperator('-')">-</button>
+            <button onclick="window.tekanOperator('*')">×</button>
+            <button onclick="window.tekanOperator(':')">:</button>
             <button onclick="window.hitung()">=</button>
         </div>
         <div class="main-grid">
             <div class="left-menu">
-                <button onclick="window.tekanKarakter('(')">(</button><button onclick="window.tekanKarakter(')')">)</button>
-                <button onclick="window.tekanPecahan()">Pecahan</button><button onclick="window.tekanKarakter('%')">%</button>
+                <button onclick="window.tekanKarakter('(')">(</button>
+                <button onclick="window.tekanKarakter(')')">)</button>
+                <button onclick="window.tekanPecahan()">Pecahan</button>
+                <button onclick="window.tekanKarakter('%')">%</button>
             </div>
             <div class="number-grid">
-                <button onclick="window.tekanKarakter('6')">6</button><button onclick="window.tekanKarakter('1')">1</button>
-                <button onclick="window.tekanKarakter('7')">7</button><button onclick="window.tekanKarakter('2')">2</button>
-                <button onclick="window.tekanKarakter('8')">8</button><button onclick="window.tekanKarakter('3')">3</button>
-                <button onclick="window.tekanKarakter('9')">9</button><button onclick="window.tekanKarakter('4')">4</button>
-                <button onclick="window.tekanKarakter('0')">0</button><button onclick="window.tekanKarakter('5')">5</button>
+                <button onclick="window.tekanKarakter('6')">6</button>
+                <button onclick="window.tekanKarakter('1')">1</button>
+                <button onclick="window.tekanKarakter('7')">7</button>
+                <button onclick="window.tekanKarakter('2')">2</button>
+                <button onclick="window.tekanKarakter('8')">8</button>
+                <button onclick="window.tekanKarakter('3')">3</button>
+                <button onclick="window.tekanKarakter('9')">9</button>
+                <button onclick="window.tekanKarakter('4')">4</button>
+                <button onclick="window.tekanKarakter('0')">0</button>
+                <button onclick="window.tekanKarakter('5')">5</button>
                 <button class="backspace-btn" onclick="window.backspace()">←</button>
                 <button class="delete-btn" onclick="window.hapusAll()">DELETE</button>
             </div>
         </div>
     </div>
     <script>
-        let rumusMentah = "";
+        // Menggunakan sistem Array Objek (Stack) agar tidak ada kebocoran karakter di layar
+        let stackRumus = [""]; 
         const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        window.tekanKarakter = function(char) { rumusMentah += char; window.renderVisual(); };
-        window.tekanOperator = function(op) { rumusMentah += " " + op + " "; window.renderVisual(); };
-        window.tekanPecahan = function() {
-            if (rumusMentah.length > 0 && !rumusMentah.endsWith("|")) { rumusMentah = "{" + rumusMentah + "}|"; } 
-            else { rumusMentah += "|"; }
+        window.tekanKarakter = function(char) {
+            stackRumus[stackRumus.length - 1] += char;
             window.renderVisual();
         };
 
-        window.buatTampilanPecahan = function(teks) {
-            if (!teks) return "0";
-            let hasil = teks.replace(/\*/g, " × ").replace(/:/g, " : ");
-            let regexPecahan = /\{([^\{\}\|]+)\}\|((?:[0-9\.\+\-\s×:%<>=\/]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
-            let teksLama;
-            do {
-                teksLama = hasil;
-                hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
-                    return `<span class="frac"><span class="num">${atas.trim()}</span><span class="den">${bawah.trim()}</span></span>`;
-                });
-                hasil = hasil.replace(/\{(<span class="frac">.*?<\/span>)\}/g, "$1");
-            } while (hasil !== teksLama);
-            return hasil.replace(/[\{\}]/g, "");
+        window.tekanOperator = function(op) {
+            let visualOp = op === "*" ? " × " : op === ":" ? " : " : " " + op + " ";
+            stackRumus[stackRumus.length - 1] += visualOp;
+            window.renderVisual();
         };
 
-        window.renderVisual = function() { currentLine.innerHTML = window.buatTampilanPecahan(rumusMentah); };
-        window.hitung = function() {
-            let ekspresi = rumusMentah.trim(); if (!ekspresi) return;
-            try {
-                let hitungEkspresi = ekspresi.replace(/[\{\}]/g, "").replace(/\|/g, "/").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
-                let hasilAngka = eval(hitungEkspresi); if (!isFinite(hasilAngka)) throw new Error();
-                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
-                rumusMentah = hasilAkhir;
-            } catch (err) {
-                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
-                rumusMentah = "";
+        // Saat tombol pecahan ditekan, langsung bungkus teks lama ke dalam struktur objek pecahan baru
+        window.tekanPecahan = function() {
+            let teksSaatIni = stackRumus[stackRumus.length - 1];
+            if (teksSaatIni.trim() !== "") {
+                stackRumus[stackRumus.length - 1] = `<span class="frac"><span class="num">${teksSaatIni}</span><span class="den">`;
+                stackRumus.push(""); // Siapkan penampung kosong untuk angka penyebut di bawahnya
             }
-            window.renderVisual(); displayScreen.scrollTop = displayScreen.scrollHeight;
+            window.renderVisual();
+        };
+
+        window.renderVisual = function() {
+            let htmlHasil = "";
+            // Satukan kepingan pecahan dari dalam array stack
+            for (let i = 0; i < stackRumus.length; i++) {
+                htmlHasil += stackRumus[i];
+            }
+            // Lengkapi penutup tag HTML span otomatis agar browser tidak error saat render realtime
+            let jumlahPecahanTerbuka = (htmlHasil.match(/<span class="frac">/g) || []).length;
+            for (let j = 0; j < jumlahPecahanTerbuka; j++) {
+                htmlHasil += "</span></span>";
+            }
+            currentLine.innerHTML = htmlHasil || "0";
+        };
+
+        window.hitung = function() {
+            let htmlKalkulasi = currentLine.innerHTML;
+            if (htmlKalkulasi === "0" || htmlKalkulasi.trim() === "") return;
+
+            try {
+                // Ekstrak tag HTML visual kembali menjadi rumus matematika murni komputer
+                let rumusMurni = htmlKalkulasi
+                    .replace(/<span class="frac"><span class="num">/g, "(")
+                    .replace(/<\/span><span class="den">/g, ")/(")
+                    .replace(/<\/span><\/span>/g, ")")
+                    .replace(/×/g, "*")
+                    .replace(/:/g, "/")
+                    .replace(/([0-9\.]+)\s*%/g, "($1/100)");
+
+                let hasilAngka = eval(rumusMurni);
+                if (!isFinite(hasilAngka)) throw new Error();
+                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
+
+                historyLog.innerHTML += `<div class="history-item">${htmlKalkulasi}<br>= ${hasilAkhir}</div>`;
+                stackRumus = [hasilAkhir];
+            } catch (err) {
+                historyLog.innerHTML += `<div class="history-item">${htmlKalkulasi}<br>= Error</div>`;
+                stackRumus = [""];
+            }
+            window.renderVisual();
+            displayScreen.scrollTop = displayScreen.scrollHeight;
         };
 
         window.backspace = function() {
-            if (rumusMentah.length > 0) {
-                if (rumusMentah.endsWith(" ")) { rumusMentah = rumusMentah.slice(0, -3); } 
-                else if (rumusMentah.endsWith("|")) {
-                    rumusMentah = rumusMentah.slice(0, -1);
-                    if (rumusMentah.startsWith("{") && rumusMentah.endsWith("}")) { rumusMentah = rumusMentah.slice(1, -1); }
-                } else { rumusMentah = rumusMentah.slice(0, -1); }
-                window.renderVisual();
+            if (stackRumus.length > 1 && stackRumus[stackRumus.length - 1] === "") {
+                stackRumus.pop(); // Hapus baris kosong
+                // Kembalikan struktur pecahan sebelumnya menjadi teks biasa
+                let teksLama = stackRumus[stackRumus.length - 1];
+                let regexBukafrac = /<span class="frac"><span class="num">([^<>]+)$/;
+                if (regexBukafrac.test(teksLama)) {
+                    stackRumus[stackRumus.length - 1] = teksLama.replace(regexBukafrac, "$1");
+                }
+            } else if (stackRumus[stackRumus.length - 1].length > 0) {
+                let barisAktif = stackRumus[stackRumus.length - 1];
+                if (barisAktif.endsWith(" ")) {
+                    stackRumus[stackRumus.length - 1] = barisAktif.slice(0, -3);
+                } else {
+                    stackRumus[stackRumus.length - 1] = barisAktif.slice(0, -1);
+                }
             }
+            window.renderVisual();
         };
-        window.hapusAll = function() { rumusMentah = ""; historyLog.innerHTML = ""; window.renderVisual(); };
+
+        window.hapusAll = function() {
+            stackRumus = [""];
+            historyLog.innerHTML = "";
+            window.renderVisual();
+        };
+
         window.renderVisual();
     </script>
 </body>
