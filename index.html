@@ -47,10 +47,12 @@
         .history-item {
             margin-bottom: 15px;
             padding-bottom: 5px;
+            border-bottom: 1px dashed #ccc;
         }
 
         .current-line-container {
             min-height: 40px;
+            margin-top: 5px;
         }
 
         /* Grid Tombol Operator Atas */
@@ -171,7 +173,7 @@
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT: ENGINE PECAHAN BERTINGKAT KATEX --- -->
+    <!-- --- JAVASCRIPT: LOGIKA PENJUMLAHAN FUNGSIONAL --- -->
     <script>
         let rawMathExpression = ""; 
         
@@ -185,6 +187,7 @@
         }
 
         function appendOperator(op) {
+            // Memberikan spasi di sekeliling operator agar regex pendeteksi pecahan bekerja valid
             rawMathExpression += " " + op + " ";
             renderMathView();
         }
@@ -194,52 +197,58 @@
             renderMathView();
         }
 
-        // Fungsi mengubah string ketikan biasa menjadi format kode LaTeX untuk pecahan bertingkat
+        // Mengubah teks input biasa menjadi bentuk LaTeX agar didukung visual KaTeX
         function convertToLaTeX(inputStr) {
-            if (!inputStr.trim()) return "0";
+            let text = inputStr.trim();
+            if (!text) return "0";
 
-            let latex = inputStr;
-            // Ubah simbol perkalian teks biasa ke format LaTeX
-            latex = latex.replace(/\*/g, " \\times ");
+            // Ganti simbol perkalian bintang (*) menjadi silang visual (\times)
+            text = text.replace(/\*/g, " \\times ");
 
-            // Regex untuk mendeteksi pembagian bertingkat otomatis dari kiri ke kanan
-            let divisionRegex = /(\([^\)]+\)|[0-9\.]+%?)\s* \/ \s*(\([^\)]+\)|[0-9\.]+%?)/g;
-            while (divisionRegex.test(latex)) {
-                latex = latex.replace(divisionRegex, function(match, p1, p2) {
+            // Formula Regex kuat untuk mendeteksi pembagian dan mengubahnya menjadi susunan pecahan vertikal \frac{atas}{bawah}
+            let divisionRegex = /(\([^\)]+\)|[0-9\.]+%?)\s*\/ \s*(\([^\)]+\)|[0-9\.]+%?)/g;
+            while (divisionRegex.test(text)) {
+                text = text.replace(divisionRegex, function(match, p1, p2) {
                     return `\\frac{${p1}}{${p2}}`;
                 });
             }
-            return latex;
+            return text;
         }
 
         function renderMathView() {
             let latexCode = convertToLaTeX(rawMathExpression);
-            // Render ekspresi aktif ke layar menggunakan pustaka KaTeX
             katex.render(latexCode, currentInputLine, { throwOnError: false });
         }
 
         function calculate() {
-            if (!rawMathExpression.trim()) return;
+            let expr = rawMathExpression.trim();
+            if (!expr) return;
 
             try {
-                // Modifikasi agar simbol % dipahami oleh mesin JavaScript (dibagi 100)
-                let evalExpression = rawMathExpression.replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                // Sempurnakan logika matematika persen (%) agar dikenali Javascript eval() (contoh: 1% diubah menjadi 1/100)
+                let evalExpression = expr.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
-                // Menghitung string matematika murni
+                // Menghitung string matematika menggunakan mesin eval aman
                 let resultRaw = eval(evalExpression);
+                
+                // Cek jika pembagian menghasilkan pembagi nol (Infinity)
+                if(!isFinite(resultRaw)) {
+                    throw new Error("DivByZero");
+                }
+
                 let resultFinal = Number(resultRaw.toFixed(4)).toString();
 
-                // Buat kontainer log riwayat kalkulasi baru
+                // Membuat elemen log baru untuk ditaruh di atas
                 const itemDiv = document.createElement("div");
                 itemDiv.className = "history-item";
                 
-                // Render rumus pecahan di atas, lalu tempatkan hasil matematika tepat di bawahnya
+                // Satukan format pecahan matematika asal dengan jawabannya ke bawah
                 let logLaTeX = convertToLaTeX(rawMathExpression) + " \\\\ = " + resultFinal;
                 katex.render(logLaTeX, itemDiv, { throwOnError: false });
                 
                 historyLog.appendChild(itemDiv);
                 
-                // Reset masukan baru dengan hasil sebelumnya agar bisa dilanjutkan berhitung
+                // Gunakan hasil perhitungan terakhir sebagai angka awal baru
                 rawMathExpression = resultFinal;
             } catch (error) {
                 const errorDiv = document.createElement("div");
@@ -250,7 +259,7 @@
             }
 
             renderMathView();
-            // Otomatis menggulung layar ke bawah saat barisan teks riwayat bertambah banyak
+            // Otomatis scroll layar ke baris terbawah
             displayScreen.scrollTop = displayScreen.scrollHeight;
         }
 
@@ -260,7 +269,7 @@
             renderMathView();
         }
 
-        // Jalankan render tampilan awal saat web dimuat
+        // Tampilkan angka 0 di awal saat web pertama kali dimuat
         renderMathView();
     </script>
 </body>
