@@ -41,17 +41,17 @@
             font-size: 1.3rem;
         }
 
-        /* CSS UNTUK PECAHAN BERLAPIS (Saling Mendukung di Dalam Elemen Lain) */
+        /* STYLING KHUSUS UNTUK PECAHAN BERLAPIS */
         .frac {
             display: inline-flex;
             flex-direction: column;
             vertical-align: middle;
             text-align: center;
             padding: 2px 6px;
-            margin: 2px 0;
+            margin: 2px 4px;
         }
         .num {
-            border-bottom: 2px solid #d13438;
+            border-bottom: 2px solid #d13438; /* Garis Pecahan Merah */
             padding-bottom: 2px;
         }
         .den {
@@ -133,7 +133,7 @@
             cursor: pointer;
         }
 
-        /* Tombol Bawah Dibagi Dua */
+        /* Tombol Bawah Dibagi Dua Pas */
         .backspace-btn {
             background-color: #fff2cc !important;
             font-size: 1.4rem !important;
@@ -161,34 +161,34 @@
 
         <!-- Baris Tombol Operator -->
         <div class="operator-row">
-            <button onclick="input('+')">+</button>
-            <button onclick="input('-')">-</button>
-            <button onclick="input('*')">×</button>
-            <button onclick="input('/')">÷</button>
+            <button onclick="inputOperator('+')">+</button>
+            <button onclick="inputOperator('-')">-</button>
+            <button onclick="inputOperator('*')">×</button>
+            <button onclick="inputOperator('/')">÷</button> <!-- Tetap menjadi Bagi Biasa -->
             <button onclick="hitung()">=</button>
         </div>
 
         <div class="main-grid">
             <!-- Sisi Kiri Menu Hijau -->
             <div class="left-menu">
-                <button onclick="input('(')">(</button>
-                <button onclick="input(')')">)</button>
-                <button onclick="input('/')">Pecahan</button>
-                <button onclick="input('%')">%</button>
+                <button onclick="inputSymbol('(')">(</button>
+                <button onclick="inputSymbol(')')">)</button>
+                <button onclick="inputFraction()">Pecahan</button> <!-- Khusus Membuat Struktur Susun -->
+                <button onclick="inputSymbol('%')">%</button>
             </div>
 
             <!-- Sisi Kanan Angka -->
             <div class="number-grid">
-                <button onclick="input('6')">6</button>
-                <button onclick="input('1')">1</button>
-                <button onclick="input('7')">7</button>
-                <button onclick="input('2')">2</button>
-                <button onclick="input('8')">8</button>
-                <button onclick="input('3')">3</button>
-                <button onclick="input('9')">9</button>
-                <button onclick="input('4')">4</button>
-                <button onclick="input('0')">0</button>
-                <button onclick="input('5')">5</button>
+                <button onclick="inputNumber('6')">6</button>
+                <button onclick="inputNumber('1')">1</button>
+                <button onclick="inputNumber('7')">7</button>
+                <button onclick="inputNumber('2')">2</button>
+                <button onclick="inputNumber('8')">8</button>
+                <button onclick="inputNumber('3')">3</button>
+                <button onclick="inputNumber('9')">9</button>
+                <button onclick="inputNumber('4')">4</button>
+                <button onclick="inputNumber('0')">0</button>
+                <button onclick="inputNumber('5')">5</button>
                 
                 <button class="backspace-btn" onclick="backspace()">←</button>
                 <button class="delete-btn" onclick="hapus()">DELETE</button>
@@ -196,30 +196,45 @@
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERLAPIS --- -->
+    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERLAPIS SEBENARNYA --- -->
     <script>
         let rumusMentah = "";
         const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        function input(karakter) {
-            rumusMentah += karakter;
+        function inputNumber(num) {
+            rumusMentah += num;
             renderVisual();
         }
 
-        // FUNGSI UTAMA: Mengubah string menjadi komponen HTML pecahan berlapis secara berulang (Loop)
+        function inputOperator(op) {
+            rumusMentah += " " + op + " ";
+            renderVisual();
+        }
+
+        function inputSymbol(sym) {
+            rumusMentah += sym;
+            renderVisual();
+        }
+
+        // FUNGSI KHUSUS TOMBOL PECAHAN: Menggunakan penanda khusus '|' agar sistem tahu ini pembagian vertikal
+        function inputFraction() {
+            rumusMentah += "|"; 
+            renderVisual();
+        }
+
+        // Menerjemahkan karakter spesial '|' menjadi elemen visual bertingkat (lapis demi lapis)
         function buatTampilanPecahan(teks) {
             if (!teks) return "0";
             
             let hasil = teks.replace(/\*/g, " × ");
+            hasil = hasil.replace(/\//g, " ÷ "); // Garis miring biasa dicetak sebagai simbol bagi biasa
 
-            // Regex mendeteksi susunan pembagian [Pembilang]/[Penyebut]
-            // Termasuk mendeteksi struktur HTML pecahan yang sudah terbentuk sebelumnya agar bisa dilapisi lagi
-            let regexPecahan = /((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\/((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            // Deteksi penanda khusus '|' untuk membungkus elemen kiri dan kanan menjadi pecahan vertical susun
+            let regexPecahan = /((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
             
             let teksLama;
-            // Terus lakukan penggantian struktur teks sampai tidak ada lagi tanda '/' yang tersisa
             do {
                 teksLama = hasil;
                 hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
@@ -239,8 +254,9 @@
             if (!ekspresi) return;
 
             try {
-                // Konversi persen agar dipahami sistem matematika browser
-                let hitungEkspresi = ekspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                // Kembalikan tanda '|' menjadi pembagian '/' murni komputer sebelum di-eval
+                let hitungEkspresi = ekspresi.replace(/\|/g, "/");
+                hitungEkspresi = hitungEkspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
                 let hasilAngka = eval(hitungEkspresi);
                 
@@ -261,7 +277,12 @@
 
         function backspace() {
             if (rumusMentah.length > 0) {
-                rumusMentah = rumusMentah.slice(0, -1);
+                // Jika karakter terakhir berupa spasi dari operator, potong lebih banyak agar rapi
+                if (rumusMentah.endsWith(" ")) {
+                    rumusMentah = rumusMentah.slice(0, -3);
+                } else {
+                    rumusMentah = rumusMentah.slice(0, -1);
+                }
                 renderVisual();
             }
         }
