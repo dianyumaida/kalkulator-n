@@ -3,98 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Jernih Aktif</title>
-    <!-- Library SheetJS untuk Ekspor Excel -->
-    <script src="https://jsdelivr.net"></script>
+    <title>Kalkulator Sesuai Sketsa</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 10px;
-            background-color: #f4f4f9;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #f5ece2; /* Warna latar krem mirip kertas di foto */
             padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Kontainer Utama Kalkulator Vertikal */
+        .kalkulator-box {
+            display: flex;
+            flex-direction: column;
+            width: 380px;
+            background: #fff;
+            border: 3px solid #333;
+            box-shadow: 5px 5px 0px #333;
+            padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        .baris-nilai-radio {
+
+        /* 1. LAYAR JERNIH (Bagian Atas) */
+        .layer-jernih {
+            width: 100%;
+            height: 140px;
+            border: 3px solid #333;
+            background-color: #f9f9f9;
             margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="radio"] {
-            margin-right: 10px;
-        }
-        .layar-atas {
-            background: #e0e0e0;
             padding: 10px;
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .layer-title {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 3px;
+        }
+
+        /* Area log riwayat hasil yang otomatis turun ke bawah */
+        .history-stream {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 5px;
             text-align: right;
-            font-size: 1.2em;
-            border-radius: 4px;
-            min-height: 25px;
+            font-size: 1.1rem;
+            color: #333;
         }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            font-size: 1em;
+
+        .history-item {
+            border-bottom: 1px solid #eee;
+            padding: 2px 0;
+        }
+
+        /* Input aktif yang sedang diketik */
+        .current-input {
+            text-align: right;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #000;
+            margin-top: 5px;
+            min-height: 35px;
+        }
+
+        /* BAGIAN BAWAH: Navigasi & Tombol Angka */
+        .tampilan-bawah {
+            display: flex;
+            gap: 15px;
+            flex: 1;
+        }
+
+        /* 2. TOMBOL PILIH (Memanjang ke bawah di sisi kiri) */
+        .kolom-pilih {
+            display: flex;
+            flex-direction: column;
+            width: 90px;
+        }
+
+        .btn-pilih {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #333;
+            background-color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
             cursor: pointer;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 4px;
+            border-radius: 6px;
+            gap: 10px;
         }
-        button:hover {
-            background-color: #0056b3;
+        
+        /* Membuat teks "PILIH" tertulis vertikal ke bawah */
+        .btn-pilih span {
+            writing-mode: vertical-lr;
+            text-orientation: upright;
+        }
+
+        .btn-pilih:active {
+            background-color: #eee;
+        }
+
+        /* 3. GRID ANGKA & DELETE (Sisi Kanan) */
+        .kolom-angka {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Susunan 2 Kolom sesuai gambar: Kolom Kiri (6-0), Kolom Kanan (1-5) */
+        .grid-num {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-num {
+            border: 3px solid #333;
+            background: #fff;
+            padding: 12px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .btn-num:active {
+            background-color: #eee;
+        }
+
+        /* Tombol DELETE lebar di bagian paling bawah angka */
+        .btn-delete {
+            width: 100%;
+            border: 3px solid #333;
+            background-color: #ffdde0;
+            padding: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .btn-delete:active {
+            background-color: #ffccd0;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Kalkulator Jernih Aktif</h2>
-    
-    <div id="layar" class="layar-atas">INPUT VARIABEL (A/B/C/D)</div>
+    <div class="kalkulator-box">
+        
+        <!-- BAGIAN ATAS: LAYER JERNIH -->
+        <div class="layer-jernih">
+            <div class="layer-title">Layer Jernih</div>
+            <!-- Aliran riwayat otomatis turun ke bawah -->
+            <div class="history-stream" id="historyStream"></div>
+            <!-- Input angka saat ini -->
+            <div class="current-input" id="activeScreen">0</div>
+        </div>
 
-    <div class="baris-nilai-radio">
-        <label for="r_konst1">Nilai Konstanta Tetap (a: 8, b: 2)</label>
-        <input type="radio" name="grup_menu" id="r_konst1" checked>
+        <!-- BAGIAN BAWAH -->
+        <div class="tampilan-bawah">
+            
+            <!-- SISI KIRI: TOMBOL PILIH (Dibuat vertikal meluncur ke bawah) -->
+            <div class="kolom-pilih">
+                <button class="btn-pilih" onclick="pilihMenu()">
+                    <span>PILIH</span>
+                    <div>▼</div>
+                </button>
+            </div>
+
+            <!-- SISI KANAN: TOMBOL ANGKA SESUAI GAMBAR -->
+            <div class="kolom-angka">
+                <div class="grid-num">
+                    <!-- Kolom Kiri (6-0) & Kolom Kanan (1-5) diatur sejajar vertikal -->
+                    <button class="btn-num" onclick="tekanAngka('6')">6</button>
+                    <button class="btn-num" onclick="tekanAngka('1')">1</button>
+                    
+                    <button class="btn-num" onclick="tekanAngka('7')">7</button>
+                    <button class="btn-num" onclick="tekanAngka('2')">2</button>
+                    
+                    <button class="btn-num" onclick="tekanAngka('8')">8</button>
+                    <button class="btn-num" onclick="tekanAngka('3')">3</button>
+                    
+                    <button class="btn-num" onclick="tekanAngka('9')">9</button>
+                    <button class="btn-num" onclick="tekanAngka('4')">4</button>
+                    
+                    <button class="btn-num" onclick="tekanAngka('0')">0</button>
+                    <button class="btn-num" onclick="tekanAngka('5')">5</button>
+                </div>
+                
+                <!-- TOMBOL DELETE DI BAWAH ANGKA -->
+                <button class="btn-delete" onclick="hapusLayar()">DELETE</button>
+            </div>
+
+        </div>
     </div>
 
-    <button onclick="pindahEditVariabel()">Ganti Variabel</button>
-    <button onclick="eksporKeExcel()">Ekspor Excel</button>
-</div>
+    <script>
+        const activeScreen = document.getElementById('activeScreen');
+        const historyStream = document.getElementById('historyStream');
+        let urutanAngka = '';
 
-<script>
-    let parameterRumus = { v_a: 10, v_b: 20 };
-    let listKomponen = ['v_a', 'v_b'];
-    let indeksFokus = 0;
-    let logDataExcel = [];
+        // Fungsi ketika angka ditekan
+        function tekanAngka(angka) {
+            if (activeScreen.innerText === '0') {
+                urutanAngka = angka;
+            } else {
+                urutanAngka += angka;
+            }
+            activeScreen.innerText = urutanAngka;
+        }
 
-    function pindahEditVariabel() {
-        indeksFokus = (indeksFokus + 1) % listKomponen.length;
-        updateTeksLayarAtas();
-    }
+        // Fungsi Tombol DELETE (Mereset atau membersihkan layar)
+        function hapusLayar() {
+            urutanAngka = '';
+            activeScreen.innerText = '0';
+        }
 
-    function updateTeksLayarAtas() {
-        let labelNama = listKomponen[indeksFokus];
-        document.getElementById('layar').innerText = "Fokus: " + labelNama + " (" + parameterRumus[labelNama] + ")";
-    }
+        // Fungsi Tombol PILIH (Sama dengan / Pencetak riwayat ke bawah)
+        function pilihMenu() {
+            if (!urutanAngka) return;
 
-    function eksporKeExcel() {
-        alert("Fungsi Ekspor Excel Berhasil Dipanggil!");
-    }
+            // Membuat elemen riwayat baru di dalam Layer Jernih
+            const itemBaru = document.createElement('div');
+            itemBaru.className = 'history-item';
+            
+            // Simulasi operasi: jika ingin otomatis menjumlahkan angka yang dimasukkan
+            // Di sini kita cetak angka yang diinput ke dalam barisan log yang turun ke bawah
+            itemBaru.innerText = urutanAngka;
+            
+            // Masukkan ke dalam list aliran riwayat
+            historyStream.appendChild(itemBaru);
+            
+            // Otomatis scroll ke bawah di dalam layar jernih jika log sudah penuh
+            historyStream.scrollTop = historyStream.scrollHeight;
 
-    // Inisialisasi tampilan pertama kali
-    updateTeksLayarAtas();
-</script>
-
+            // Reset input aktif agar bisa mengetik angka baru berikutnya
+            hapusLayar();
+        }
+    </script>
 </body>
 </html>
