@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis</title>
+    <title>Kalkulator Pecahan Berlapis Sukses</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f7ebe1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .calculator { width: 360px; background-color: #ffffff; border: 2px solid #000; border-radius: 12px; padding: 20px; box-shadow: 5px 5px 0px #000000; }
         .display-container { width: 100%; height: 280px; border: 2px solid #000; margin-bottom: 15px; background-color: #fff; padding: 12px; box-sizing: border-box; text-align: left; overflow-y: auto; color: #d13438; font-weight: bold; font-size: 1.4rem; }
         .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; padding: 4px 8px; margin: 4px; }
         .num { border-bottom: 2px solid #d13438; padding-bottom: 4px; margin-bottom: 2px; }
-        .den { padding-top: 4px; }
+        .den { padding-top: 4px; min-height: 25px; }
         .history-item { margin-bottom: 20px; border-bottom: 1px dashed #ccc; padding-bottom: 12px; line-height: 2.2; }
         .current-line { min-height: 60px; line-height: 2.2; display: inline-block; }
         .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="calculator">
-        <div id="display-screen" class="display-container"><div id="history-log"></div><div id="current-input-line" class="current-line">0</div></div>
+        <div id="display-screen" class="display-container"><div id="history-log"></div><div id="current-input-line" class="current-line"></div></div>
         <div class="operator-row">
             <button onclick="window.tekanOperator('+')">+</button><button onclick="window.tekanOperator('-')">-</button>
             <button onclick="window.tekanOperator('*')">×</button><button onclick="window.tekanOperator(':')">:</button>
@@ -50,60 +50,58 @@
         </div>
     </div>
     <script>
-        let stackRumus = [""]; 
         const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
+        let targetAktif = currentLine;
 
-        window.tekanKarakter = function(char) { stackRumus[stackRumus.length - 1] += char; window.renderVisual(); };
-        window.tekanOperator = function(op) { stackRumus[stackRumus.length - 1] += (op === "*" ? " × " : op === ":" ? " : " : " " + op + " "); window.renderVisual(); };
+        function bersihkanNolAwal(el) { if (el.innerHTML === "0" || el.innerHTML === "") el.innerHTML = ""; }
+
+        window.tekanKarakter = function(char) { bersihkanNolAwal(targetAktif); targetAktif.innerHTML += char; displayScreen.scrollTop = displayScreen.scrollHeight; };
+        window.tekanOperator = function(op) { bersihkanNolAwal(targetAktif); targetAktif.innerHTML += (op === "*" ? " × " : op === ":" ? " : " : " " + op + " "); displayScreen.scrollTop = displayScreen.scrollHeight; };
+
         window.tekanPecahan = function() {
-            let teksSaatIni = stackRumus[stackRumus.length - 1];
-            if (teksSaatIni.trim() !== "") {
-                stackRumus[stackRumus.length - 1] = `<span class="frac"><span class="num">${teksSaatIni}</span><span class="den">`;
-                stackRumus.push("");
-            }
-            window.renderVisual();
-        };
-
-        window.renderVisual = function() {
-            let htmlHasil = "";
-            for (let i = 0; i < stackRumus.length; i++) { htmlHasil += stackRumus[i]; }
-            let jmlFrac = (htmlHasil.match(/<span class="frac">/g) || []).length;
-            for (let j = 0; j < jmlFrac; j++) { htmlHasil += "</span></span>"; }
-            currentLine.innerHTML = htmlHasil || "0";
+            let kontenLama = currentLine.innerHTML; if (kontenLama === "0" || !kontenLama.trim()) return;
+            let fracSpan = document.createElement("span"); fracSpan.className = "frac";
+            let numSpan = document.createElement("span"); numSpan.className = "num"; numSpan.innerHTML = kontenLama;
+            let denSpan = document.createElement("span"); denSpan.className = "den";
+            fracSpan.appendChild(numSpan); fracSpan.appendChild(denSpan);
+            currentLine.innerHTML = ""; currentLine.appendChild(fracSpan);
+            targetAktif = denSpan; displayScreen.scrollTop = displayScreen.scrollHeight;
         };
 
         window.hitung = function() {
-            let htmlKalkulasi = currentLine.innerHTML; if (htmlKalkulasi === "0" || !htmlKalkulasi.trim()) return;
+            let htmlKalkulasi = currentLine.innerHTML; if (!htmlKalkulasi.trim() || htmlKalkulasi === "0") return;
             try {
                 let rumusMurni = htmlKalkulasi.replace(/<span class="frac"><span class="num">/g, "(").replace(/<\/span><span class="den">/g, ")/(").replace(/<\/span><\/span>/g, ")").replace(/×/g, "*").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 let hasilAngka = eval(rumusMurni); if (!isFinite(hasilAngka)) throw new Error();
                 let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
                 historyLog.innerHTML += `<div class="history-item">${htmlKalkulasi}<br>= ${hasilAkhir}</div>`;
-                stackRumus = [hasilAkhir];
+                currentLine.innerHTML = hasilAkhir;
             } catch (err) {
                 historyLog.innerHTML += `<div class="history-item">${htmlKalkulasi}<br>= Error</div>`;
-                stackRumus = [""];
+                currentLine.innerHTML = "0";
             }
-            window.renderVisual(); displayScreen.scrollTop = displayScreen.scrollHeight;
+            targetAktif = currentLine; displayScreen.scrollTop = displayScreen.scrollHeight;
         };
 
         window.backspace = function() {
-            if (stackRumus.length > 1 && stackRumus[stackRumus.length - 1] === "") {
-                stackRumus.pop();
-                let teksLama = stackRumus[stackRumus.length - 1];
-                let regFrac = /<span class="frac"><span class="num">([^<>]+)$/;
-                if (regFrac.test(teksLama)) { stackRumus[stackRumus.length - 1] = teksLama.replace(regFrac, "$1"); }
-            } else if (stackRumus[stackRumus.length - 1].length > 0) {
-                let baris = stackRumus[stackRumus.length - 1];
-                stackRumus[stackRumus.length - 1] = baris.endsWith(" ") ? baris.slice(0, -3) : baris.slice(0, -1);
+            if (targetAktif.innerHTML.length > 0) {
+                let teks = targetAktif.innerHTML;
+                targetAktif.innerHTML = teks.endsWith(" ") ? teks.slice(0, -3) : teks.slice(0, -1);
+            } else if (targetAktif !== currentLine) {
+                let parentFrac = targetAktif.closest(".frac");
+                if (parentFrac) {
+                    let isiPembilang = parentFrac.querySelector(".num").innerHTML;
+                    let parentDariFrac = parentFrac.parentNode;
+                    parentFrac.remove(); parentDariFrac.innerHTML = isiPembilang; targetAktif = parentDariFrac;
+                }
             }
-            window.renderVisual();
+            if (!currentLine.innerHTML.trim()) { currentLine.innerHTML = "0"; targetAktif = currentLine; }
         };
 
-        window.hapusAll = function() { stackRumus = [""]; historyLog.innerHTML = ""; window.renderVisual(); };
-        window.renderVisual();
+        window.hapusAll = function() { currentLine.innerHTML = "0"; historyLog.innerHTML = ""; targetAktif = currentLine; };
+        window.hapusAll();
     </script>
 </body>
 </html>
