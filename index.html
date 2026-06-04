@@ -115,7 +115,7 @@
             border-radius: 4px;
         }
 
-        /* Grid Angka Kanan */
+        /* Grid Angka Kanan (Pas 2 Kolom) */
         .number-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -132,15 +132,16 @@
             cursor: pointer;
         }
 
-        /* PERBAIKAN TOMBOL BAWAH: Membagi tempat Panah Edit & Delete */
+        /* MEMBAGI TOMBOL MENJADI DUA DI GRID 2 KOLOM */
         .backspace-btn {
-            background-color: #fff2cc !important; /* Warna kuning muda untuk penanda edit */
-            font-size: 1.3rem !important;
+            background-color: #fff2cc !important; /* Warna kuning muda penanda edit */
+            font-size: 1.4rem !important;
         }
 
         .delete-btn {
-            background-color: #f8cbad !important; /* Warna pink tetap untuk reset */
-            font-size: 1rem !important;
+            background-color: #f8cbad !important; /* Warna pink untuk reset */
+            font-size: 0.95rem !important;
+            font-weight: bold;
         }
 
         button:active {
@@ -188,10 +189,8 @@
                 <button onclick="input('0')">0</button>
                 <button onclick="input('5')">5</button>
                 
-                <!-- TOMBOL EDIT BARU (Backspace satu karakter) -->
+                <!-- BAGIAN BAWAH DIBAGI DUA: KOLOM KIRI (EDIT) & KOLOM KANAN (DELETE) -->
                 <button class="backspace-btn" onclick="backspace()">←</button>
-                
-                <!-- TOMBOL DELETE (Reset Semua) -->
                 <button class="delete-btn" onclick="hapus()">DELETE</button>
             </div>
         </div>
@@ -259,10 +258,9 @@
             displayScreen.scrollTop = displayScreen.scrollHeight; // Auto gulung ke bawah
         }
 
-        // 4. Tombol EDIT PANAH KIRI (Hapus satu karakter terakhir)
+        // 4. Fungsi tombol panah edit (Hapus satu karakter terakhir)
         function backspace() {
             if (rumusMentah.length > 0) {
-                // Potong 1 karakter terakhir dari string rumusMentah
                 rumusMentah = rumusMentah.slice(0, -1);
                 renderVisual();
             }
