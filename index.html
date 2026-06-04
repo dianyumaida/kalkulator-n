@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Sketsa - Fitur Lengkap</title>
+    <title>Kalkulator Sketsa - Aliran Kiri Atas Ke Bawah</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,7 +16,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            background-color: #f5ece2; /* Warna kertas sesuai foto */
+            background-color: #f5ece2; /* Warna kertas sesuai sketsa */
             padding: 20px;
             min-height: 100vh;
         }
@@ -33,17 +33,36 @@
             border-radius: 8px;
         }
 
-        /* 1. LAYER JERNIH (Bagian Atas) */
+        /* CONTAINER LAYAR UTAMA */
+        .layer-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        /* 1. LAYER JERNIH (Tampilan Aliran Kiri Atas ke Bawah) */
         .layer-jernih {
             width: 100%;
-            height: 160px;
+            height: 180px;
             border: 3px solid #333;
             background-color: #f9f9f9;
-            margin-bottom: 12px;
             padding: 10px;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start; /* Memulai konten dari atas */
+            align-items: flex-start;     /* Memulai konten dari sisi kiri */
+            position: relative;
+        }
+
+        .layer-header {
+            width: 100%;
+            display: flex;
             justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
         }
 
         .layer-title {
@@ -51,40 +70,58 @@
             color: #666;
             font-weight: bold;
             text-transform: uppercase;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 3px;
         }
 
-        /* Area log riwayat hasil yang otomatis turun ke bawah */
+        /* Tombol untuk mendelete / membersihkan isi Layer Jernih */
+        .btn-clear-layer {
+            background-color: #ff4d4d;
+            color: white;
+            border: 1px solid #333;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-clear-layer:hover {
+            background-color: #ff1a1a;
+        }
+
+        /* Area log riwayat hasil dari kiri atas berbaris turun ke bawah */
         .history-stream {
+            width: 100%;
             flex: 1;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            margin-top: 5px;
-            text-align: right;
+            gap: 6px;
+            text-align: left; /* Rata kiri sesuai permintaan */
             font-size: 1rem;
-            color: #555;
+            color: #333;
         }
 
         .history-item {
             border-bottom: 1px solid #eee;
             padding: 2px 0;
+            width: 100%;
+            word-wrap: break-word;
         }
 
-        /* Input aktif yang sedang diketik */
+        /* Input aktif yang sedang diketik (berada di kiri bawah layar) */
         .current-input {
-            text-align: right;
-            font-size: 1.5rem;
+            width: 100%;
+            text-align: left; /* Rata kiri */
+            font-size: 1.4rem;
             font-weight: bold;
             color: #000;
-            margin-top: 5px;
+            border-top: 2px solid #333;
+            padding-top: 5px;
             min-height: 35px;
             word-wrap: break-word;
         }
 
-        /* PANEL SIMBOL MATEMATIKA (Baru) */
+        /* PANEL TOMBOL SIMBOL MATEMATIKA */
         .panel-simbol {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -117,7 +154,7 @@
             gap: 12px;
         }
 
-        /* 2. TOMBOL PILIH (Memanjang ke bawah di sisi kiri) */
+        /* 2. TOMBOL PILIH (Sisi Kiri Memanjang) */
         .kolom-pilih {
             display: flex;
             flex-direction: column;
@@ -131,7 +168,7 @@
             justify-content: center;
             align-items: center;
             border: 3px solid #333;
-            background-color: #e6ffed; /* Hijau muda untuk tombol aksi */
+            background-color: #e6ffed; 
             font-size: 1.1rem;
             font-weight: bold;
             letter-spacing: 2px;
@@ -157,7 +194,7 @@
             gap: 8px;
         }
 
-        /* Susunan 2 Kolom sesuai gambar asli Anda */
+        /* Susunan 2 Kolom sesuai sketsa asli */
         .grid-num {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -179,7 +216,7 @@
             background-color: #eee;
         }
 
-        /* Tombol DELETE di bagian paling bawah angka */
+        /* Tombol DELETE di bagian bawah angka */
         .btn-delete {
             width: 100%;
             border: 3px solid #333;
@@ -202,14 +239,22 @@
 
     <div class="kalkulator-box">
         
-        <!-- BAGIAN ATAS: LAYER JERNIH -->
-        <div class="layer-jernih">
-            <div class="layer-title">Layer Jernih</div>
-            <div class="history-stream" id="historyStream"></div>
-            <div class="current-input" id="activeScreen">0</div>
+        <!-- BAGIAN ATAS: LAYER CONTAINER -->
+        <div class="layer-container">
+            <div class="layer-jernih">
+                <div class="layer-header">
+                    <div class="layer-title">Layer Jernih</div>
+                    <!-- Tombol Baru untuk Mereset/Delete isi Layer Jernih -->
+                    <button class="btn-clear-layer" onclick="bersihkanLayerJernih()">CLEAR LAYER</button>
+                </div>
+                <!-- Aliran dari kiri atas ke bawah -->
+                <div class="history-stream" id="historyStream"></div>
+                <!-- Input aktif rata kiri -->
+                <div class="current-input" id="activeScreen">0</div>
+            </div>
         </div>
 
-        <!-- PANEL TOMBOL SIMBOL BARU -->
+        <!-- PANEL TOMBOL SIMBOL -->
         <div class="panel-simbol">
             <button class="btn-simbol operator-utama" onclick="tekanSimbol('+')">+</button>
             <button class="btn-simbol operator-utama" onclick="tekanSimbol('-')">-</button>
@@ -227,7 +272,7 @@
         <!-- BAGIAN BAWAH -->
         <div class="tampilan-bawah">
             
-            <!-- SISI KIRI: TOMBOL PILIH (Fungsi Tambahan / Menu Aksi Eksekusi) -->
+            <!-- SISI KIRI: TOMBOL PILIH -->
             <div class="kolom-pilih">
                 <button class="btn-pilih" onclick="hitungSamaDengan()">
                     <span>PILIH</span>
@@ -238,11 +283,10 @@
             <!-- SISI KANAN: TOMBOL ANGKA SESUAI SKETSA -->
             <div class="kolom-angka">
                 <div class="grid-num">
-                    <!-- Kolom Kiri (6-0) & Kolom Kanan (1-5) -->
                     <button class="btn-num" onclick="tekanAngka('6')">6</button>
                     <button class="btn-num" onclick="tekanAngka('1')">1</button>
                     
-                    <button class="btn-num" onclick="tekanAngka('7')">7</button>
+                    <button class="btn-num" onclick="tekanAngka('7') text')">7</button>
                     <button class="btn-num" onclick="tekanAngka('2')">2</button>
                     
                     <button class="btn-num" onclick="tekanAngka('8')">8</button>
@@ -255,8 +299,8 @@
                     <button class="btn-num" onclick="tekanAngka('5')">5</button>
                 </div>
                 
-                <!-- TOMBOL DELETE -->
-                <button class="btn-delete" onclick="hapusLayar()">DELETE</button>
+                <!-- TOMBOL DELETE INPUT (Untuk menghapus baris ketikan saat ini) -->
+                <button class="btn-delete" onclick="hapusLayarAktif()">DELETE</button>
             </div>
 
         </div>
@@ -267,45 +311,4 @@
         const historyStream = document.getElementById('historyStream');
         let rumusSaatIni = '';
 
-        // Memasukkan angka ke layar
-        function tekanAngka(angka) {
-            if (activeScreen.innerText === '0') {
-                rumusSaatIni = angka;
-            } else {
-                rumusSaatIni += angka;
-            }
-            activeScreen.innerText = rumusSaatIni;
-        }
-
-        // Memasukkan simbol matematika ke layar
-        function tekanSimbol(simbol) {
-            if (rumusSaatIni === '' && simbol !== '-') return;
-            
-            // Mengubah tampilan visual pangkat agar rapi di layar
-            let simbolTampil = simbol;
-            if (simbol === '**') simbolTampil = '^';
-            if (simbol === '*') simbolTampil = '×';
-            if (simbol === '/') simbolTampil = '÷';
-
-            rumusSaatIni += simbol;
-            activeScreen.innerText = rumusSaatIni.replace(/\*\*/g, '^').replace(/\*/g, '×').replace(/\//g, '÷');
-        }
-
-        // Fungsi khusus Log, Integral, dan Sudut
-        function fungsiSains(jenis) {
-            let angka = parseFloat(rumusSaatIni);
-            if (isNaN(angka)) {
-                alert("Masukkan angka terlebih dahulu sebelum menekan fungsi!");
-                return;
-            }
-
-            let hasil = 0;
-            let deskripsi = '';
-
-            if (jenis === 'log') {
-                hasil = Math.log10(angka);
-                deskripsi = `log(${angka})`;
-            } else if (jenis === 'sin') {
-                // Konversi hitung sudut (Simulasi nilai Sin Radian)
-                hasil = Math.sin(angka);
-                deskripsi = `sin∠(${angka} rad)`;
+        // Memasukkan angka ke layar (Rata Kiri)
