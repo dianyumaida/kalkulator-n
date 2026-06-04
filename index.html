@@ -281,7 +281,6 @@
             renderVisual();
             displayScreen.scrollTop = displayScreen.scrollHeight; // Otomatis gulung layar ke bawah
         }
-
         function backspace() {
             if (rumusMentah.length > 0) {
                 if (rumusMentah.endsWith(" ")) {
@@ -290,3 +289,23 @@
                     rumusMentah = rumusMentah.slice(0, -1);
                 }
                 renderVisual();
+        function backspace() {
+            if (rumusMentah.length > 0) {
+                if (rumusMentah.endsWith(" ")) {
+                    rumusMentah = rumusMentah.slice(0, -3);
+                } else {
+                    rumusMentah = rumusMentah.slice(0, -1);
+                }
+                renderVisual();
+            }
+        }
+
+        function hapus() {
+            rumusMentah = "";
+            historyLog.innerHTML = "";
+            renderVisual();
+        }
+    </script>
+</body>
+</html>
+
