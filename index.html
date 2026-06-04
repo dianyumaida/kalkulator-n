@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis</title>
+    <title>Kalkulator Pecahan Berlapis Sukses</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,7 +15,7 @@
             margin: 0;
         }
         .calculator {
-            width: 350px;
+            width: 360px;
             background-color: #ffffff;
             border: 2px solid #000;
             border-radius: 12px;
@@ -24,7 +24,7 @@
         }
         .display-container {
             width: 100%;
-            height: 250px;
+            height: 260px;
             border: 2px solid #000;
             margin-bottom: 15px;
             background-color: #fff;
@@ -36,21 +36,22 @@
             font-weight: bold;
             font-size: 1.4rem;
         }
+        /* DESIGN PECAHAN BERTINGKAT AGAR PAS SEPERTI GAMBAR CORETAN */
         .frac {
             display: inline-flex;
             flex-direction: column;
             vertical-align: middle;
             text-align: center;
-            padding: 4px 8px;
-            margin: 4px 4px;
+            padding: 2px 6px;
+            margin: 0 4px;
         }
         .num {
-            border-bottom: 2px solid #d13438;
-            padding-bottom: 4px;
+            border-bottom: 2px solid #d13438; /* Garis horizontal pembagi */
+            padding-bottom: 2px;
             margin-bottom: 2px;
         }
         .den {
-            padding-top: 4px;
+            padding-top: 2px;
         }
         .history-item {
             margin-bottom: 20px;
@@ -140,7 +141,7 @@
             <button onclick="window.tekanOperator('+')">+</button>
             <button onclick="window.tekanOperator('-')">-</button>
             <button onclick="window.tekanOperator('*')">×</button>
-            <button onclick="window.tekanOperator('/')">÷</button>
+            <button onclick="window.tekanOperator(':')">:</button> <!-- Titik dua sesuai gambar -->
             <button onclick="window.hitung()">=</button>
         </div>
 
@@ -148,14 +149,14 @@
             <div class="left-menu">
                 <button onclick="window.tekanKarakter('(')">(</button>
                 <button onclick="window.tekanKarakter(')')">)</button>
-                <button onclick="window.tekanPecahan()">Pecahan</button>
+                <button onclick="window.tekanPecahan()">Pecahan</button> <!-- Membuat Garis Berlapis -->
                 <button onclick="window.tekanKarakter('%')">%</button>
             </div>
 
             <div class="number-grid">
                 <button onclick="window.tekanKarakter('6')">6</button>
                 <button onclick="window.tekanKarakter('1')">1</button>
-                <button onclick="window.tekanKarakter('7')">7</button>
+                <button onclick="window.tekanKarakter('7') text-transform:lowercase;">a</button> <!-- Ganti angka jadi huruf agar sesuai gambar -->
                 <button onclick="window.tekanKarakter('2')">2</button>
                 <button onclick="window.tekanKarakter('8')">8</button>
                 <button onclick="window.tekanKarakter('3')">3</button>
@@ -176,7 +177,6 @@
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        // Daftarkan fungsi ke objek window global agar pasti terbaca oleh onclick HTML
         window.tekanKarakter = function(char) {
             rumusMentah += char;
             window.renderVisual();
@@ -192,10 +192,14 @@
             window.renderVisual();
         };
 
+        // FUNGSI SUPREME PARSER: Mampu mengubah susunan berlapis paling kompleks menjadi HTML bertingkat
         window.buatTampilanPecahan = function(teks) {
             if (!teks) return "0";
-            let hasil = teks.replace(/\*/g, " × ").replace(/\//g, " ÷ ");
-            let regexPecahan = /((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            let hasil = teks.replace(/\*/g, " × ");
+            
+            // Regex diperkuat agar mendukung huruf alfabet kecil/besar dan simbol matematika titik dua (:)
+            let regexPecahan = /((?:[a-zA-Z0-9\.\+\-\s×:%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[a-zA-Z0-9\.\+\-\s×:%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            
             let teksLama;
             do {
                 teksLama = hasil;
@@ -203,6 +207,7 @@
                     return `<span class="frac"><span class="num">${atas.trim()}</span><span class="den">${bawah.trim()}</span></span>`;
                 });
             } while (hasil !== teksLama);
+            
             return hasil;
         };
 
@@ -214,12 +219,20 @@
             let ekspresi = rumusMentah.trim();
             if (!ekspresi) return;
             try {
-                let hitungEkspresi = ekspresi.replace(/\|/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
-                let hasilAngka = eval(hitungEkspresi);
-                if (!isFinite(hasilAngka)) throw new Error();
-                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
-                rumusMentah = hasilAkhir;
+                // Ganti lambang visual ke rumus internal komputer
+                let hitungEkspresi = ekspresi.replace(/\|/g, "/").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                
+                // Cek jika mengandung huruf variabel abstrak (seperti coretan a, b, c, d) cetak teks aslinya tanpa di-eval angka
+                if(/[a-zA-Z]/.test(hitungEkspresi)) {
+                    historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Terproses (Abstrak)</div>`;
+                    rumusMentah = "";
+                } else {
+                    let hasilAngka = eval(hitungEkspresi);
+                    if (!isFinite(hasilAngka)) throw new Error();
+                    let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
+                    historyLog.innerHTML += `<div class="history-item">${window.buatTaughlinPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
+                    rumusMentah = hasilAkhir;
+                }
             } catch (err) {
                 historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
                 rumusMentah = "";
@@ -245,7 +258,6 @@
             window.renderVisual();
         };
 
-        // Jalankan tampilan awal saat halaman selesai dimuat
         window.renderVisual();
     </script>
 </body>
