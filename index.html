@@ -137,35 +137,35 @@
         </div>
 
         <div class="operator-row">
-            <button onclick="tekanOperator('+')">+</button>
-            <button onclick="tekanOperator('-')">-</button>
-            <button onclick="tekanOperator('*')">×</button>
-            <button onclick="tekanOperator('/')">÷</button>
-            <button onclick="hitung()">=</button>
+            <button onclick="window.tekanOperator('+')">+</button>
+            <button onclick="window.tekanOperator('-')">-</button>
+            <button onclick="window.tekanOperator('*')">×</button>
+            <button onclick="window.tekanOperator('/')">÷</button>
+            <button onclick="window.hitung()">=</button>
         </div>
 
         <div class="main-grid">
             <div class="left-menu">
-                <button onclick="tekanKarakter('(')">(</button>
-                <button onclick="tekanKarakter(')')">)</button>
-                <button onclick="tekanPecahan()">Pecahan</button>
-                <button onclick="tekanKarakter('%')">%</button>
+                <button onclick="window.tekanKarakter('(')">(</button>
+                <button onclick="window.tekanKarakter(')')">)</button>
+                <button onclick="window.tekanPecahan()">Pecahan</button>
+                <button onclick="window.tekanKarakter('%')">%</button>
             </div>
 
             <div class="number-grid">
-                <button onclick="tekanKarakter('6')">6</button>
-                <button onclick="tekanKarakter('1')">1</button>
-                <button onclick="tekanKarakter('7')">7</button>
-                <button onclick="tekanKarakter('2')">2</button>
-                <button onclick="tekanKarakter('8')">8</button>
-                <button onclick="tekanKarakter('3')">3</button>
-                <button onclick="tekanKarakter('9')">9</button>
-                <button onclick="tekanKarakter('4')">4</button>
-                <button onclick="tekanKarakter('0')">0</button>
-                <button onclick="tekanKarakter('5')">5</button>
+                <button onclick="window.tekanKarakter('6')">6</button>
+                <button onclick="window.tekanKarakter('1')">1</button>
+                <button onclick="window.tekanKarakter('7')">7</button>
+                <button onclick="window.tekanKarakter('2')">2</button>
+                <button onclick="window.tekanKarakter('8')">8</button>
+                <button onclick="window.tekanKarakter('3')">3</button>
+                <button onclick="window.tekanKarakter('9')">9</button>
+                <button onclick="window.tekanKarakter('4')">4</button>
+                <button onclick="window.tekanKarakter('0')">0</button>
+                <button onclick="window.tekanKarakter('5')">5</button>
                 
-                <button class="backspace-btn" onclick="backspace()">←</button>
-                <button class="delete-btn" onclick="hapusAll()">DELETE</button>
+                <button class="backspace-btn" onclick="window.backspace()">←</button>
+                <button class="delete-btn" onclick="window.hapusAll()">DELETE</button>
             </div>
         </div>
     </div>
@@ -176,22 +176,23 @@
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        function tekanKarakter(char) {
+        // Daftarkan fungsi ke objek window global agar pasti terbaca oleh onclick HTML
+        window.tekanKarakter = function(char) {
             rumusMentah += char;
-            renderVisual();
-        }
+            window.renderVisual();
+        };
 
-        function tekanOperator(op) {
+        window.tekanOperator = function(op) {
             rumusMentah += " " + op + " ";
-            renderVisual();
-        }
+            window.renderVisual();
+        };
 
-        function tekanPecahan() {
+        window.tekanPecahan = function() {
             rumusMentah += "|"; 
-            renderVisual();
-        }
+            window.renderVisual();
+        };
 
-        function buatTampilanPecahan(teks) {
+        window.buatTampilanPecahan = function(teks) {
             if (!teks) return "0";
             let hasil = teks.replace(/\*/g, " × ").replace(/\//g, " ÷ ");
             let regexPecahan = /((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
@@ -203,13 +204,13 @@
                 });
             } while (hasil !== teksLama);
             return hasil;
-        }
+        };
 
-        function renderVisual() {
-            currentLine.innerHTML = buatTampilanPecahan(rumusMentah);
-        }
+        window.renderVisual = function() {
+            currentLine.innerHTML = window.buatTampilanPecahan(rumusMentah);
+        };
 
-        function hitung() {
+        window.hitung = function() {
             let ekspresi = rumusMentah.trim();
             if (!ekspresi) return;
             try {
@@ -217,32 +218,35 @@
                 let hasilAngka = eval(hitungEkspresi);
                 if (!isFinite(hasilAngka)) throw new Error();
                 let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
+                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
                 rumusMentah = hasilAkhir;
             } catch (err) {
-                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
+                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
                 rumusMentah = "";
             }
-            renderVisual();
+            window.renderVisual();
             displayScreen.scrollTop = displayScreen.scrollHeight;
-        }
+        };
 
-        function backspace() {
+        window.backspace = function() {
             if (rumusMentah.length > 0) {
                 if (rumusMentah.endsWith(" ")) {
                     rumusMentah = rumusMentah.slice(0, -3);
                 } else {
                     rumusMentah = rumusMentah.slice(0, -1);
                 }
-                renderVisual();
+                window.renderVisual();
             }
-        }
+        };
 
-        function hapusAll() {
+        window.hapusAll = function() {
             rumusMentah = "";
             historyLog.innerHTML = "";
-            renderVisual();
-        }
+            window.renderVisual();
+        };
+
+        // Jalankan tampilan awal saat halaman selesai dimuat
+        window.renderVisual();
     </script>
 </body>
 </html>
