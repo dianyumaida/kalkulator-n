@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Bertingkat</title>
-    
-    <!-- Ambil pustaka visual matematika KaTeX dari CDN terpercaya -->
-    <link rel="stylesheet" href="https://jsdelivr.net">
-    <script src="https://jsdelivr.net"></script>
-
+    <title>Kalkulator Pecahan Vertikal</title>
     <style>
-        /* --- CSS: DESAIN KOTAK KALKULATOR --- */
+        /* --- CSS DASAR KALKULATOR --- */
         body {
-            font-family: 'Courier New', Courier, monospace;
+            font-family: Arial, sans-serif;
             background-color: #f7ebe1;
             display: flex;
             justify-content: center;
@@ -30,7 +25,7 @@
             box-shadow: 5px 5px 0px #000000;
         }
 
-        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll, memanjang ke bawah */
+        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll */
         .display-container {
             width: 100%;
             height: 200px;
@@ -39,20 +34,39 @@
             background-color: #fff;
             padding: 12px;
             box-sizing: border-box;
-            text-align: left;            /* Dimulai dari kiri atas sesuai gambar */
-            overflow-y: auto;            /* Auto scroll ke bawah jika penuh */
-            color: #d13438;              /* Warna tulisan merah */
+            text-align: left;
+            overflow-y: auto;
+            color: #d13438;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+
+        /* CSS Membuat Efek Pecahan Bertingkat Tanpa Library Luar */
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 4px;
+        }
+        .num {
+            border-bottom: 2px solid #d13438;
+            padding-bottom: 2px;
+        }
+        .den {
+            padding-top: 2px;
         }
 
         .history-item {
             margin-bottom: 15px;
-            padding-bottom: 5px;
             border-bottom: 1px dashed #ccc;
+            padding-bottom: 8px;
+            line-height: 1.8;
         }
 
-        .current-line-container {
+        .current-line {
             min-height: 40px;
-            margin-top: 5px;
+            line-height: 1.8;
         }
 
         /* Grid Tombol Operator Atas */
@@ -80,10 +94,10 @@
             gap: 15px;
         }
 
-        /* Area Menu Sisi Kiri (Hijau Sesuai Gambar) */
+        /* Menu Sisi Kiri Hijau */
         .left-menu {
             background-color: #e2efda;
-            border: 2px solid transparent;
+            border: 2px solid #000;
             border-radius: 5px;
             padding: 8px;
             display: flex;
@@ -92,7 +106,7 @@
         }
 
         .left-menu button {
-            padding: 8px 2px;
+            padding: 10px 2px;
             font-weight: bold;
             font-size: 0.85rem;
             cursor: pointer;
@@ -101,7 +115,7 @@
             border-radius: 4px;
         }
 
-        /* Grid Angka Sisi Kanan */
+        /* Grid Angka Kanan */
         .number-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -118,7 +132,6 @@
             cursor: pointer;
         }
 
-        /* Tombol Delete Pink lebar */
         .delete-btn {
             grid-column: span 2;
             background-color: #f8cbad !important;
@@ -132,145 +145,115 @@
 <body>
 
     <div class="calculator">
-        <!-- Layar Tampilan Utama Kalkulator -->
+        <!-- Layar Tampilan Utama -->
         <div id="display-screen" class="display-container">
             <div id="history-log"></div>
-            <div id="current-input-line" class="current-line-container"></div>
+            <div id="current-input-line" class="current-line">0</div>
         </div>
 
-        <!-- Baris Tombol Operator Utama -->
+        <!-- Baris Tombol Operator -->
         <div class="operator-row">
-            <button onclick="appendOperator('+')">+</button>
-            <button onclick="appendOperator('-')">-</button>
-            <button onclick="appendOperator('*')">×</button>
-            <button onclick="appendOperator('/')">÷</button>
-            <button onclick="calculate()">=</button>
+            <button onclick="input('+')">+</button>
+            <button onclick="input('-')">-</button>
+            <button onclick="input('*')">×</button>
+            <button onclick="input('/')">÷</button>
+            <button onclick="hitung()">=</button>
         </div>
 
         <div class="main-grid">
-            <!-- Sisi Kiri: Tambahan Fitur Tanda Kurung & Simbol Utama -->
+            <!-- Sisi Kiri Menu Hijau -->
             <div class="left-menu">
-                <button onclick="appendSymbol('(')">(</button>
-                <button onclick="appendSymbol(')')">)</button>
-                <button onclick="appendOperator('/')">Pecahan</button>
-                <button onclick="appendSymbol('%')">%</button>
+                <button onclick="input('(')">(</button>
+                <button onclick="input(')')">)</button>
+                <button onclick="input('/')">Pecahan</button>
+                <button onclick="input('%')">%</button>
             </div>
 
-            <!-- Sisi Kanan: Angka & Tombol Hapus -->
+            <!-- Sisi Kanan Angka -->
             <div class="number-grid">
-                <button onclick="appendNumber('6')">6</button>
-                <button onclick="appendNumber('1')">1</button>
-                <button onclick="appendNumber('7')">7</button>
-                <button onclick="appendNumber('2')">2</button>
-                <button onclick="appendNumber('8')">8</button>
-                <button onclick="appendNumber('3')">3</button>
-                <button onclick="appendNumber('9')">9</button>
-                <button onclick="appendNumber('4')">4</button>
-                <button onclick="appendNumber('0')">0</button>
-                <button onclick="appendNumber('5')">5</button>
-                <button class="delete-btn" onclick="clearDisplay()">DELETE</button>
+                <button onclick="input('6')">6</button>
+                <button onclick="input('1')">1</button>
+                <button onclick="input('7')">7</button>
+                <button onclick="input('2')">2</button>
+                <button onclick="input('8')">8</button>
+                <button onclick="input('3')">3</button>
+                <button onclick="input('9')">9</button>
+                <button onclick="input('4')">4</button>
+                <button onclick="input('0')">0</button>
+                <button onclick="input('5')">5</button>
+                <button class="delete-btn" onclick="hapus()">DELETE</button>
             </div>
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT: LOGIKA PENJUMLAHAN FUNGSIONAL --- -->
+    <!-- --- JAVASCRIPT MURNI ANTI-GAGAL --- -->
     <script>
-        let rawMathExpression = ""; 
-        
-        const currentInputLine = document.getElementById("current-input-line");
+        let rumusMentah = "";
+        const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        function appendNumber(num) {
-            rawMathExpression += num;
-            renderMathView();
+        // 1. Fungsi menerima ketikan tombol apa saja
+        function input(karakter) {
+            rumusMentah += karakter;
+            renderVisual();
         }
 
-        function appendOperator(op) {
-            // Memberikan spasi di sekeliling operator agar regex pendeteksi pecahan bekerja valid
-            rawMathExpression += " " + op + " ";
-            renderMathView();
-        }
+        // 2. Mengubah teks rumus biasa menjadi tampilan pecahan susun HTML
+        function buatTampilanPecahan(teks) {
+            if (!teks) return "0";
+            
+            let hasil = teks.replace(/\*/g, " × "); // Ubah visual bintang ke tanda kali
 
-        function appendSymbol(sym) {
-            rawMathExpression += sym;
-            renderMathView();
-        }
-
-        // Mengubah teks input biasa menjadi bentuk LaTeX agar didukung visual KaTeX
-        function convertToLaTeX(inputStr) {
-            let text = inputStr.trim();
-            if (!text) return "0";
-
-            // Ganti simbol perkalian bintang (*) menjadi silang visual (\times)
-            text = text.replace(/\*/g, " \\times ");
-
-            // Formula Regex kuat untuk mendeteksi pembagian dan mengubahnya menjadi susunan pecahan vertikal \frac{atas}{bawah}
-            let divisionRegex = /(\([^\)]+\)|[0-9\.]+%?)\s*\/ \s*(\([^\)]+\)|[0-9\.]+%?)/g;
-            while (divisionRegex.test(text)) {
-                text = text.replace(divisionRegex, function(match, p1, p2) {
-                    return `\\frac{${p1}}{${p2}}`;
+            // Regex mendeteksi format (angka/kurung) / (angka/kurung) untuk diubah ke pecahan bertingkat
+            let regexPecahan = /(\([^\)]+\)|[0-9\.]+%?)\/([0-9\.]+%?|\([^\)]+\))/g;
+            while (regexPecahan.test(hasil)) {
+                hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
+                    return `<span class="frac"><span class="num">${atas}</span><span class="den">${bawah}</span></span>`;
                 });
             }
-            return text;
+            return hasil;
         }
 
-        function renderMathView() {
-            let latexCode = convertToLaTeX(rawMathExpression);
-            katex.render(latexCode, currentInputLine, { throwOnError: false });
+        function renderVisual() {
+            currentLine.innerHTML = buatTampilanPecahan(rumusMentah);
         }
 
-        function calculate() {
-            let expr = rawMathExpression.trim();
-            if (!expr) return;
+        // 3. Fungsi menghitung hasil ketika menekan tombol '='
+        function hitung() {
+            let ekspresi = rumusMentah.trim();
+            if (!ekspresi) return;
 
             try {
-                // Sempurnakan logika matematika persen (%) agar dikenali Javascript eval() (contoh: 1% diubah menjadi 1/100)
-                let evalExpression = expr.replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                // Sempurnakan logika persen (%) agar dibaca pembagian /100 oleh system
+                let hitungEkspresi = ekspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
-                // Menghitung string matematika menggunakan mesin eval aman
-                let resultRaw = eval(evalExpression);
+                let hasilAngka = eval(hitungEkspresi);
                 
-                // Cek jika pembagian menghasilkan pembagi nol (Infinity)
-                if(!isFinite(resultRaw)) {
-                    throw new Error("DivByZero");
-                }
+                // Mencegah error pembagian dengan nol (Infinity)
+                if (!isFinite(hasilAngka)) throw new Error();
 
-                let resultFinal = Number(resultRaw.toFixed(4)).toString();
+                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
 
-                // Membuat elemen log baru untuk ditaruh di atas
-                const itemDiv = document.createElement("div");
-                itemDiv.className = "history-item";
+                // Cetak riwayat ke baris atasnya
+                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
                 
-                // Satukan format pecahan matematika asal dengan jawabannya ke bawah
-                let logLaTeX = convertToLaTeX(rawMathExpression) + " \\\\ = " + resultFinal;
-                katex.render(logLaTeX, itemDiv, { throwOnError: false });
-                
-                historyLog.appendChild(itemDiv);
-                
-                // Gunakan hasil perhitungan terakhir sebagai angka awal baru
-                rawMathExpression = resultFinal;
-            } catch (error) {
-                const errorDiv = document.createElement("div");
-                errorDiv.className = "history-item";
-                katex.render(convertToLaTeX(rawMathExpression) + " \\\\ = \\text{Error}", errorDiv, { throwOnError: false });
-                historyLog.appendChild(errorDiv);
-                rawMathExpression = "";
+                // Hasil dijadikan awalan baru untuk kelanjutan hitungan
+                rumusMentah = hasilAkhir;
+            } catch (err) {
+                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
+                rumusMentah = "";
             }
-
-            renderMathView();
-            // Otomatis scroll layar ke baris terbawah
-            displayScreen.scrollTop = displayScreen.scrollHeight;
+            renderVisual();
+            displayScreen.scrollTop = displayScreen.scrollHeight; // Auto gulung ke bawah
         }
 
-        function clearDisplay() {
-            rawMathExpression = "";
+        // 4. Tombol DELETE
+        function hapus() {
+            rumusMentah = "";
             historyLog.innerHTML = "";
-            renderMathView();
+            renderVisual();
         }
-
-        // Tampilkan angka 0 di awal saat web pertama kali dimuat
-        renderMathView();
     </script>
 </body>
 </html>
