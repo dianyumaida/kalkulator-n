@@ -3,321 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Vertikal - Perbaikan Fitur</title>
+    <title>Kalkulator Vertikal</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Courier New', Courier, monospace;
-        }
-
+        /* --- BAGIAN CSS (DESAIN KALKULATOR) --- */
         body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f7ebe1;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            background-color: #f5ece2;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        .kalkulator-box {
-            display: flex;
-            flex-direction: column;
-            width: 440px;
-            background: #fff;
-            border: 3px solid #333;
-            box-shadow: 5px 5px 0px #333;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .layer-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 12px;
-        }
-
-        .layer-jernih {
-            width: 100%;
-            height: 200px;
-            border: 3px solid #333;
-            background-color: #f9f9f9;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-
-        .layer-header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 5px;
-            margin-bottom: 5px;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        .layer-title {
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: bold;
-            text-transform: uppercase;
+        .calculator {
+            width: 320px;
+            background-color: #ffffff;
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 5px 5px 0px #000000;
         }
 
-        .btn-clear-layer {
-            background-color: #ff4d4d;
-            color: white;
-            border: 1px solid #333;
-            padding: 2px 6px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-
-        .btn-clear-layer:hover {
-            background-color: #ff1a1a;
-        }
-
-        .history-stream {
+        /* Desain Layar Utama (Fix agar teks tidak melorot ke bawah) */
+        .display-container {
             width: 100%;
-            flex: 1;
-            overflow-y: auto;
+            height: 140px;
+            border: 2px solid #000;
+            margin-bottom: 15px;
+            background-color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            text-align: left;
-            font-size: 0.95rem;
-            color: #333;
+            justify-content: space-between;
+            align-items: flex-end;
         }
 
-        .history-item {
-            border-bottom: 1px solid #eee;
-            padding: 2px 0;
+        /* Menampilkan rumus aktif */
+        #history-screen {
+            font-size: 1rem;
+            color: #666;
+            white-space: nowrap;
+            overflow-x: auto;
             width: 100%;
-            word-wrap: break-word;
+            text-align: right;
         }
 
-        .current-input {
-            width: 100%;
-            text-align: left;
-            font-size: 1.4rem;
+        /* Menampilkan angka masukan & Hasil utama */
+        #display-screen {
+            font-size: 2.2rem;
+            color: #d13438;
             font-weight: bold;
-            color: #000;
-            border-top: 2px solid #333;
-            padding-top: 5px;
-            min-height: 35px;
-            word-wrap: break-word;
+            white-space: nowrap;
+            overflow-x: auto;
+            width: 100%;
+            text-align: right;
         }
 
-        .panel-simbol {
+        /* Grid Tombol Operator Atas */
+        .operator-row {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            margin-bottom: 12px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
-        .btn-simbol {
-            border: 2px solid #333;
-            background: #ffe6cc;
-            padding: 8px 2px;
-            font-size: 1.1rem;
+        .operator-row button {
+            background-color: #fce4d6;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
-            text-align: center;
         }
 
-        .btn-simbol:active {
-            background: #ccd;
+        /* Bagian Bawah: Grid Menu Kiri & Tombol Angka Kanan */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 15px;
         }
 
-        .tampilan-bawah {
-            display: flex;
-            gap: 12px;
-        }
-
-        /* MENU UTAMA DAN SUB-MENU ANAK */
-        .kolom-pilih {
+        .left-menu {
             display: flex;
             flex-direction: column;
-            width: 130px;
-            gap: 5px;
+            gap: 10px;
         }
 
-        .menu-induk {
+        .menu-box {
+            border: 2px solid #000;
+            background-color: #e2efda;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 3px solid #333;
-            background-color: #e6ffed;
-            padding: 10px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 6px;
         }
 
-        .menu-anak {
-            list-style: none;
-            padding-left: 10px;
-            display: none; /* Tersembunyi sebelum menu induk diklik */
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 2px;
-        }
-
-        .menu-anak.buka {
-            display: flex;
-        }
-
-        .menu-anak li {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px;
-            background-color: #fff;
-            border: 2px solid #333;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .menu-anak li:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* GRID ANGKA */
-        .kolom-angka {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .grid-num {
+        .number-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
 
-        .btn-num {
-            border: 3px solid #333;
-            background: #fff;
-            padding: 10px;
+        .number-grid button {
+            background-color: #ffffff;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 15px;
             font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
-            border-radius: 6px;
-            text-align: center;
         }
 
-        .btn-num:active {
-            background-color: #eee;
+        /* Tombol Delete Pink lebar di bagian bawah */
+        .delete-btn {
+            grid-column: span 2;
+            background-color: #f8cbad !important;
+            color: #000;
         }
 
-        .btn-delete {
-            width: 100%;
-            border: 3px solid #333;
-            background-color: #ffdde0;
-            padding: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 6px;
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .btn-delete:active {
-            background-color: #ffccd0;
+        button:active {
+            transform: scale(0.95);
+            background-color: #ddd !important;
         }
     </style>
 </head>
 <body>
 
-    <div class="kalkulator-box">
+    <!-- --- BAGIAN HTML (STRUKTUR KALKULATOR) --- -->
+    <div class="calculator">
         
-        <!-- BAGIAN ATAS: LAYER -->
-        <div class="layer-container">
-            <div class="layer-jernih">
-                <div class="layer-header">
-                    <div class="layer-title">Layer Jernih</div>
-                    <button class="btn-clear-layer" onclick="bersihkanLayerJernih()">CLEAR LAYER</button>
-                </div>
-                <div class="history-stream" id="historyStream"></div>
-                <div class="current-input" id="activeScreen">0</div>
-            </div>
+        <!-- Layar Monitor -->
+        <div class="display-container">
+            <div id="history-screen"></div>
+            <div id="display-screen">0</div>
         </div>
 
-        <!-- PANEL TOMBOL SIMBOL DASAR -->
-        <div class="panel-simbol">
-            <button class="btn-simbol" onclick="tekanSimbol('+')">+</button>
-            <button class="btn-simbol" onclick="tekanSimbol('-')">-</button>
-            <button class="btn-simbol" onclick="tekanSimbol('*')">×</button>
-            <button class="btn-simbol" onclick="tekanSimbol('/')">÷</button>
-            <button class="btn-simbol" onclick="hitungSamaDengan()">=</button>
+        <!-- Baris Operator Atas -->
+        <div class="operator-row">
+            <button onclick="appendOperator('+')">+</button>
+            <button onclick="appendOperator('-')">-</button>
+            <button onclick="appendOperator('*')">×</button>
+            <button onclick="appendOperator('/')">÷</button>
+            <button onclick="calculate()">=</button>
         </div>
 
-        <!-- BAGIAN BAWAH -->
-        <div class="tampilan-bawah">
-            
-            <!-- SISI KIRI: MENU PILIH DENGAN ANAK-ANAKNYA -->
-            <div class="kolom-pilih">
-                
-                <!-- Kelompok Sudut -->
-                <div class="menu-induk" onclick="toggleMenuAnak('anakSudut', 'radioSudut')">
+        <!-- Grid Utama Bawah -->
+        <div class="main-grid">
+            <!-- Sisi Kiri: Menu Fitur -->
+            <div class="left-menu">
+                <div class="menu-box">
                     <span>sudut</span>
-                    <input type="radio" name="pilihan_utama" id="radioSudut">
+                    <input type="radio" name="mode" checked>
                 </div>
-                <ul class="menu-anak" id="anakSudut">
-                    <li onclick="eksekusiRumusAnak('sin', event)"><input type="radio" name="sub_pilih" id="r-sin"> sin</li>
-                    <li onclick="eksekusiRumusAnak('cos', event)"><input type="radio" name="sub_pilih" id="r-cos"> cos</li>
-                    <li onclick="eksekusiRumusAnak('tan', event)"><input type="radio" name="sub_pilih" id="r-tan"> tan</li>
-                </ul>
-
-                <!-- Kelompok Rumus Lain -->
-                <div class="menu-induk" onclick="toggleMenuAnak('anakRumus', 'radioRumus')">
+                <div class="menu-box">
                     <span>rumus</span>
-                    <input type="radio" name="pilihan_utama" id="radioRumus">
+                    <input type="radio" name="mode">
                 </div>
-                <ul class="menu-anak" id="anakRumus">
-                    <li onclick="eksekusiRumusAnak('log', event)"><input type="radio" name="sub_pilih" id="r-log"> log</li>
-                    <li onclick="eksekusiRumusAnak('akar', event)"><input type="radio" name="sub_pilih" id="r-akar"> √ akar</li>
-                    <li onclick="eksekusiRumusAnak('integral', event)"><input type="radio" name="sub_pilih" id="r-int"> ∫ int</li>
-                </ul>
-
             </div>
 
-            <!-- SISI KANAN: TOMBOL ANGKA -->
-            <div class="kolom-angka">
-                <div class="grid-num">
-                    <button class="btn-num" onclick="tekanAngka('6')">6</button>
-                    <button class="btn-num" onclick="tekanAngka('1')">1</button>
-                    
-                    <button class="btn-num" onclick="tekanAngka('7')">7</button>
-                    <button class="btn-num" onclick="tekanAngka('2')">2</button>
-                    
-                    <button class="btn-num" onclick="tekanAngka('8')">8</button>
-                    <button class="btn-num" onclick="tekanAngka('3')">3</button>
-                    
-                    <button class="btn-num" onclick="tekanAngka('9')">9</button>
-                    <button class="btn-num" onclick="tekanAngka('4')">4</button>
-                    
-                    <button class="btn-num" onclick="tekanAngka('0')">0</button>
-                    <button class="btn-num" onclick="tekanAngka('5')">5</button>
-                </div>
-                
-                <button class="btn-delete" onclick="hapusLayarAktif()">DELETE</button>
+            <!-- Sisi Kanan: Angka & Delete -->
+            <div class="number-grid">
+                <button onclick="appendNumber('6')">6</button>
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('7')">7</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('8')">8</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button onclick="appendNumber('9')">9</button>
+                <button onclick="appendNumber('4')">4</button>
+                <button onclick="appendNumber('0')">0</button>
+                <button onclick="appendNumber('5')">5</button>
+                <button class="delete-btn" onclick="clearDisplay()">DELETE</button>
             </div>
-
         </div>
     </div>
 
+    <!-- --- BAGIAN JAVASCRIPT (LOGIKA PERHITUNGAN) --- -->
     <script>
-        const activeScreen = document.getElementById('activeScreen');
+        let currentInput = "0"; // Menyimpan angka yang sedang aktif diketik
+        let expression = "";    // Menyimpan baris matematika lengkap untuk dievaluasi
+
+        const displayScreen = document.getElementById("display-screen");
+        const historyScreen = document.getElementById("history-screen");
+
+        function updateScreen() {
+            displayScreen.textContent = currentInput;
+            historyScreen.textContent = expression;
+        }
+
+        function appendNumber(num) {
+            if (currentInput === "0") {
+                currentInput = num;
+            } else {
+                currentInput += num;
+            }
+            updateScreen();
+        }
+
+        function appendOperator(op) {
+            // Pasang angka terakhir ke susunan rumus matematika eksekusi
+            if (currentInput !== "0" || expression === "") {
+                expression += currentInput + " " + op + " ";
+            } else {
+                // Jika operator ditekan berturut-turut, ganti operator terakhir
+                expression = expression.slice(0, -3) + " " + op + " ";
+            }
+            currentInput = "0"; // reset pengetikan angka baru setelah operator
+            updateScreen();
+        }
+
+        function calculate() {
+            if (expression === "") return;
+            
+            // Tambahkan input angka paling akhir ke ekspresi penuh
+            expression += currentInput;
+            
+            try {
+                // Eksekusi string matematika menggunakan fungsi eval bawaan browser
+                let rawResult = eval(expression);
+                
+                // Batasi desimal panjang jika ada pembagian sisa banyak
+                let finalResult = Number(rawResult.toFixed(4)).toString();
+                
+                currentInput = finalResult; 
+                expression = ""; // Reset riwayat atas setelah ditekan sama dengan
+            } catch (error) {
+                currentInput = "Error";
+                expression = "";
+            }
+            updateScreen();
+        }
+
+        function clearDisplay() {
+            currentInput = "0";
+            expression = "";
+            updateScreen();
+        }
+    </script>
+</body>
+</html>
