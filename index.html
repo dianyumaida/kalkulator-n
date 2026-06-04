@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Sesuai Sketsa</title>
+    <title>Kalkulator Sketsa - Fitur Lengkap</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,17 +16,16 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            background-color: #f5ece2; /* Warna latar krem mirip kertas di foto */
+            background-color: #f5ece2; /* Warna kertas sesuai foto */
             padding: 20px;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
         /* Kontainer Utama Kalkulator Vertikal */
         .kalkulator-box {
             display: flex;
             flex-direction: column;
-            width: 380px;
+            width: 420px;
             background: #fff;
             border: 3px solid #333;
             box-shadow: 5px 5px 0px #333;
@@ -34,18 +33,17 @@
             border-radius: 8px;
         }
 
-        /* 1. LAYAR JERNIH (Bagian Atas) */
+        /* 1. LAYER JERNIH (Bagian Atas) */
         .layer-jernih {
             width: 100%;
-            height: 140px;
+            height: 160px;
             border: 3px solid #333;
             background-color: #f9f9f9;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             padding: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
 
         .layer-title {
@@ -66,8 +64,8 @@
             gap: 4px;
             margin-top: 5px;
             text-align: right;
-            font-size: 1.1rem;
-            color: #333;
+            font-size: 1rem;
+            color: #555;
         }
 
         .history-item {
@@ -78,25 +76,52 @@
         /* Input aktif yang sedang diketik */
         .current-input {
             text-align: right;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #000;
             margin-top: 5px;
             min-height: 35px;
+            word-wrap: break-word;
         }
 
-        /* BAGIAN BAWAH: Navigasi & Tombol Angka */
+        /* PANEL SIMBOL MATEMATIKA (Baru) */
+        .panel-simbol {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .btn-simbol {
+            border: 2px solid #333;
+            background: #eef;
+            padding: 8px 2px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .btn-simbol:active {
+            background: #ccd;
+        }
+
+        .btn-simbol.operator-utama {
+            background: #ffe6cc;
+        }
+
+        /* BAGIAN BAWAH: Navigasi PILIH & Tombol Angka */
         .tampilan-bawah {
             display: flex;
-            gap: 15px;
-            flex: 1;
+            gap: 12px;
         }
 
         /* 2. TOMBOL PILIH (Memanjang ke bawah di sisi kiri) */
         .kolom-pilih {
             display: flex;
             flex-direction: column;
-            width: 90px;
+            width: 85px;
         }
 
         .btn-pilih {
@@ -106,8 +131,8 @@
             justify-content: center;
             align-items: center;
             border: 3px solid #333;
-            background-color: #fff;
-            font-size: 1.2rem;
+            background-color: #e6ffed; /* Hijau muda untuk tombol aksi */
+            font-size: 1.1rem;
             font-weight: bold;
             letter-spacing: 2px;
             cursor: pointer;
@@ -115,14 +140,13 @@
             gap: 10px;
         }
         
-        /* Membuat teks "PILIH" tertulis vertikal ke bawah */
         .btn-pilih span {
             writing-mode: vertical-lr;
             text-orientation: upright;
         }
 
         .btn-pilih:active {
-            background-color: #eee;
+            background-color: #cdffd8;
         }
 
         /* 3. GRID ANGKA & DELETE (Sisi Kanan) */
@@ -133,7 +157,7 @@
             gap: 8px;
         }
 
-        /* Susunan 2 Kolom sesuai gambar: Kolom Kiri (6-0), Kolom Kanan (1-5) */
+        /* Susunan 2 Kolom sesuai gambar asli Anda */
         .grid-num {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -143,8 +167,8 @@
         .btn-num {
             border: 3px solid #333;
             background: #fff;
-            padding: 12px;
-            font-size: 1.4rem;
+            padding: 10px;
+            font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 6px;
@@ -155,13 +179,13 @@
             background-color: #eee;
         }
 
-        /* Tombol DELETE lebar di bagian paling bawah angka */
+        /* Tombol DELETE di bagian paling bawah angka */
         .btn-delete {
             width: 100%;
             border: 3px solid #333;
             background-color: #ffdde0;
-            padding: 12px;
-            font-size: 1.2rem;
+            padding: 10px;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 6px;
@@ -181,27 +205,40 @@
         <!-- BAGIAN ATAS: LAYER JERNIH -->
         <div class="layer-jernih">
             <div class="layer-title">Layer Jernih</div>
-            <!-- Aliran riwayat otomatis turun ke bawah -->
             <div class="history-stream" id="historyStream"></div>
-            <!-- Input angka saat ini -->
             <div class="current-input" id="activeScreen">0</div>
+        </div>
+
+        <!-- PANEL TOMBOL SIMBOL BARU -->
+        <div class="panel-simbol">
+            <button class="btn-simbol operator-utama" onclick="tekanSimbol('+')">+</button>
+            <button class="btn-simbol operator-utama" onclick="tekanSimbol('-')">-</button>
+            <button class="btn-simbol operator-utama" onclick="tekanSimbol('*')">×</button>
+            <button class="btn-simbol operator-utama" onclick="tekanSimbol('/')">÷</button>
+            <button class="btn-simbol operator-utama" onclick="hitungSamaDengan()">=</button>
+            
+            <button class="btn-simbol" onclick="tekanSimbol('%')">%</button>
+            <button class="btn-simbol" onclick="tekanSimbol('**')">^</button>
+            <button class="btn-simbol" onclick="fungsiSains('log')">log</button>
+            <button class="btn-simbol" onclick="fungsiSains('sin')">∠rad</button> 
+            <button class="btn-simbol" onclick="fungsiSains('integral')">∫</button>
         </div>
 
         <!-- BAGIAN BAWAH -->
         <div class="tampilan-bawah">
             
-            <!-- SISI KIRI: TOMBOL PILIH (Dibuat vertikal meluncur ke bawah) -->
+            <!-- SISI KIRI: TOMBOL PILIH (Fungsi Tambahan / Menu Aksi Eksekusi) -->
             <div class="kolom-pilih">
-                <button class="btn-pilih" onclick="pilihMenu()">
+                <button class="btn-pilih" onclick="hitungSamaDengan()">
                     <span>PILIH</span>
                     <div>▼</div>
                 </button>
             </div>
 
-            <!-- SISI KANAN: TOMBOL ANGKA SESUAI GAMBAR -->
+            <!-- SISI KANAN: TOMBOL ANGKA SESUAI SKETSA -->
             <div class="kolom-angka">
                 <div class="grid-num">
-                    <!-- Kolom Kiri (6-0) & Kolom Kanan (1-5) diatur sejajar vertikal -->
+                    <!-- Kolom Kiri (6-0) & Kolom Kanan (1-5) -->
                     <button class="btn-num" onclick="tekanAngka('6')">6</button>
                     <button class="btn-num" onclick="tekanAngka('1')">1</button>
                     
@@ -218,7 +255,7 @@
                     <button class="btn-num" onclick="tekanAngka('5')">5</button>
                 </div>
                 
-                <!-- TOMBOL DELETE DI BAWAH ANGKA -->
+                <!-- TOMBOL DELETE -->
                 <button class="btn-delete" onclick="hapusLayar()">DELETE</button>
             </div>
 
@@ -228,45 +265,47 @@
     <script>
         const activeScreen = document.getElementById('activeScreen');
         const historyStream = document.getElementById('historyStream');
-        let urutanAngka = '';
+        let rumusSaatIni = '';
 
-        // Fungsi ketika angka ditekan
+        // Memasukkan angka ke layar
         function tekanAngka(angka) {
             if (activeScreen.innerText === '0') {
-                urutanAngka = angka;
+                rumusSaatIni = angka;
             } else {
-                urutanAngka += angka;
+                rumusSaatIni += angka;
             }
-            activeScreen.innerText = urutanAngka;
+            activeScreen.innerText = rumusSaatIni;
         }
 
-        // Fungsi Tombol DELETE (Mereset atau membersihkan layar)
-        function hapusLayar() {
-            urutanAngka = '';
-            activeScreen.innerText = '0';
+        // Memasukkan simbol matematika ke layar
+        function tekanSimbol(simbol) {
+            if (rumusSaatIni === '' && simbol !== '-') return;
+            
+            // Mengubah tampilan visual pangkat agar rapi di layar
+            let simbolTampil = simbol;
+            if (simbol === '**') simbolTampil = '^';
+            if (simbol === '*') simbolTampil = '×';
+            if (simbol === '/') simbolTampil = '÷';
+
+            rumusSaatIni += simbol;
+            activeScreen.innerText = rumusSaatIni.replace(/\*\*/g, '^').replace(/\*/g, '×').replace(/\//g, '÷');
         }
 
-        // Fungsi Tombol PILIH (Sama dengan / Pencetak riwayat ke bawah)
-        function pilihMenu() {
-            if (!urutanAngka) return;
+        // Fungsi khusus Log, Integral, dan Sudut
+        function fungsiSains(jenis) {
+            let angka = parseFloat(rumusSaatIni);
+            if (isNaN(angka)) {
+                alert("Masukkan angka terlebih dahulu sebelum menekan fungsi!");
+                return;
+            }
 
-            // Membuat elemen riwayat baru di dalam Layer Jernih
-            const itemBaru = document.createElement('div');
-            itemBaru.className = 'history-item';
-            
-            // Simulasi operasi: jika ingin otomatis menjumlahkan angka yang dimasukkan
-            // Di sini kita cetak angka yang diinput ke dalam barisan log yang turun ke bawah
-            itemBaru.innerText = urutanAngka;
-            
-            // Masukkan ke dalam list aliran riwayat
-            historyStream.appendChild(itemBaru);
-            
-            // Otomatis scroll ke bawah di dalam layar jernih jika log sudah penuh
-            historyStream.scrollTop = historyStream.scrollHeight;
+            let hasil = 0;
+            let deskripsi = '';
 
-            // Reset input aktif agar bisa mengetik angka baru berikutnya
-            hapusLayar();
-        }
-    </script>
-</body>
-</html>
+            if (jenis === 'log') {
+                hasil = Math.log10(angka);
+                deskripsi = `log(${angka})`;
+            } else if (jenis === 'sin') {
+                // Konversi hitung sudut (Simulasi nilai Sin Radian)
+                hasil = Math.sin(angka);
+                deskripsi = `sin∠(${angka} rad)`;
