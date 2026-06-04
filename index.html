@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Sketsa - Aliran Kiri Atas Ke Bawah</title>
+    <title>Kalkulator Sketsa dengan Dropdown Sinkron</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,7 +16,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            background-color: #f5ece2; /* Warna kertas sesuai sketsa */
+            background-color: #f5ece2; /* Warna kertas sketsa */
             padding: 20px;
             min-height: 100vh;
         }
@@ -25,7 +25,7 @@
         .kalkulator-box {
             display: flex;
             flex-direction: column;
-            width: 420px;
+            width: 430px;
             background: #fff;
             border: 3px solid #333;
             box-shadow: 5px 5px 0px #333;
@@ -50,8 +50,8 @@
             padding: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Memulai konten dari atas */
-            align-items: flex-start;     /* Memulai konten dari sisi kiri */
+            justify-content: flex-start;
+            align-items: flex-start;
             position: relative;
         }
 
@@ -72,7 +72,6 @@
             text-transform: uppercase;
         }
 
-        /* Tombol untuk mendelete / membersihkan isi Layer Jernih */
         .btn-clear-layer {
             background-color: #ff4d4d;
             color: white;
@@ -88,7 +87,7 @@
             background-color: #ff1a1a;
         }
 
-        /* Area log riwayat hasil dari kiri atas berbaris turun ke bawah */
+        /* Aliran log riwayat dari kiri atas berbaris turun ke bawah */
         .history-stream {
             width: 100%;
             flex: 1;
@@ -96,7 +95,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            text-align: left; /* Rata kiri sesuai permintaan */
+            text-align: left;
             font-size: 1rem;
             color: #333;
         }
@@ -108,10 +107,10 @@
             word-wrap: break-word;
         }
 
-        /* Input aktif yang sedang diketik (berada di kiri bawah layar) */
+        /* Input aktif di bawah layar jernih (rata kiri) */
         .current-input {
             width: 100%;
-            text-align: left; /* Rata kiri */
+            text-align: left;
             font-size: 1.4rem;
             font-weight: bold;
             color: #000;
@@ -121,7 +120,7 @@
             word-wrap: break-word;
         }
 
-        /* PANEL TOMBOL SIMBOL MATEMATIKA */
+        /* PANEL TOMBOL SIMBOL DASAR */
         .panel-simbol {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -131,9 +130,9 @@
 
         .btn-simbol {
             border: 2px solid #333;
-            background: #eef;
+            background: #ffe6cc;
             padding: 8px 2px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
@@ -144,46 +143,50 @@
             background: #ccd;
         }
 
-        .btn-simbol.operator-utama {
-            background: #ffe6cc;
-        }
-
-        /* BAGIAN BAWAH: Navigasi PILIH & Tombol Angka */
+        /* BAGIAN BAWAH: Navigasi Dropdown PILIH & Tombol Angka */
         .tampilan-bawah {
             display: flex;
             gap: 12px;
         }
 
-        /* 2. TOMBOL PILIH (Sisi Kiri Memanjang) */
+        /* 2. TOMBOL PILIH (Diubah Menjadi Dropdown Dinamis Vertikal) */
         .kolom-pilih {
             display: flex;
             flex-direction: column;
-            width: 85px;
+            width: 110px;
         }
 
-        .btn-pilih {
+        /* Mengganti tombol biasa menjadi kotak dropdown select */
+        .select-pilih {
+            width: 100%;
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             border: 3px solid #333;
-            background-color: #e6ffed; 
-            font-size: 1.1rem;
+            background-color: #e6ffed; /* Warna hijau muda */
+            font-size: 0.95rem;
             font-weight: bold;
-            letter-spacing: 2px;
             cursor: pointer;
             border-radius: 6px;
-            gap: 10px;
-        }
-        
-        .btn-pilih span {
+            padding: 10px 5px;
+            /* Membuat tulisan opsi utama tampil vertikal dari atas ke bawah */
             writing-mode: vertical-lr;
-            text-orientation: upright;
+            text-orientation: mixed;
+            text-align: center;
+            appearance: none; /* Menghilangkan tanda panah bawaan browser browser agar bisa dikustom */
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='100' height='50'><polygon points='0,0 100,0 50,50' style='fill:%23333333;'/></svg>");
+            background-repeat: no-repeat;
+            background-position: center bottom 15px;
+            background-size: 12px 6px;
         }
 
-        .btn-pilih:active {
-            background-color: #cdffd8;
+        /* Reset style tulisan menu di dalam dropdown saat diklik */
+        .select-pilih option {
+            writing-mode: horizontal-tb;
+            text-orientation: initial;
+            background-color: #fff;
+            color: #333;
+            font-size: 1rem;
+            padding: 10px;
+            text-align: left;
         }
 
         /* 3. GRID ANGKA & DELETE (Sisi Kanan) */
@@ -194,7 +197,6 @@
             gap: 8px;
         }
 
-        /* Susunan 2 Kolom sesuai sketsa asli */
         .grid-num {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -216,7 +218,6 @@
             background-color: #eee;
         }
 
-        /* Tombol DELETE di bagian bawah angka */
         .btn-delete {
             width: 100%;
             border: 3px solid #333;
@@ -244,40 +245,34 @@
             <div class="layer-jernih">
                 <div class="layer-header">
                     <div class="layer-title">Layer Jernih</div>
-                    <!-- Tombol Baru untuk Mereset/Delete isi Layer Jernih -->
                     <button class="btn-clear-layer" onclick="bersihkanLayerJernih()">CLEAR LAYER</button>
                 </div>
-                <!-- Aliran dari kiri atas ke bawah -->
                 <div class="history-stream" id="historyStream"></div>
-                <!-- Input aktif rata kiri -->
                 <div class="current-input" id="activeScreen">0</div>
             </div>
         </div>
 
-        <!-- PANEL TOMBOL SIMBOL -->
+        <!-- PANEL TOMBOL SIMBOL MATEMATIKA -->
         <div class="panel-simbol">
-            <button class="btn-simbol operator-utama" onclick="tekanSimbol('+')">+</button>
-            <button class="btn-simbol operator-utama" onclick="tekanSimbol('-')">-</button>
-            <button class="btn-simbol operator-utama" onclick="tekanSimbol('*')">×</button>
-            <button class="btn-simbol operator-utama" onclick="tekanSimbol('/')">÷</button>
-            <button class="btn-simbol operator-utama" onclick="hitungSamaDengan()">=</button>
-            
-            <button class="btn-simbol" onclick="tekanSimbol('%')">%</button>
-            <button class="btn-simbol" onclick="tekanSimbol('**')">^</button>
-            <button class="btn-simbol" onclick="fungsiSains('log')">log</button>
-            <button class="btn-simbol" onclick="fungsiSains('sin')">∠rad</button> 
-            <button class="btn-simbol" onclick="fungsiSains('integral')">∫</button>
+            <button class="btn-simbol" onclick="tekanSimbol('+')">+</button>
+            <button class="btn-simbol" onclick="tekanSimbol('-')">-</button>
+            <button class="btn-simbol" onclick="tekanSimbol('*')">×</button>
+            <button class="btn-simbol" onclick="tekanSimbol('/')">÷</button>
+            <button class="btn-simbol" onclick="hitungSamaDengan()">=</button>
         </div>
 
         <!-- BAGIAN BAWAH -->
         <div class="tampilan-bawah">
             
-            <!-- SISI KIRI: TOMBOL PILIH -->
+            <!-- SISI KIRI: DROPDOWN DINAMIS (PILIH ▼) SINKRON DATA -->
             <div class="kolom-pilih">
-                <button class="btn-pilih" onclick="hitungSamaDengan()">
-                    <span>PILIH</span>
-                    <div>▼</div>
-                </button>
+                <select class="select-pilih" id="dropdownPilih" onchange="eksekusiDropdown(this.value)">
+                    <option value="" disabled selected>PILIH ▼</option>
+                    <option value="log">[-] log</option>
+                    <option value="integral">[-] integral</option>
+                    <option value="konstanta">[-] konstanta (π)</option>
+                    <option value="sudut">[-] sudut (sin rad)</option>
+                </select>
             </div>
 
             <!-- SISI KANAN: TOMBOL ANGKA SESUAI SKETSA -->
@@ -286,7 +281,7 @@
                     <button class="btn-num" onclick="tekanAngka('6')">6</button>
                     <button class="btn-num" onclick="tekanAngka('1')">1</button>
                     
-                    <button class="btn-num" onclick="tekanAngka('7') text')">7</button>
+                    <button class="btn-num" onclick="tekanAngka('7')">7</button>
                     <button class="btn-num" onclick="tekanAngka('2')">2</button>
                     
                     <button class="btn-num" onclick="tekanAngka('8')">8</button>
@@ -299,7 +294,6 @@
                     <button class="btn-num" onclick="tekanAngka('5')">5</button>
                 </div>
                 
-                <!-- TOMBOL DELETE INPUT (Untuk menghapus baris ketikan saat ini) -->
                 <button class="btn-delete" onclick="hapusLayarAktif()">DELETE</button>
             </div>
 
@@ -309,6 +303,8 @@
     <script>
         const activeScreen = document.getElementById('activeScreen');
         const historyStream = document.getElementById('historyStream');
+        const dropdownPilih = document.getElementById('dropdownPilih');
         let rumusSaatIni = '';
 
-        // Memasukkan angka ke layar (Rata Kiri)
+        // Memasukkan angka ke layar aktif
+        function tekanAngka(angka) {
