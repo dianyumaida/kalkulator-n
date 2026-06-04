@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Vertikal</title>
+    <title>Kalkulator Vertikal Kompleks</title>
     <style>
-        /* --- CSS: TAMPILAN KALKULATOR --- */
+        /* --- CSS DASAR KALKULATOR --- */
         body {
             font-family: 'Courier New', Courier, monospace;
             background-color: #f7ebe1;
@@ -17,7 +17,7 @@
         }
 
         .calculator {
-            width: 320px;
+            width: 340px;
             background-color: #ffffff;
             border: 2px solid #000;
             border-radius: 12px;
@@ -25,25 +25,46 @@
             box-shadow: 5px 5px 0px #000000;
         }
 
-        /* PERBAIKAN DISPLAY: Rata kiri atas dan mendukung baris baru */
+        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll, dan gaya pecahan */
         .display-container {
             width: 100%;
-            height: 150px;
+            height: 180px;
             border: 2px solid #000;
             margin-bottom: 15px;
             background-color: #fff;
-            padding: 10px;
+            padding: 12px;
             box-sizing: border-box;
-            text-align: left;            /* Teks mulai dari kiri atas seperti di gambar */
-            font-size: 1.5rem;
-            color: #d13438;              /* Warna teks merah */
+            text-align: left;
+            font-size: 1.2rem;
+            color: #d13438;
             font-weight: bold;
-            overflow-y: auto;            /* Otomatis memunculkan scroll vertikal jika baris penuh */
-            white-space: pre-wrap;       /* Menjaga teks agar bisa turun ke bawah (\n) */
-            line-height: 1.3;
+            overflow-y: auto;
         }
 
-        /* Baris Operator Atas */
+        /* CSS untuk membuat format Pecahan Bertingkat/Susun */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .numerator {
+            border-bottom: 2px solid #d13438; /* Garis pembagi pecahan */
+            padding-bottom: 2px;
+        }
+
+        .denominator {
+            padding-top: 2px;
+        }
+
+        .history-block {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        /* Grid Tombol Operator Atas */
         .operator-row {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -61,18 +82,22 @@
             cursor: pointer;
         }
 
-        /* Grid Utama Bawah */
+        /* Grid Bagian Bawah */
         .main-grid {
             display: grid;
             grid-template-columns: 1.2fr 2fr;
             gap: 15px;
         }
 
-        /* Area Hijau Kosong Sesuai Gambar Baru Anda */
         .left-space {
-            border: 2px solid transparent;
-            background-color: #e2efda; /* Warna hijau muda polos */
+            background-color: #e2efda;
             border-radius: 5px;
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #555;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .number-grid {
@@ -91,27 +116,26 @@
             cursor: pointer;
         }
 
-        /* Tombol Delete Pink lebar */
         .delete-btn {
             grid-column: span 2;
             background-color: #f8cbad !important;
-            color: #000;
         }
 
         button:active {
             transform: scale(0.95);
-            background-color: #ddd !important;
         }
     </style>
 </head>
 <body>
 
     <div class="calculator">
-        
-        <!-- Layar Monitor Hasil -->
-        <div id="display-screen" class="display-container"></div>
+        <!-- Layar Tampilan Utama -->
+        <div id="display-screen" class="display-container">
+            <div id="history-log"></div>
+            <div id="current-input-line">0</div>
+        </div>
 
-        <!-- Baris Operator Atas -->
+        <!-- Tombol Operator -->
         <div class="operator-row">
             <button onclick="appendOperator('+')">+</button>
             <button onclick="appendOperator('-')">-</button>
@@ -120,12 +144,16 @@
             <button onclick="calculate()">=</button>
         </div>
 
-        <!-- Grid Utama Bawah -->
         <div class="main-grid">
-            <!-- Sisi Kiri: Area Kosong Hijau Sesuai Gambar -->
-            <div class="left-space"></div>
+            <!-- Sisi Kiri: Tambahan Tombol Pecahan Khusus Modifikasi -->
+            <div class="left-space">
+                <button onclick="makeFraction()" style="padding:5px; font-weight:bold; cursor:pointer;">[ / ] Pecahan</button>
+                <button onclick="appendOperator('%')" style="padding:5px; font-weight:bold; cursor:pointer;">%</button>
+                <button onclick="appendNumber('(')" style="padding:5px; cursor:pointer;">(</button>
+                <button onclick="appendNumber(')')" style="padding:5px; cursor:pointer;">)</button>
+            </div>
 
-            <!-- Sisi Kanan: Angka & Delete -->
+            <!-- Sisi Kanan: Angka -->
             <div class="number-grid">
                 <button onclick="appendNumber('6')">6</button>
                 <button onclick="appendNumber('1')">1</button>
@@ -142,63 +170,83 @@
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT: LOGIKA TURUN BARIS --- -->
+    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERTINGKAT --- -->
     <script>
-        let currentLine = "";  // Menyimpan ketikan baris saat ini (misal: 5*2)
-        let fullHistory = "";  // Menyimpan seluruh teks kumulatif yang tampil di layar
+        let currentRawMath = ""; // Menyimpan string rumus asli untuk dievaluasi oleh eval()
         
+        const currentInputLine = document.getElementById("current-input-line");
+        const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
         function appendNumber(num) {
-            currentLine += num;
-            renderDisplay();
+            if (currentRawMath === "0") currentRawMath = "";
+            currentRawMath += num;
+            renderLiveView();
         }
 
         function appendOperator(op) {
-            // Mengubah simbol perkalian dan pembagian agar terlihat rapi di layar
-            let visualOp = op;
-            if (op === '*') visualOp = 'x';
-            if (op === '/') visualOp = '÷';
+            currentRawMath += " " + op + " ";
+            renderLiveView();
+        }
 
-            currentLine += " " + visualOp + " ";
-            renderDisplay();
+        // Fitur mengubah simbol garis miring '/' terakhir menjadi visual pecahan bertingkat HTML
+        function makeFraction() {
+            currentRawMath += "/";
+            renderLiveView();
+        }
+
+        // Fungsi menerjemahkan string matematika mentah menjadi kode HTML visual pecahan susun
+        function parseToVisualHTML(mathStr) {
+            if(!mathStr) return "0";
+            
+            // Mengubah perkalian biasa menjadi simbol 'x'
+            let htmlResult = mathStr.replace(/\*/g, " x ");
+            
+            // Cari pola angka/tanda kurung sebelum dan sesudah tanda '/' untuk dijadikan pecahan vertikal
+            // Rumus regex ini mendeteksi struktur pembagian pembilang/penyebut
+            let fractionRegex = /(\([^\)]+\)|[0-9\.]+%?)\s*\/\s*(\([^\)]+\)|[0-9\.]+%?)/g;
+            
+            while (fractionRegex.test(htmlResult)) {
+                htmlResult = htmlResult.replace(fractionRegex, function(match, p1, p2) {
+                    return `<span class="fraction"><span class="numerator">${p1}</span><span class="denominator">${p2}</span></span>`;
+                });
+            }
+            return htmlResult;
+        }
+
+        function renderLiveView() {
+            currentInputLine.innerHTML = parseToVisualHTML(currentRawMath);
         }
 
         function calculate() {
-            if (currentLine.trim() === "") return;
+            if (!currentRawMath.trim()) return;
 
             try {
-                // Konversi simbol visual 'x' kembali menjadi '*' untuk dievaluasi JavaScript
-                let mathExpression = currentLine.replace(/x/g, '*').replace(/÷/g, '/');
+                // Sempurnakan logika persen (%) agar dikenali eval script (misal: 5% menjadi 5/100)
+                let executableMath = currentRawMath.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
-                // Hitung hasil matematika
-                let rawResult = eval(mathExpression);
+                let rawResult = eval(executableMath);
                 let finalResult = Number(rawResult.toFixed(4)).toString();
+
+                // Cetak riwayat visual pembagian bertingkat ke log atas
+                let visualFormula = parseToVisualHTML(currentRawMath);
+                historyLog.innerHTML += `<div class="history-block">${visualFormula}<br>= ${finalResult}</div>`;
                 
-                // Satukan teks rumusan dengan hasil di baris baru (\n)
-                fullHistory += currentLine + "\n=" + finalResult + "\n\n";
-                
-                // Reset baris masukan baru untuk perhitungan selanjutnya
-                currentLine = ""; 
+                // Masukkan hasil ke penampung input baru jika ingin dihitung kembali
+                currentRawMath = finalResult;
             } catch (error) {
-                fullHistory += currentLine + "\n=Error\n\n";
-                currentLine = "";
+                historyLog.innerHTML += `<div class="history-block">${parseToVisualHTML(currentRawMath)}<br>= Error</div>`;
+                currentRawMath = "0";
             }
-            renderDisplay();
             
-            // Otomatis scroll layar ke bagian paling bawah jika riwayat sudah panjang
-            displayScreen.scrollTop = displayScreen.scrollHeight;
+            renderLiveView();
+            displayScreen.scrollTop = displayScreen.scrollHeight; // Auto scroll kebawah
         }
 
         function clearDisplay() {
-            currentLine = "";
-            fullHistory = "";
-            renderDisplay();
-        }
-
-        function renderDisplay() {
-            // Tampilkan riwayat lama digabung dengan ketikan yang sedang berjalan
-            displayScreen.textContent = fullHistory + currentLine;
+            currentRawMath = "0";
+            historyLog.innerHTML = "";
+            renderLiveView();
         }
     </script>
 </body>
