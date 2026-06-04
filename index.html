@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis</title>
+    <title>Kalkulator Pecahan Berlapis Kompleks</title>
     <style>
         /* --- CSS DASAR KALKULATOR --- */
         body {
@@ -17,7 +17,7 @@
         }
 
         .calculator {
-            width: 340px;
+            width: 350px;
             background-color: #ffffff;
             border: 2px solid #000;
             border-radius: 12px;
@@ -25,10 +25,10 @@
             box-shadow: 5px 5px 0px #000000;
         }
 
-        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll */
+        /* DISPLAY UTAMA: Mendukung tumpukan vertikal tinggi agar pecahan berlapis tidak terpotong */
         .display-container {
             width: 100%;
-            height: 220px;
+            height: 250px;
             border: 2px solid #000;
             margin-bottom: 15px;
             background-color: #fff;
@@ -38,36 +38,40 @@
             overflow-y: auto;
             color: #d13438;
             font-weight: bold;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
 
-        /* STYLING KHUSUS UNTUK PECAHAN BERLAPIS */
+        /* STYLING UTAMA PECAHAN BERLAPIS */
         .frac {
             display: inline-flex;
             flex-direction: column;
             vertical-align: middle;
             text-align: center;
-            padding: 2px 6px;
-            margin: 2px 4px;
+            padding: 4px 8px;
+            margin: 4px 4px;
         }
         .num {
-            border-bottom: 2px solid #d13438; /* Garis Pecahan Merah */
-            padding-bottom: 2px;
+            border-bottom: 2px solid #d13438; /* Garis horizontal pecahan */
+            padding-bottom: 4px;
+            margin-bottom: 2px;
         }
         .den {
-            padding-top: 2px;
+            padding-top: 4px;
         }
 
         .history-item {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-bottom: 1px dashed #ccc;
-            padding-bottom: 8px;
-            line-height: 2;
+            padding-bottom: 12px;
+            line-height: 2.2;
         }
 
         .current-line {
-            min-height: 40px;
-            line-height: 2;
+            min-height: 50px;
+            line-height: 2.2;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         /* Grid Tombol Operator Atas */
@@ -164,7 +168,7 @@
             <button onclick="inputOperator('+')">+</button>
             <button onclick="inputOperator('-')">-</button>
             <button onclick="inputOperator('*')">×</button>
-            <button onclick="inputOperator('/')">÷</button> <!-- Tetap menjadi Bagi Biasa -->
+            <button onclick="inputOperator('/')">÷</button> <!-- Pembagian baris menyamping biasa -->
             <button onclick="hitung()">=</button>
         </div>
 
@@ -173,7 +177,7 @@
             <div class="left-menu">
                 <button onclick="inputSymbol('(')">(</button>
                 <button onclick="inputSymbol(')')">)</button>
-                <button onclick="inputFraction()">Pecahan</button> <!-- Khusus Membuat Struktur Susun -->
+                <button onclick="inputFraction()">Pecahan</button> <!-- Khusus membuat tumpukan atas-bawah berlapis -->
                 <button onclick="inputSymbol('%')">%</button>
             </div>
 
@@ -196,7 +200,7 @@
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERLAPIS SEBENARNYA --- -->
+    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERLAPIS TINGKAT TINGGI --- -->
     <script>
         let rumusMentah = "";
         const currentLine = document.getElementById("current-input-line");
@@ -218,27 +222,29 @@
             renderVisual();
         }
 
-        // FUNGSI KHUSUS TOMBOL PECAHAN: Menggunakan penanda khusus '|' agar sistem tahu ini pembagian vertikal
+        // FUNGSI KHUSUS TOMBOL PECAHAN: Menggunakan tanda '|' agar sistem tahu ini batas atas-bawah vertikal
         function inputFraction() {
             rumusMentah += "|"; 
             renderVisual();
         }
 
-        // Menerjemahkan karakter spesial '|' menjadi elemen visual bertingkat (lapis demi lapis)
+        // Mengubah string mentah menjadi kode HTML visual pecahan susun berlapis secara dinamis
         function buatTampilanPecahan(teks) {
             if (!teks) return "0";
             
             let hasil = teks.replace(/\*/g, " × ");
-            hasil = hasil.replace(/\//g, " ÷ "); // Garis miring biasa dicetak sebagai simbol bagi biasa
+            hasil = hasil.replace(/\//g, " ÷ "); // Operator / biasa dicetak horizontal
 
-            // Deteksi penanda khusus '|' untuk membungkus elemen kiri dan kanan menjadi pecahan vertical susun
-            let regexPecahan = /((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            // Regex cerdas untuk menangkap operasi campuran kompleks (+, -, ×, ÷, kurung) di sekitar penanda pecahan '|'
+            let regexPecahan = /((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\|((?:[0-9\.\+\-\s×÷%]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
             
             let teksLama;
+            // Memproses struktur berulang agar pecahan di dalam pecahan (berlapis) tercetak sempurna
             do {
                 teksLama = hasil;
                 hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
-                    return `<span class="frac"><span class="num">${atas}</span><span class="den">${bawah}</span></span>`;
+                    // Bersihkan spasi berlebih di ujung elemen agar simetris di tengah
+                    return `<span class="frac"><span class="num">${atas.trim()}</span><span class="den">${bawah.trim()}</span></span>`;
                 });
             } while (hasil !== teksLama);
 
@@ -254,7 +260,7 @@
             if (!ekspresi) return;
 
             try {
-                // Kembalikan tanda '|' menjadi pembagian '/' murni komputer sebelum di-eval
+                // Kembalikan karakter '|' menjadi tanda bagi murni '/' untuk proses hitung komputer
                 let hitungEkspresi = ekspresi.replace(/\|/g, "/");
                 hitungEkspresi = hitungEkspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
@@ -264,6 +270,7 @@
 
                 let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
 
+                // Cetak riwayat tumpukan berlapis ke bagian atas layar log
                 historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
                 
                 rumusMentah = hasilAkhir;
@@ -272,26 +279,14 @@
                 rumusMentah = "";
             }
             renderVisual();
-            displayScreen.scrollTop = displayScreen.scrollHeight;
+            displayScreen.scrollTop = displayScreen.scrollHeight; // Otomatis gulung layar ke bawah
         }
 
         function backspace() {
             if (rumusMentah.length > 0) {
-                // Jika karakter terakhir berupa spasi dari operator, potong lebih banyak agar rapi
                 if (rumusMentah.endsWith(" ")) {
-                    rumusMentah = rumusMentah.slice(0, -3);
+                    rumusMentah = rumusMentah.slice(0, -3); // Potong penuh jika operator memiliki spasi samping
                 } else {
                     rumusMentah = rumusMentah.slice(0, -1);
                 }
                 renderVisual();
-            }
-        }
-
-        function hapus() {
-            rumusMentah = "";
-            historyLog.innerHTML = "";
-            renderVisual();
-        }
-    </script>
-</body>
-</html>
