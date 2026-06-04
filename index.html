@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Vertikal</title>
+    <title>Kalkulator Pecahan Berlapis</title>
     <style>
         /* --- CSS DASAR KALKULATOR --- */
         body {
@@ -28,7 +28,7 @@
         /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll */
         .display-container {
             width: 100%;
-            height: 200px;
+            height: 220px;
             border: 2px solid #000;
             margin-bottom: 15px;
             background-color: #fff;
@@ -41,13 +41,14 @@
             font-size: 1.3rem;
         }
 
-        /* CSS Membuat Efek Pecahan Bertingkat Tanpa Library Luar */
+        /* CSS UNTUK PECAHAN BERLAPIS (Saling Mendukung di Dalam Elemen Lain) */
         .frac {
             display: inline-flex;
             flex-direction: column;
             vertical-align: middle;
             text-align: center;
-            padding: 0 4px;
+            padding: 2px 6px;
+            margin: 2px 0;
         }
         .num {
             border-bottom: 2px solid #d13438;
@@ -61,12 +62,12 @@
             margin-bottom: 15px;
             border-bottom: 1px dashed #ccc;
             padding-bottom: 8px;
-            line-height: 1.8;
+            line-height: 2;
         }
 
         .current-line {
             min-height: 40px;
-            line-height: 1.8;
+            line-height: 2;
         }
 
         /* Grid Tombol Operator Atas */
@@ -115,7 +116,7 @@
             border-radius: 4px;
         }
 
-        /* Grid Angka Kanan (Pas 2 Kolom) */
+        /* Grid Angka Kanan */
         .number-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -132,14 +133,14 @@
             cursor: pointer;
         }
 
-        /* MEMBAGI TOMBOL MENJADI DUA DI GRID 2 KOLOM */
+        /* Tombol Bawah Dibagi Dua */
         .backspace-btn {
-            background-color: #fff2cc !important; /* Warna kuning muda penanda edit */
+            background-color: #fff2cc !important;
             font-size: 1.4rem !important;
         }
 
         .delete-btn {
-            background-color: #f8cbad !important; /* Warna pink untuk reset */
+            background-color: #f8cbad !important;
             font-size: 0.95rem !important;
             font-weight: bold;
         }
@@ -189,39 +190,43 @@
                 <button onclick="input('0')">0</button>
                 <button onclick="input('5')">5</button>
                 
-                <!-- BAGIAN BAWAH DIBAGI DUA: KOLOM KIRI (EDIT) & KOLOM KANAN (DELETE) -->
                 <button class="backspace-btn" onclick="backspace()">←</button>
                 <button class="delete-btn" onclick="hapus()">DELETE</button>
             </div>
         </div>
     </div>
 
-    <!-- --- JAVASCRIPT MURNI ANTI-GAGAL --- -->
+    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERLAPIS --- -->
     <script>
         let rumusMentah = "";
         const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        // 1. Fungsi menerima ketikan tombol apa saja
         function input(karakter) {
             rumusMentah += karakter;
             renderVisual();
         }
 
-        // 2. Mengubah teks rumus biasa menjadi tampilan pecahan susun HTML
+        // FUNGSI UTAMA: Mengubah string menjadi komponen HTML pecahan berlapis secara berulang (Loop)
         function buatTampilanPecahan(teks) {
             if (!teks) return "0";
             
-            let hasil = teks.replace(/\*/g, " × "); // Ubah visual bintang ke tanda kali
+            let hasil = teks.replace(/\*/g, " × ");
 
-            // Regex mendeteksi format (angka/kurung) / (angka/kurung) untuk diubah ke pecahan bertingkat
-            let regexPecahan = /(\([^\)]+\)|[0-9\.]+%?)\/([0-9\.]+%?|\([^\)]+\))/g;
-            while (regexPecahan.test(hasil)) {
+            // Regex mendeteksi susunan pembagian [Pembilang]/[Penyebut]
+            // Termasuk mendeteksi struktur HTML pecahan yang sudah terbentuk sebelumnya agar bisa dilapisi lagi
+            let regexPecahan = /((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)\/((?:[0-9\.]+%?|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            
+            let teksLama;
+            // Terus lakukan penggantian struktur teks sampai tidak ada lagi tanda '/' yang tersisa
+            do {
+                teksLama = hasil;
                 hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
                     return `<span class="frac"><span class="num">${atas}</span><span class="den">${bawah}</span></span>`;
                 });
-            }
+            } while (hasil !== teksLama);
+
             return hasil;
         }
 
@@ -229,36 +234,31 @@
             currentLine.innerHTML = buatTampilanPecahan(rumusMentah);
         }
 
-        // 3. Fungsi menghitung hasil ketika menekan tombol '='
         function hitung() {
             let ekspresi = rumusMentah.trim();
             if (!ekspresi) return;
 
             try {
-                // Sempurnakan logika persen (%) agar dibaca pembagian /100 oleh system
+                // Konversi persen agar dipahami sistem matematika browser
                 let hitungEkspresi = ekspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
                 
                 let hasilAngka = eval(hitungEkspresi);
                 
-                // Mencegah error pembagian dengan nol (Infinity)
                 if (!isFinite(hasilAngka)) throw new Error();
 
                 let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
 
-                // Cetak riwayat ke baris atasnya
                 historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
                 
-                // Hasil dijadikan awalan baru untuk kelanjutan hitungan
                 rumusMentah = hasilAkhir;
             } catch (err) {
                 historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
                 rumusMentah = "";
             }
             renderVisual();
-            displayScreen.scrollTop = displayScreen.scrollHeight; // Auto gulung ke bawah
+            displayScreen.scrollTop = displayScreen.scrollHeight;
         }
 
-        // 4. Fungsi tombol panah edit (Hapus satu karakter terakhir)
         function backspace() {
             if (rumusMentah.length > 0) {
                 rumusMentah = rumusMentah.slice(0, -1);
@@ -266,7 +266,6 @@
             }
         }
 
-        // 5. Tombol DELETE (Reset Total)
         function hapus() {
             rumusMentah = "";
             historyLog.innerHTML = "";
