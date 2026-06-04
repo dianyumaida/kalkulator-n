@@ -40,7 +40,7 @@
             </div>
             <div class="number-grid">
                 <button onclick="window.tekanKarakter('6')">6</button><button onclick="window.tekanKarakter('1')">1</button>
-                <button onclick="window.tekanKarakter('a')">a</button><button onclick="window.tekanKarakter('2')">2</button>
+                <button onclick="window.tekanKarakter('7')">7</button><button onclick="window.tekanKarakter('2')">2</button>
                 <button onclick="window.tekanKarakter('8')">8</button><button onclick="window.tekanKarakter('3')">3</button>
                 <button onclick="window.tekanKarakter('9')">9</button><button onclick="window.tekanKarakter('4')">4</button>
                 <button onclick="window.tekanKarakter('0')">0</button><button onclick="window.tekanKarakter('5')">5</button>
@@ -58,7 +58,7 @@
         window.tekanKarakter = function(char) { rumusMentah += char; window.renderVisual(); };
         window.tekanOperator = function(op) { rumusMentah += " " + op + " "; window.renderVisual(); };
         window.tekanPecahan = function() {
-            if (rumusMentah.length > 0 && !rumusMentah.endsWith("|")) { rumusMentah = "[" + rumusMentah + "]|"; } 
+            if (rumusMentah.length > 0 && !rumusMentah.endsWith("|")) { rumusMentah = "{" + rumusMentah + "}|"; } 
             else { rumusMentah += "|"; }
             window.renderVisual();
         };
@@ -66,32 +66,27 @@
         window.buatTampilanPecahan = function(teks) {
             if (!teks) return "0";
             let hasil = teks.replace(/\*/g, " × ").replace(/:/g, " : ");
-            let regexPecahan = /\[([^\[\]\|]+)\]\|((?:[a-zA-Z0-9\.\+\-\s×:%<>=\/]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
+            let regexPecahan = /\{([^\{\}\|]+)\}\|((?:[0-9\.\+\-\s×:%<>=\/]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
             let teksLama;
             do {
                 teksLama = hasil;
                 hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
                     return `<span class="frac"><span class="num">${atas.trim()}</span><span class="den">${bawah.trim()}</span></span>`;
                 });
-                hasil = hasil.replace(/\[(<span class="frac">.*?<\/span>)\]/g, "$1");
+                hasil = hasil.replace(/\{(<span class="frac">.*?<\/span>)\}/g, "$1");
             } while (hasil !== teksLama);
-            return hasil.replace(/[\[\]]/g, "");
+            return hasil.replace(/[\{\}]/g, "");
         };
 
         window.renderVisual = function() { currentLine.innerHTML = window.buatTampilanPecahan(rumusMentah); };
         window.hitung = function() {
             let ekspresi = rumusMentah.trim(); if (!ekspresi) return;
             try {
-                let hitungEkspresi = ekspresi.replace(/[\[\]]/g, "").replace(/\|/g, "/").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
-                if(/[a-zA-Z]/.test(hitungEkspresi)) {
-                    historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Terproses (Abstrak)</div>`;
-                    rumusMentah = "";
-                } else {
-                    let hasilAngka = eval(hitungEkspresi); if (!isFinite(hasilAngka)) throw new Error();
-                    let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-                    historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
-                    rumusMentah = hasilAkhir;
-                }
+                let hitungEkspresi = ekspresi.replace(/[\{\}]/g, "").replace(/\|/g, "/").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                let hasilAngka = eval(hitungEkspresi); if (!isFinite(hasilAngka)) throw new Error();
+                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
+                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
+                rumusMentah = hasilAkhir;
             } catch (err) {
                 historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
                 rumusMentah = "";
@@ -104,7 +99,7 @@
                 if (rumusMentah.endsWith(" ")) { rumusMentah = rumusMentah.slice(0, -3); } 
                 else if (rumusMentah.endsWith("|")) {
                     rumusMentah = rumusMentah.slice(0, -1);
-                    if (rumusMentah.startsWith("[") && rumusMentah.endsWith("]")) { rumusMentah = rumusMentah.slice(1, -1); }
+                    if (rumusMentah.startsWith("{") && rumusMentah.endsWith("}")) { rumusMentah = rumusMentah.slice(1, -1); }
                 } else { rumusMentah = rumusMentah.slice(0, -1); }
                 window.renderVisual();
             }
