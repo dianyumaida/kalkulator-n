@@ -3,208 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis Sukses</title>
+    <title>Kalkulator Pecahan Berlapis</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7ebe1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .calculator {
-            width: 360px;
-            background-color: #ffffff;
-            border: 2px solid #000;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 5px 5px 0px #000000;
-        }
-        .display-container {
-            width: 100%;
-            height: 280px;
-            border: 2px solid #000;
-            margin-bottom: 15px;
-            background-color: #fff;
-            padding: 12px;
-            box-sizing: border-box;
-            text-align: left;
-            overflow-y: auto;
-            color: #d13438;
-            font-weight: bold;
-            font-size: 1.4rem;
-        }
-        .frac {
-            display: inline-flex;
-            flex-direction: column;
-            vertical-align: middle;
-            text-align: center;
-            padding: 4px 8px;
-            margin: 4px;
-        }
-        .num {
-            border-bottom: 2px solid #d13438;
-            padding-bottom: 4px;
-            margin-bottom: 2px;
-        }
-        .den {
-            padding-top: 4px;
-        }
-        .history-item {
-            margin-bottom: 20px;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 12px;
-            line-height: 2.2;
-        }
-        .current-line {
-            min-height: 60px;
-            line-height: 2.2;
-            display: inline-block;
-        }
-        .operator-row {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        .operator-row button {
-            background-color: #fce4d6;
-            border: 2px solid #000;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 2fr;
-            gap: 15px;
-        }
-        .left-menu {
-            background-color: #e2efda;
-            border: 2px solid #000;
-            border-radius: 5px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .left-menu button {
-            padding: 10px 2px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: 1px solid #000;
-            background-color: #fff;
-            border-radius: 4px;
-        }
-        .number-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-        .number-grid button {
-            background-color: #ffffff;
-            border: 2px solid #000;
-            border-radius: 5px;
-            padding: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .backspace-btn {
-            background-color: #fff2cc !important;
-            font-size: 1.4rem !important;
-        }
-        .delete-btn {
-            background-color: #f8cbad !important;
-            font-size: 0.95rem !important;
-            font-weight: bold;
-        }
-        button:active {
-            transform: scale(0.95);
-        }
+        body { font-family: Arial, sans-serif; background-color: #f7ebe1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .calculator { width: 360px; background-color: #ffffff; border: 2px solid #000; border-radius: 12px; padding: 20px; box-shadow: 5px 5px 0px #000000; }
+        .display-container { width: 100%; height: 280px; border: 2px solid #000; margin-bottom: 15px; background-color: #fff; padding: 12px; box-sizing: border-box; text-align: left; overflow-y: auto; color: #d13438; font-weight: bold; font-size: 1.4rem; }
+        .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; padding: 4px 8px; margin: 4px; }
+        .num { border-bottom: 2px solid #d13438; padding-bottom: 4px; margin-bottom: 2px; }
+        .den { padding-top: 4px; }
+        .history-item { margin-bottom: 20px; border-bottom: 1px dashed #ccc; padding-bottom: 12px; line-height: 2.2; }
+        .current-line { min-height: 60px; line-height: 2.2; display: inline-block; }
+        .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 15px; }
+        .operator-row button { background-color: #fce4d6; border: 2px solid #000; border-radius: 5px; padding: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        .main-grid { display: grid; grid-template-columns: 1.2fr 2fr; gap: 15px; }
+        .left-menu { background-color: #e2efda; border: 2px solid #000; border-radius: 5px; padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+        .left-menu button { padding: 10px 2px; font-weight: bold; font-size: 0.85rem; cursor: pointer; border: 1px solid #000; background-color: #fff; border-radius: 4px; }
+        .number-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .number-grid button { background-color: #ffffff; border: 2px solid #000; border-radius: 5px; padding: 15px; font-size: 1.3rem; font-weight: bold; cursor: pointer; }
+        .backspace-btn { background-color: #fff2cc !important; font-size: 1.4rem !important; }
+        .delete-btn { background-color: #f8cbad !important; font-size: 0.95rem !important; font-weight: bold; }
+        button:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-
     <div class="calculator">
-        <div id="display-screen" class="display-container">
-            <div id="history-log"></div>
-            <div id="current-input-line" class="current-line">0</div>
-        </div>
-
+        <div id="display-screen" class="display-container"><div id="history-log"></div><div id="current-input-line" class="current-line">0</div></div>
         <div class="operator-row">
-            <button onclick="window.tekanOperator('+')">+</button>
-            <button onclick="window.tekanOperator('-')">-</button>
-            <button onclick="window.tekanOperator('*')">×</button>
-            <button onclick="window.tekanOperator('/')">÷</button>
+            <button onclick="window.tekanOperator('+')">+</button><button onclick="window.tekanOperator('-')">-</button>
+            <button onclick="window.tekanOperator('*')">×</button><button onclick="window.tekanOperator(':')">:</button>
             <button onclick="window.hitung()">=</button>
         </div>
-
         <div class="main-grid">
             <div class="left-menu">
-                <button onclick="window.tekanKarakter('(')">(</button>
-                <button onclick="window.tekanKarakter(')')">)</button>
-                <button onclick="window.tekanPecahan()">Pecahan</button> 
-                <button onclick="window.tekanKarakter('%')">%</button>
+                <button onclick="window.tekanKarakter('(')">(</button><button onclick="window.tekanKarakter(')')">)</button>
+                <button onclick="window.tekanPecahan()">Pecahan</button><button onclick="window.tekanKarakter('%')">%</button>
             </div>
-
             <div class="number-grid">
-                <button onclick="window.tekanKarakter('6')">6</button>
-                <button onclick="window.tekanKarakter('1')">1</button>
-                <button onclick="window.tekanKarakter('7')">7</button>
-                <button onclick="window.tekanKarakter('2')">2</button>
-                <button onclick="window.tekanKarakter('8')">8</button>
-                <button onclick="window.tekanKarakter('3')">3</button>
-                <button onclick="window.tekanKarakter('9')">9</button>
-                <button onclick="window.tekanKarakter('4')">4</button>
-                <button onclick="window.tekanKarakter('0')">0</button>
-                <button onclick="window.tekanKarakter('5')">5</button>
-                
-                <button class="backspace-btn" onclick="window.backspace()"><!-- panah kiri -->←</button>
+                <button onclick="window.tekanKarakter('6')">6</button><button onclick="window.tekanKarakter('1')">1</button>
+                <button onclick="window.tekanKarakter('a')">a</button><button onclick="window.tekanKarakter('2')">2</button>
+                <button onclick="window.tekanKarakter('8')">8</button><button onclick="window.tekanKarakter('3')">3</button>
+                <button onclick="window.tekanKarakter('9')">9</button><button onclick="window.tekanKarakter('4')">4</button>
+                <button onclick="window.tekanKarakter('0')">0</button><button onclick="window.tekanKarakter('5')">5</button>
+                <button class="backspace-btn" onclick="window.backspace()">←</button>
                 <button class="delete-btn" onclick="window.hapusAll()">DELETE</button>
             </div>
         </div>
     </div>
-
     <script>
         let rumusMentah = "";
         const currentLine = document.getElementById("current-input-line");
         const historyLog = document.getElementById("history-log");
         const displayScreen = document.getElementById("display-screen");
 
-        window.tekanKarakter = function(char) {
-            rumusMentah += char;
-            window.renderVisual();
-        };
-
-        window.tekanOperator = function(op) {
-            rumusMentah += " " + op + " ";
-            window.renderVisual();
-        };
-
+        window.tekanKarakter = function(char) { rumusMentah += char; window.renderVisual(); };
+        window.tekanOperator = function(op) { rumusMentah += " " + op + " "; window.renderVisual(); };
         window.tekanPecahan = function() {
-            if (rumusMentah.length > 0 && !rumusMentah.endsWith("|")) {
-                rumusMentah = "[" + rumusMentah + "]" + "|";
-            } else {
-                rumusMentah += "|";
-            }
+            if (rumusMentah.length > 0 && !rumusMentah.endsWith("|")) { rumusMentah = "[" + rumusMentah + "]|"; } 
+            else { rumusMentah += "|"; }
             window.renderVisual();
         };
 
         window.buatTampilanPecahan = function(teks) {
             if (!teks) return "0";
-            let hasil = teks.replace(/\*/g, " × ").replace(/\//g, " ÷ ");
-            let regexPecahan = /\[([^\[\]]+)\]\|(?:\[([^\[\]]+)\]|([0-9\.\+\-\s×÷%]+))/g;
+            let hasil = teks.replace(/\*/g, " × ").replace(/:/g, " : ");
+            let regexPecahan = /\[([^\[\]\|]+)\]\|((?:[a-zA-Z0-9\.\+\-\s×:%<>=\/]+|\([^\)]+\)|<span class="frac">.*?<\/span>)+)/g;
             let teksLama;
             do {
                 teksLama = hasil;
-                hasil = hasil.replace(regexPecahan, function(match, atas, bawahKurung, bawahPolos) {
-                    let bawah = bawahKurung || bawahPolos;
+                hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
                     return `<span class="frac"><span class="num">${atas.trim()}</span><span class="den">${bawah.trim()}</span></span>`;
                 });
                 hasil = hasil.replace(/\[(<span class="frac">.*?<\/span>)\]/g, "$1");
@@ -212,50 +78,38 @@
             return hasil.replace(/[\[\]]/g, "");
         };
 
-        window.renderVisual = function() {
-            currentLine.innerHTML = window.buatTampilanPecahan(rumusMentah);
-        };
-
+        window.renderVisual = function() { currentLine.innerHTML = window.buatTampilanPecahan(rumusMentah); };
         window.hitung = function() {
-            let ekspresi = rumusMentah.trim();
-            if (!ekspresi) return;
+            let ekspresi = rumusMentah.trim(); if (!ekspresi) return;
             try {
-                let hitungEkspresi = ekspresi.replace(/[\[\]]/g, "").replace(/\|/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
-                let hasilAngka = eval(hitungEkspresi);
-                if (!isFinite(hasilAngka)) throw new Error();
-                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-                historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
-                rumusMentah = hasilAkhir;
+                let hitungEkspresi = ekspresi.replace(/[\[\]]/g, "").replace(/\|/g, "/").replace(/:/g, "/").replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                if(/[a-zA-Z]/.test(hitungEkspresi)) {
+                    historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Terproses (Abstrak)</div>`;
+                    rumusMentah = "";
+                } else {
+                    let hasilAngka = eval(hitungEkspresi); if (!isFinite(hasilAngka)) throw new Error();
+                    let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
+                    historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
+                    rumusMentah = hasilAkhir;
+                }
             } catch (err) {
                 historyLog.innerHTML += `<div class="history-item">${window.buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
                 rumusMentah = "";
             }
-            window.renderVisual();
-            displayScreen.scrollTop = displayScreen.scrollHeight;
+            window.renderVisual(); displayScreen.scrollTop = displayScreen.scrollHeight;
         };
 
         window.backspace = function() {
             if (rumusMentah.length > 0) {
-                if (rumusMentah.endsWith(" ")) {
-                    rumusMentah = rumusMentah.slice(0, -3);
-                } else if (rumusMentah.endsWith("|")) {
+                if (rumusMentah.endsWith(" ")) { rumusMentah = rumusMentah.slice(0, -3); } 
+                else if (rumusMentah.endsWith("|")) {
                     rumusMentah = rumusMentah.slice(0, -1);
-                    if (rumusMentah.startsWith("[") && rumusMentah.endsWith("]")) {
-                        rumusMentah = rumusMentah.slice(1, -1);
-                    }
-                } else {
-                    rumusMentah = rumusMentah.slice(0, -1);
-                }
+                    if (rumusMentah.startsWith("[") && rumusMentah.endsWith("]")) { rumusMentah = rumusMentah.slice(1, -1); }
+                } else { rumusMentah = rumusMentah.slice(0, -1); }
                 window.renderVisual();
             }
         };
-
-        window.hapusAll = function() {
-            rumusMentah = "";
-            historyLog.innerHTML = "";
-            window.renderVisual();
-        };
-
+        window.hapusAll = function() { rumusMentah = ""; historyLog.innerHTML = ""; window.renderVisual(); };
         window.renderVisual();
     </script>
 </body>
