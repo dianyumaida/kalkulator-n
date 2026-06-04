@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Sketsa - Sinkronisasi Semua Rumus & Data</title>
+    <title>Kalkulator Vertikal - Perbaikan Fitur</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,12 +16,11 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            background-color: #f5ece2; /* Warna kertas sketsa */
+            background-color: #f5ece2;
             padding: 20px;
             min-height: 100vh;
         }
 
-        /* Kontainer Utama Kalkulator Vertikal */
         .kalkulator-box {
             display: flex;
             flex-direction: column;
@@ -33,7 +32,6 @@
             border-radius: 8px;
         }
 
-        /* CONTAINER LAYAR UTAMA */
         .layer-container {
             display: flex;
             flex-direction: column;
@@ -41,7 +39,6 @@
             margin-bottom: 12px;
         }
 
-        /* 1. LAYER JERNIH (Tampilan Aliran Kiri Atas ke Bawah) */
         .layer-jernih {
             width: 100%;
             height: 200px;
@@ -52,7 +49,6 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
-            position: relative;
         }
 
         .layer-header {
@@ -87,7 +83,6 @@
             background-color: #ff1a1a;
         }
 
-        /* Aliran log riwayat dari kiri atas berbaris turun ke bawah */
         .history-stream {
             width: 100%;
             flex: 1;
@@ -107,7 +102,6 @@
             word-wrap: break-word;
         }
 
-        /* Input aktif di bawah layar jernih (rata kiri) */
         .current-input {
             width: 100%;
             text-align: left;
@@ -120,7 +114,6 @@
             word-wrap: break-word;
         }
 
-        /* PANEL TOMBOL SIMBOL DASAR */
         .panel-simbol {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -143,58 +136,63 @@
             background: #ccd;
         }
 
-        /* BAGIAN BAWAH: Navigasi Dropdown PILIH & Tombol Angka */
         .tampilan-bawah {
             display: flex;
             gap: 12px;
         }
 
-        /* 2. TOMBOL PILIH (Dropdown Vertikal Fleksibel) */
+        /* MENU UTAMA DAN SUB-MENU ANAK */
         .kolom-pilih {
             display: flex;
             flex-direction: column;
-            width: 120px;
+            width: 130px;
+            gap: 5px;
         }
 
-        .select-pilih {
-            width: 100%;
-            flex: 1;
+        .menu-induk {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border: 3px solid #333;
-            background-color: #e6ffed; /* Warna hijau muda */
+            background-color: #e6ffed;
+            padding: 10px;
             font-size: 0.95rem;
             font-weight: bold;
             cursor: pointer;
             border-radius: 6px;
-            padding: 10px 5px;
-            writing-mode: vertical-lr;
-            text-orientation: mixed;
-            text-align: center;
-            appearance: none; 
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='100' height='50'><polygon points='0,0 100,0 50,50' style='fill:%23333333;'/></svg>");
-            background-repeat: no-repeat;
-            background-position: center bottom 15px;
-            background-size: 12px 6px;
         }
 
-        .select-pilih option {
-            writing-mode: horizontal-tb;
-            text-orientation: initial;
+        .menu-anak {
+            list-style: none;
+            padding-left: 10px;
+            display: none; /* Tersembunyi sebelum menu induk diklik */
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 2px;
+        }
+
+        .menu-anak.buka {
+            display: flex;
+        }
+
+        .menu-anak li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px;
             background-color: #fff;
-            color: #333;
-            font-size: 0.95rem;
-            padding: 8px;
-            text-align: left;
+            border: 2px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
         }
 
-        .select-pilih optgroup {
-            writing-mode: horizontal-tb;
-            text-orientation: initial;
-            font-weight: bold;
-            color: #555;
+        .menu-anak li:hover {
             background-color: #f0f0f0;
         }
 
-        /* 3. GRID ANGKA & DELETE (Sisi Kanan) */
+        /* GRID ANGKA */
         .kolom-angka {
             flex: 1;
             display: flex;
@@ -245,7 +243,7 @@
 
     <div class="kalkulator-box">
         
-        <!-- BAGIAN ATAS: LAYER CONTAINER -->
+        <!-- BAGIAN ATAS: LAYER -->
         <div class="layer-container">
             <div class="layer-jernih">
                 <div class="layer-header">
@@ -257,7 +255,7 @@
             </div>
         </div>
 
-        <!-- PANEL TOMBOL SIMBOL MATEMATIKA DASAR -->
+        <!-- PANEL TOMBOL SIMBOL DASAR -->
         <div class="panel-simbol">
             <button class="btn-simbol" onclick="tekanSimbol('+')">+</button>
             <button class="btn-simbol" onclick="tekanSimbol('-')">-</button>
@@ -269,30 +267,34 @@
         <!-- BAGIAN BAWAH -->
         <div class="tampilan-bawah">
             
-            <!-- SISI KIRI: DROPDOWN PILIH (SINKRON RUMUS DAN DATA DATA) -->
+            <!-- SISI KIRI: MENU PILIH DENGAN ANAK-ANAKNYA -->
             <div class="kolom-pilih">
-                <select class="select-pilih" id="dropdownPilih" onchange="eksekusiDropdown(this.value)">
-                    <option value="" disabled selected>PILIH ▼</option>
-                    
-                    <optgroup label="── FUNGSI & RUMUS ──">
-                        <option value="log">log (Logaritma)</option>
-                        <option value="ln">ln (Log Alami)</option>
-                        <option value="sin">sin (Radian)</option>
-                        <option value="cos">cos (Radian)</option>
-                        <option value="tan">tan (Radian)</option>
-                        <option value="akar">√ (Akar Kuadrat)</option>
-                        <option value="kuadrat">x² (Kuadrat)</option>
-                        <option value="integral">∫ (Integral Dasar)</option>
-                    </optgroup>
+                
+                <!-- Kelompok Sudut -->
+                <div class="menu-induk" onclick="toggleMenuAnak('anakSudut', 'radioSudut')">
+                    <span>sudut</span>
+                    <input type="radio" name="pilihan_utama" id="radioSudut">
+                </div>
+                <ul class="menu-anak" id="anakSudut">
+                    <li onclick="eksekusiRumusAnak('sin', event)"><input type="radio" name="sub_pilih" id="r-sin"> sin</li>
+                    <li onclick="eksekusiRumusAnak('cos', event)"><input type="radio" name="sub_pilih" id="r-cos"> cos</li>
+                    <li onclick="eksekusiRumusAnak('tan', event)"><input type="radio" name="sub_pilih" id="r-tan"> tan</li>
+                </ul>
 
-                    <optgroup label="── DATA & KONSTANTA ──">
-                        <option value="pi">π (Pi = 3.1415)</option>
-                        <option value="euler">e (Euler = 2.7182)</option>
-                    </optgroup>
-                </select>
+                <!-- Kelompok Rumus Lain -->
+                <div class="menu-induk" onclick="toggleMenuAnak('anakRumus', 'radioRumus')">
+                    <span>rumus</span>
+                    <input type="radio" name="pilihan_utama" id="radioRumus">
+                </div>
+                <ul class="menu-anak" id="anakRumus">
+                    <li onclick="eksekusiRumusAnak('log', event)"><input type="radio" name="sub_pilih" id="r-log"> log</li>
+                    <li onclick="eksekusiRumusAnak('akar', event)"><input type="radio" name="sub_pilih" id="r-akar"> √ akar</li>
+                    <li onclick="eksekusiRumusAnak('integral', event)"><input type="radio" name="sub_pilih" id="r-int"> ∫ int</li>
+                </ul>
+
             </div>
 
-            <!-- SISI KANAN: TOMBOL ANGKA SESUAI SKETSA -->
+            <!-- SISI KANAN: TOMBOL ANGKA -->
             <div class="kolom-angka">
                 <div class="grid-num">
                     <button class="btn-num" onclick="tekanAngka('6')">6</button>
@@ -308,3 +310,14 @@
                     <button class="btn-num" onclick="tekanAngka('4')">4</button>
                     
                     <button class="btn-num" onclick="tekanAngka('0')">0</button>
+                    <button class="btn-num" onclick="tekanAngka('5')">5</button>
+                </div>
+                
+                <button class="btn-delete" onclick="hapusLayarAktif()">DELETE</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const activeScreen = document.getElementById('activeScreen');
