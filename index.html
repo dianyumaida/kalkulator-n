@@ -132,9 +132,15 @@
             cursor: pointer;
         }
 
+        /* PERBAIKAN TOMBOL BAWAH: Membagi tempat Panah Edit & Delete */
+        .backspace-btn {
+            background-color: #fff2cc !important; /* Warna kuning muda untuk penanda edit */
+            font-size: 1.3rem !important;
+        }
+
         .delete-btn {
-            grid-column: span 2;
-            background-color: #f8cbad !important;
+            background-color: #f8cbad !important; /* Warna pink tetap untuk reset */
+            font-size: 1rem !important;
         }
 
         button:active {
@@ -181,6 +187,11 @@
                 <button onclick="input('4')">4</button>
                 <button onclick="input('0')">0</button>
                 <button onclick="input('5')">5</button>
+                
+                <!-- TOMBOL EDIT BARU (Backspace satu karakter) -->
+                <button class="backspace-btn" onclick="backspace()">←</button>
+                
+                <!-- TOMBOL DELETE (Reset Semua) -->
                 <button class="delete-btn" onclick="hapus()">DELETE</button>
             </div>
         </div>
@@ -248,7 +259,16 @@
             displayScreen.scrollTop = displayScreen.scrollHeight; // Auto gulung ke bawah
         }
 
-        // 4. Tombol DELETE
+        // 4. Tombol EDIT PANAH KIRI (Hapus satu karakter terakhir)
+        function backspace() {
+            if (rumusMentah.length > 0) {
+                // Potong 1 karakter terakhir dari string rumusMentah
+                rumusMentah = rumusMentah.slice(0, -1);
+                renderVisual();
+            }
+        }
+
+        // 5. Tombol DELETE (Reset Total)
         function hapus() {
             rumusMentah = "";
             historyLog.innerHTML = "";
