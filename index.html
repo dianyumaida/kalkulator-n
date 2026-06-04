@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Vertikal</title>
     <style>
-        /* --- BAGIAN CSS (DESAIN KALKULATOR) --- */
+        /* --- CSS: TAMPILAN KALKULATOR --- */
         body {
             font-family: 'Courier New', Courier, monospace;
             background-color: #f7ebe1;
@@ -25,43 +25,25 @@
             box-shadow: 5px 5px 0px #000000;
         }
 
-        /* Desain Layar Utama (Fix agar teks tidak melorot ke bawah) */
+        /* PERBAIKAN DISPLAY: Rata kiri atas dan mendukung baris baru */
         .display-container {
             width: 100%;
-            height: 140px;
+            height: 150px;
             border: 2px solid #000;
             margin-bottom: 15px;
             background-color: #fff;
             padding: 10px;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        /* Menampilkan rumus aktif */
-        #history-screen {
-            font-size: 1rem;
-            color: #666;
-            white-space: nowrap;
-            overflow-x: auto;
-            width: 100%;
-            text-align: right;
-        }
-
-        /* Menampilkan angka masukan & Hasil utama */
-        #display-screen {
-            font-size: 2.2rem;
-            color: #d13438;
+            text-align: left;            /* Teks mulai dari kiri atas seperti di gambar */
+            font-size: 1.5rem;
+            color: #d13438;              /* Warna teks merah */
             font-weight: bold;
-            white-space: nowrap;
-            overflow-x: auto;
-            width: 100%;
-            text-align: right;
+            overflow-y: auto;            /* Otomatis memunculkan scroll vertikal jika baris penuh */
+            white-space: pre-wrap;       /* Menjaga teks agar bisa turun ke bawah (\n) */
+            line-height: 1.3;
         }
 
-        /* Grid Tombol Operator Atas */
+        /* Baris Operator Atas */
         .operator-row {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -79,28 +61,18 @@
             cursor: pointer;
         }
 
-        /* Bagian Bawah: Grid Menu Kiri & Tombol Angka Kanan */
+        /* Grid Utama Bawah */
         .main-grid {
             display: grid;
             grid-template-columns: 1.2fr 2fr;
             gap: 15px;
         }
 
-        .left-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .menu-box {
-            border: 2px solid #000;
-            background-color: #e2efda;
-            padding: 10px;
+        /* Area Hijau Kosong Sesuai Gambar Baru Anda */
+        .left-space {
+            border: 2px solid transparent;
+            background-color: #e2efda; /* Warna hijau muda polos */
             border-radius: 5px;
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .number-grid {
@@ -119,7 +91,7 @@
             cursor: pointer;
         }
 
-        /* Tombol Delete Pink lebar di bagian bawah */
+        /* Tombol Delete Pink lebar */
         .delete-btn {
             grid-column: span 2;
             background-color: #f8cbad !important;
@@ -134,14 +106,10 @@
 </head>
 <body>
 
-    <!-- --- BAGIAN HTML (STRUKTUR KALKULATOR) --- -->
     <div class="calculator">
         
-        <!-- Layar Monitor -->
-        <div class="display-container">
-            <div id="history-screen"></div>
-            <div id="display-screen">0</div>
-        </div>
+        <!-- Layar Monitor Hasil -->
+        <div id="display-screen" class="display-container"></div>
 
         <!-- Baris Operator Atas -->
         <div class="operator-row">
@@ -154,17 +122,8 @@
 
         <!-- Grid Utama Bawah -->
         <div class="main-grid">
-            <!-- Sisi Kiri: Menu Fitur -->
-            <div class="left-menu">
-                <div class="menu-box">
-                    <span>sudut</span>
-                    <input type="radio" name="mode" checked>
-                </div>
-                <div class="menu-box">
-                    <span>rumus</span>
-                    <input type="radio" name="mode">
-                </div>
-            </div>
+            <!-- Sisi Kiri: Area Kosong Hijau Sesuai Gambar -->
+            <div class="left-space"></div>
 
             <!-- Sisi Kanan: Angka & Delete -->
             <div class="number-grid">
@@ -183,66 +142,63 @@
         </div>
     </div>
 
-    <!-- --- BAGIAN JAVASCRIPT (LOGIKA PERHITUNGAN) --- -->
+    <!-- --- JAVASCRIPT: LOGIKA TURUN BARIS --- -->
     <script>
-        let currentInput = "0"; // Menyimpan angka yang sedang aktif diketik
-        let expression = "";    // Menyimpan baris matematika lengkap untuk dievaluasi
-
+        let currentLine = "";  // Menyimpan ketikan baris saat ini (misal: 5*2)
+        let fullHistory = "";  // Menyimpan seluruh teks kumulatif yang tampil di layar
+        
         const displayScreen = document.getElementById("display-screen");
-        const historyScreen = document.getElementById("history-screen");
-
-        function updateScreen() {
-            displayScreen.textContent = currentInput;
-            historyScreen.textContent = expression;
-        }
 
         function appendNumber(num) {
-            if (currentInput === "0") {
-                currentInput = num;
-            } else {
-                currentInput += num;
-            }
-            updateScreen();
+            currentLine += num;
+            renderDisplay();
         }
 
         function appendOperator(op) {
-            // Pasang angka terakhir ke susunan rumus matematika eksekusi
-            if (currentInput !== "0" || expression === "") {
-                expression += currentInput + " " + op + " ";
-            } else {
-                // Jika operator ditekan berturut-turut, ganti operator terakhir
-                expression = expression.slice(0, -3) + " " + op + " ";
-            }
-            currentInput = "0"; // reset pengetikan angka baru setelah operator
-            updateScreen();
+            // Mengubah simbol perkalian dan pembagian agar terlihat rapi di layar
+            let visualOp = op;
+            if (op === '*') visualOp = 'x';
+            if (op === '/') visualOp = '÷';
+
+            currentLine += " " + visualOp + " ";
+            renderDisplay();
         }
 
         function calculate() {
-            if (expression === "") return;
-            
-            // Tambahkan input angka paling akhir ke ekspresi penuh
-            expression += currentInput;
-            
+            if (currentLine.trim() === "") return;
+
             try {
-                // Eksekusi string matematika menggunakan fungsi eval bawaan browser
-                let rawResult = eval(expression);
+                // Konversi simbol visual 'x' kembali menjadi '*' untuk dievaluasi JavaScript
+                let mathExpression = currentLine.replace(/x/g, '*').replace(/÷/g, '/');
                 
-                // Batasi desimal panjang jika ada pembagian sisa banyak
+                // Hitung hasil matematika
+                let rawResult = eval(mathExpression);
                 let finalResult = Number(rawResult.toFixed(4)).toString();
                 
-                currentInput = finalResult; 
-                expression = ""; // Reset riwayat atas setelah ditekan sama dengan
+                // Satukan teks rumusan dengan hasil di baris baru (\n)
+                fullHistory += currentLine + "\n=" + finalResult + "\n\n";
+                
+                // Reset baris masukan baru untuk perhitungan selanjutnya
+                currentLine = ""; 
             } catch (error) {
-                currentInput = "Error";
-                expression = "";
+                fullHistory += currentLine + "\n=Error\n\n";
+                currentLine = "";
             }
-            updateScreen();
+            renderDisplay();
+            
+            // Otomatis scroll layar ke bagian paling bawah jika riwayat sudah panjang
+            displayScreen.scrollTop = displayScreen.scrollHeight;
         }
 
         function clearDisplay() {
-            currentInput = "0";
-            expression = "";
-            updateScreen();
+            currentLine = "";
+            fullHistory = "";
+            renderDisplay();
+        }
+
+        function renderDisplay() {
+            // Tampilkan riwayat lama digabung dengan ketikan yang sedang berjalan
+            displayScreen.textContent = fullHistory + currentLine;
         }
     </script>
 </body>
