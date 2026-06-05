@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Logaritma & Aturan Sturges</title>
+    <!-- Menggunakan Bootstrap 5 untuk tampilan yang rapi dan responsif -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <style>
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .radio-item input {
+            display: none;
+        }
+        .radio-item label {
+            display: block;
+            text-align: center;
+            padding: 6px;
+            background: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .radio-item input:checked + label {
+            background-color: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+        .result-box {
+            background-color: #e9ecef;
+            border-left: 5px solid #0d6efd;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Kalkulator Log & Aturan Sturges (1 - 100)</h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted text-center">Pilih jumlah sampel data (n) di bawah ini untuk melihat nilai logaritma dan hasil perhitungan banyak kelas.</p>
+                    
+                    <!-- Grid Radio Button dari 1 sampai 100 -->
+                    <h5 class="mb-3">1. Pilih Angka (n):</h5>
+                    <div class="radio-grid mb-4" id="radioContainer">
+                        <!-- Generasi radio button otomatis menggunakan JavaScript -->
+                    </div>
+
+                    <!-- Input Opsional untuk Rentang Data -->
+                    <h5 class="mb-3">2. Masukkan Rentang Data (Opsional):</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <label for="valMin" class="form-label">Nilai Terkecil (Xmin)</label>
+                            <input type="number" id="valMin" class="form-control" placeholder="Contoh: 40">
+                        </div>
+                        <div class="col-6">
+                            <label for="valMax" class="form-label">Nilai Terbesar (Xmax)</label>
+                            <input type="number" id="valMax" class="form-control" placeholder="Contoh: 95">
+                        </div>
+                    </div>
+
+                    <!-- Tombol Hitung -->
+                    <button class="btn btn-success w-100 py-2 fw-bold mb-4" onclick="hitungSturges()">HITUNG SEKARANG</button>
+
+                    <!-- Kotak Hasil Perhitungan -->
+                    <div class="result-box p-4 rounded d-none" id="resultContainer">
+                        <h4 class="text-primary mb-3">Hasil Perhitungan:</h4>
+                        <div class="row fs-5">
+                            <div class="col-12 mb-2">
+                                <strong>Nilai \( \log(n) \):</strong> <span id="resLog" class="badge bg-secondary fs-6">0</span>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <strong>Banyak Kelas (k):</strong> 
+                                <span id="resKRaw">0</span> &rarr; Dibulatkan menjadi <strong id="resKRound" class="text-danger">0</strong>
+                            </div>
+                            <div class="col-12 d-none" id="resIntervalRow">
+                                <strong>Rentang (R):</strong> <span id="resR">0</span><br>
+                                <strong>Panjang Interval Class (i):</strong> 
+                                <span id="resIRaw">0</span> &rarr; Dibulatkan ke atas menjadi <strong id="resIRound" class="text-success">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Mengisi grid radio button secara otomatis dari angka 1 s.d 100 saat halaman dimuat
+    const container = document.getElementById('radioContainer');
+    for (let i = 1; i <= 100; i++) {
+        const div = document.createElement('div');
+        div.className = 'radio-item';
+        // Set angka default terpilih ke 40 sebagai contoh awal
+        const checked = i === 40 ? 'checked' : ''; 
+        
+        div.innerHTML = `
+            <input type="radio" id="num_${i}" name="selectedNumber" value="${i}" ${checked}>
+            <label for="num_${i}">${i}</label>
+        `;
+        container.appendChild(div);
+    }
+
+    // 2. Fungsi Logika Perhitungan Statistik
+    function hitungSturges() {
+        // Ambil angka n dari radio button yang terpilih
+        const selectedRadio = document.querySelector('input[name="selectedNumber"]:checked');
+        if (!selectedRadio) {
+            alert("Silakan pilih angka terlebih dahulu!");
+            return;
+        }
+        
+        const n = parseInt(selectedRadio.value);
+        
+        // Hitung nilai logaritma basis 10
+        const logN = Math.log10(n);
+        
+        // Rumus Sturges: k = 1 + 3.3 * log(n)
+        const kRaw = 1 + (3.3 * logN);
+        const kRound = Math.round(kRaw); // Pembulatan biasa untuk banyak kelas
+
+        // Tampilkan hasil dasar log dan banyak kelas
+        document.getElementById('resLog').innerText = logN.toFixed(4);
+        document.getElementById('resKRaw').innerText = `1 + 3.3 * ${logN.toFixed(4)} = ${kRaw.toFixed(4)}`;
+        document.getElementById('resKRound').innerText = kRound;
+
+        // Cek parameter input nilai min & max
+        const minInput = document.getElementById('valMin').value;
+        const maxInput = document.getElementById('valMax').value;
+        const intervalRow = document.getElementById('resIntervalRow');
+
+        if (minInput !== '' && maxInput !== '') {
+            const xMin = parseFloat(minInput);
+            const xMax = parseFloat(maxInput);
+            
+            if (xMax > xMin) {
+                const R = xMax - xMin; // Hitung Rentang (R)
+                const iRaw = R / kRound; // Hitung Panjang Interval (i)
+                const iRound = Math.ceil(iRaw); // Interval kelas selalu dibulatkan ke atas
+
+                document.getElementById('resR').innerText = `${xMax} - ${xMin} = ${R}`;
+                document.getElementById('resIRaw').innerText = `${R} / ${kRound} = ${iRaw.toFixed(4)}`;
+                document.getElementById('resIRound').innerText = iRound;
+                
+                intervalRow.classList.remove('d-none');
+            } else {
+                alert("Nilai terbesar harus lebih besar daripada nilai terkecil!");
+                intervalRow.classList.add('d-none');
+            }
+        } else {
+            intervalRow.classList.add('d-none');
+        }
+
+        // Tampilkan container hasil
+        document.getElementById('resultContainer').classList.remove('d-none');
+    }
+</script>
+
+</body>
+</html>
