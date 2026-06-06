@@ -2,14 +2,69 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=Folder/index.html">
-    <title>Mengalihkan ke Kalkulator...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kustom Ekonomi IT</title>
+    <link rel="stylesheet" href="∠.css">
 </head>
 <body>
-    <p>Jika Anda tidak dialihkan secara otomatis, silakan klik <a href="Folder/index.html">di sini</a>.</p>
-    <script>
-        // Pengalihan cadangan menggunakan JavaScript jika refresh HTML lambat
-        window.location.href = "Folder/index.html";
-    </script>
+    <div class="calculator-container">
+        <!-- 1. Layar Putih Besar Sesuai Gambar Anda -->
+        <div class="display-section">
+            <div id="result-display">0</div>
+            <div id="formula-display"></div>
+        </div>
+
+        <!-- 2. Baris Operator Horizontal (Ditambah tombol AC/Delete) -->
+        <div class="operator-row">
+            <button class="btn-op" onclick="append('+')">+</button>
+            <button class="btn-op" onclick="append('-')">-</button>
+            <button class="btn-op" onclick="append('*')">&times;</button>
+            <button class="btn-op" onclick="append('/')">:</button>
+            <button class="btn-delete" onclick="clearAll()">AC</button>
+            <button class="btn-equal" onclick="calculate()">=</button>
+        </div>
+
+        <!-- 3. Bagian Bawah: Tiga Kolom Sesuai Gambar Anda -->
+        <div class="bottom-layout">
+            
+            <!-- Kolom 1 (Kiri - Panel Hijau) -->
+            <div class="green-panel">
+                <div class="radio-scroll">
+                    <!-- Opsi Rumus Teknik Ekonomi IT di dalam kotak hijau -->
+                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
+                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (NPV)</label>
+                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
+                    <label><input type="radio" name="calc-option" value="°"> Sudut (°)</label>
+                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
+                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
+                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
+                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
+                </div>
+                <!-- Tombol PILIH Teks Merah -->
+                <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
+            </div>
+
+            <!-- Kolom 2 (Tengah - Angka 6 sampai 0) -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('6')">6</button>
+                <button class="btn-num" onclick="append('7')">7</button>
+                <button class="btn-num" onclick="append('8')">8</button>
+                <button class="btn-num" onclick="append('9')">9</button>
+                <button class="btn-num" onclick="append('0')">0</button>
+            </div>
+
+            <!-- Kolom 3 (Kanan - Angka 1 sampai 5) -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('1')">1</button>
+                <button class="btn-num" onclick="append('2')">2</button>
+                <button class="btn-num" onclick="append('3')">3</button>
+                <button class="btn-num" onclick="append('4')">4</button>
+                <button class="btn-num" onclick="append('5')">5</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="∠.js"></script>
 </body>
 </html>
