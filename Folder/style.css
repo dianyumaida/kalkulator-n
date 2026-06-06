@@ -11,84 +11,88 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 10px;
+    padding: 15px;
 }
 
+/* KUNCI UTAMA: Menggunakan Gambar Anda Langsung dari Folder gbr */
 .calculator-container {
     background-image: url('gambar/bodykal.jpg');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    padding: 15px;
+    background-repeat: no-repeat;
     width: 100%;
     max-width: 360px;
+    height: 640px; 
+    border: 2px solid #000000;
+    border-radius: 12px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
+/* Membuat Area Tombol HTML Bening/Transparan 
+   Agar Gambar Asli di Belakangnya Terlihat Sempurna */
+.btn-op, .btn-equal, .btn-delete, .btn-num, .btn-pilih {
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000000;
+    cursor: pointer;
+    box-shadow: none !important;
+}
+
+/* Layar Monitor Bening Atas */
 .display-section {
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    height: 140px;
-    padding: 10px;
+    background: transparent;
+    border: none;
+    height: 110px;
+    width: 100%;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: space-between;
 }
 
 #result-display {
     color: #cc2222;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
 }
 
 #formula-display {
-    color: #555555;
+    color: #333333;
     font-size: 1rem;
-    margin-top: 5px;
+    text-align: right;
 }
 
+/* Penyelarasan Layout Baris dan Kolom */
 .operator-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 6px;
-}
-
-.btn-op, .btn-equal, .btn-delete {
-    background-color: #fddede;
-    border: 2px solid #000000;
-    border-radius: 6px;
-    padding: 12px 0;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #000000;
-    cursor: pointer;
-    text-align: center;
-}
-
-.btn-delete {
-    background-color: #ffcccc;
-    color: #cc2222;
+    gap: 4px;
+    margin-top: 15px;
+    height: 45px;
 }
 
 .bottom-layout {
     display: grid;
-    grid-template-columns: 1.3fr 1fr 1fr;
-    gap: 8px;
+    grid-template-columns: 1.25fr 1fr 1fr;
+    gap: 6px;
+    margin-top: 25px;
+    height: 290px;
 }
 
 .green-panel {
-    background-color: #e2f0d9;
-    border: 2px solid #000000;
-    border-radius: 6px;
-    padding: 6px;
+    background: transparent;
+    border: none;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 265px;
+    height: 100%;
 }
 
 .radio-scroll {
@@ -96,51 +100,30 @@ body {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    max-height: 210px;
+    max-height: 220px;
 }
 
 .radio-scroll label {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid #000000;
-    padding: 5px;
-    font-size: 0.8rem;
+    padding: 4px;
+    font-size: 0.75rem;
     color: #000000;
     display: flex;
     align-items: center;
     gap: 4px;
     border-radius: 4px;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.btn-pilih {
-    background-color: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 4px;
-    color: #cc2222;
-    font-weight: bold;
-    padding: 8px 0;
-    font-size: 0.85rem;
-    cursor: pointer;
-    text-align: center;
 }
 
 .num-column {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 10px;
+    padding-top: 5px;
 }
 
 .btn-num {
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 6px;
-    padding: 12px 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #000000;
-    cursor: pointer;
-    height: 48px;
+    height: 46px;
     display: flex;
     justify-content: center;
     align-items: center;
