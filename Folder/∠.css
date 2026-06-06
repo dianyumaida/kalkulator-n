@@ -2,7 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -11,119 +11,139 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: #c9d1d9;
 }
 
 .calculator-container {
-    /* MEMANGGIL GAMBAR DARI FOLDER gambar */
-    background-image: url('gambar/bodykal.jpg');
+    background-image: url('gambar/bodykal.jpg'); /* Gambar Anda tetap jadi background utama */
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
-
-h2 {
-    font-size: 1.1rem;
-    text-align: center;
-    margin-bottom: 15px;
-    color: #58a6ff;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-}
-
-.display-section {
-    background-color: rgba(13, 17, 23, 0.85); /* Semi-transparan agar serasi */
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-#formula-display, #result-display {
-    width: 100%;
-    background: transparent;
-    border: none;
-    text-align: right;
-    outline: none;
-}
-
-#formula-display { color: #8b949e; font-size: 0.9rem; }
-#result-display { color: #ffffff; font-size: 1.8rem; font-weight: bold; margin-top: 5px; }
-
-.main-layout {
+    background-color: #ffffff; /* Cadangan putih */
+    border: 2px solid #000000;
+    padding: 15px;
+    width: 360px;
     display: flex;
-    gap: 15px;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.radio-panel {
-    flex: 1;
-    background-color: rgba(13, 17, 23, 0.8); /* Panel radio transparan */
-    border: 1px solid #30363d;
-    border-radius: 6px;
+/* Layar Putih Besar dengan Angka Merah di Kiri Atas */
+.display-section {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    height: 150px;
     padding: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
-.radio-panel h3 {
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    color: #8b949e;
+#result-display {
+    color: #cc2222;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
-.scrollable {
-    max-height: 220px;
+#formula-display {
+    color: #555555;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+/* Baris Operator Horizontal */
+.operator-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+}
+
+.btn-op, .btn-equal, .btn-delete {
+    background-color: #fddede; /* Warna merah muda lembut sesuai gambar Anda */
+    border: 2px solid #000000;
+    border-radius: 6px;
+    padding: 12px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000000;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background-color: #ffcccc;
+    color: #cc2222;
+}
+
+/* Tata Letak 3 Kolom Bagian Bawah */
+.bottom-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 8px;
+}
+
+/* Kolom Kiri - Panel Hijau */
+.green-panel {
+    background-color: #e2f0d9; /* Warna hijau lembut sesuai gambar Anda */
+    border: 2px solid #000000;
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 260px;
+}
+
+.radio-scroll {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-right: 5px;
+    gap: 6px;
+    max-height: 200px;
 }
 
-.scrollable::-webkit-scrollbar { width: 5px; }
-.scrollable::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-
-label {
-    font-size: 0.95rem;
-    cursor: pointer;
+.radio-scroll label {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding: 6px;
+    font-size: 0.85rem;
+    color: #000000;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.buttons-grid {
-    width: 120px;
+/* Tombol PILIH Teks Merah */
+.btn-pilih {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    color: #cc2222;
+    font-weight: bold;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Kolom Angka (Tengah dan Kanan) */
+.num-column {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* TOMBOL DENGAN EFEK SEMI-TRANSPARAN (RGBA) */
-.btn {
-    background-color: rgba(33, 38, 45, 0.75); /* Transparan 75% */
-    border: 1px solid #30363d;
-    color: #c9d1d9;
-    padding: 12px;
-    font-size: 1.1rem;
+.btn-num {
+    background-color: #ffffff;
+    border: 2px solid #000000;
     border-radius: 6px;
+    padding: 12px 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #000000;
     cursor: pointer;
-    transition: background 0.2s;
-    text-align: center;
-    backdrop-filter: blur(4px); /* Efek blur kaca di balik tombol */
+    height: 47px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-.btn:hover { background-color: rgba(48, 54, 61, 0.9); }
-.btn-select { background-color: rgba(31, 111, 235, 0.8); color: white; font-weight: bold; margin-top: 10px; width: 100%; }
-.btn-select:hover { background-color: #388bfd; }
-.btn-action { background-color: rgba(218, 54, 55, 0.8); color: white; }
-.btn-action:hover { background-color: #f85149; }
-.btn-operator { background-color: rgba(255, 152, 0, 0.8); color: white; }
-.btn-operator:hover { background-color: #ffa726; }
-.btn-equal { background-color: rgba(35, 134, 54, 0.8); color: white; flex-grow: 1; font-weight: bold; }
-.btn-equal:hover { background-color: #2ea043; }
