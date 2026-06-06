@@ -3,60 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Minimalis Teknik Ekonomi IT</title>
-    
-    <!-- MENGHUBUNGKAN KE FILE CSS DENGAN NAMA SIMBOL ∠.css -->
-    <link rel="stylesheet" href="∠.css">
+    <title>Kalkulator Kustom Ekonomi IT</title>
+    <!-- Pemanggilan file CSS yang sudah diganti nama menjadi standar -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="calculator-container">
-        <h2>Kalkulator Ekonomi IT (Radio Input)</h2>
-        
+        <!-- 1. Layar Putih Besar -->
         <div class="display-section">
-            <input type="text" id="formula-display" readonly placeholder="Rumus">
-            <input type="text" id="result-display" readonly placeholder="0">
+            <div id="result-display">0</div>
+            <div id="formula-display"></div>
         </div>
 
-        <div class="main-layout">
-            <!-- Panel Kiri: Pilihan Opsi Radio -->
-            <div class="radio-panel">
-                <h3>Pilih Angka / Fungsi:</h3>
-                <div class="radio-group scrollable">
-                    <label><input type="radio" name="calc-option" value="1" checked> 🔢 Angka 1</label>
-                    <label><input type="radio" name="calc-option" value="2"> 🔢 Angka 2</label>
-                    <label><input type="radio" name="calc-option" value="3"> 🔢 Angka 3</label>
-                    <label><input type="radio" name="calc-option" value="4"> 🔢 Angka 4</label>
-                    <label><input type="radio" name="calc-option" value="5"> 🔢 Angka 5</label>
-                    <label><input type="radio" name="calc-option" value="6"> 🔢 Angka 6</label>
-                    <label><input type="radio" name="calc-option" value="7"> 🔢 Angka 7</label>
-                    <label><input type="radio" name="calc-option" value="8"> 🔢 Angka 8</label>
-                    <label><input type="radio" name="calc-option" value="9"> 🔢 Angka 9</label>
-                    <label><input type="radio" name="calc-option" value="0"> 🔢 Angka 0</label>
-                    <label><input type="radio" name="calc-option" value="."> 🎯 Titik (.)</label>
-                    <label><input type="radio" name="calc-option" value="integral"> 🌐 ∫ dx (PV Kontinu)</label>
-                    <label><input type="radio" name="calc-option" value="sigma"> 📈 ∑ (Total NPV)</label>
-                    <label><input type="radio" name="calc-option" value="^"> ⚡ Pangkat (^)</label>
-                    <label><input type="radio" name="calc-option" value="°"> 📐 Sudut (&deg;)</label>
-                    <label><input type="radio" name="calc-option" value="%"> 📊 Persen (%)</label>
-                    <label><input type="radio" name="calc-option" value="("> 🔓 Kurung (</label>
-                    <label><input type="radio" name="calc-option" value=")"> 🔒 Kurung )</label>
+        <!-- 2. Baris Operator Horizontal -->
+        <div class="operator-row">
+            <button class="btn-op" onclick="append('+')">+</button>
+            <button class="btn-op" onclick="append('-')">-</button>
+            <button class="btn-op" onclick="append('*')">&times;</button>
+            <button class="btn-op" onclick="append('/')">:</button>
+            <button class="btn-delete" onclick="clearAll()">AC</button>
+            <button class="btn-equal" onclick="calculate()">=</button>
+        </div>
+
+        <!-- 3. Bagian Bawah: Tiga Kolom Sesuai Gambar Anda -->
+        <div class="bottom-layout">
+            
+            <!-- Kolom Kiri - Panel Hijau -->
+            <div class="green-panel">
+                <div class="radio-scroll">
+                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
+                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (NPV)</label>
+                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
+                    <label><input type="radio" name="calc-option" value="°"> Sudut (°)</label>
+                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
+                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
+                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
+                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
                 </div>
-                <button class="btn btn-select" onclick="insertRadioValue()">📥 PILIH</button>
+                <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
             </div>
 
-            <!-- Panel Kanan: Operator Dasar & Aksi -->
-            <div class="buttons-grid">
-                <button class="btn btn-action" onclick="clearAll()">❌ AC</button>
-                <button class="btn btn-operator" onclick="append('/')">&divide;</button>
-                <button class="btn btn-operator" onclick="append('*')">&times;</button>
-                <button class="btn btn-operator" onclick="append('-')">&minus;</button>
-                <button class="btn btn-operator" onclick="append('+')">+</button>
-                <button class="btn btn-equal" onclick="calculate()">=</button>
+            <!-- Kolom Tengah - Angka 6 sampai 0 -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('6')">6</button>
+                <button class="btn-num" onclick="append('7')">7</button>
+                <button class="btn-num" onclick="append('8')">8</button>
+                <button class="btn-num" onclick="append('9')">9</button>
+                <button class="btn-num" onclick="append('0')">0</button>
             </div>
+
+            <!-- Kolom Kanan - Angka 1 sampai 5 -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('1')">1</button>
+                <button class="btn-num" onclick="append('2')">2</button>
+                <button class="btn-num" onclick="append('3')">3</button>
+                <button class="btn-num" onclick="append('4')">4</button>
+                <button class="btn-num" onclick="append('5')">5</button>
+            </div>
+
         </div>
     </div>
 
-    <!-- MENGHUBUNGKAN KE FILE JAVASCRIPT DENGAN NAMA SIMBOL ∠.js -->
-    <script src="∠.js"></script>
+    <!-- Pemanggilan file JS yang sudah diganti nama menjadi standar -->
+    <script src="script.js"></script>
 </body>
 </html>
