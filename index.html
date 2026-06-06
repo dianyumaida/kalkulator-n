@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Kustom Ekonomi IT</title>
     <style>
-        /* ==========================================
-           🎨 SEKSI DESAIN TAMPILAN (CSS KUNCI SKETSA)
-           ========================================== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -24,16 +21,15 @@
             padding: 15px;
         }
 
-        /* Kotak Utama Kalkulator */
         .calculator-container {
-            background-image: url('Folder/gambar/bodykal.jpg'); /* Jalur gambar latar Anda */
+            background-image: url('Folder/gambar/bodykal.jpg');
             background-size: cover;
             background-position: center;
-            background-color: #ffffff; /* Cadangan jika gambar belum termuat */
+            background-color: #ffffff;
             border: 3px solid #000000;
             padding: 15px;
             width: 100%;
-            max-width: 360px; /* Lebar ideal untuk layar HP Anda */
+            max-width: 360px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -41,7 +37,6 @@
             border-radius: 8px;
         }
 
-        /* 1. Layar Putih Besar */
         .display-section {
             background-color: #ffffff;
             border: 2px solid #000000;
@@ -55,7 +50,7 @@
         }
 
         #result-display {
-            color: #cc2222; /* Angka merah di kiri atas sesuai sketsa */
+            color: #cc2222;
             font-size: 2rem;
             font-weight: bold;
             line-height: 1;
@@ -68,7 +63,6 @@
             word-break: break-all;
         }
 
-        /* 2. Baris Operator Tengah Horizontal (5 Tombol + AC) */
         .operator-row {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -76,7 +70,7 @@
         }
 
         .btn-op, .btn-equal, .btn-delete {
-            background-color: #fddede; /* Warna merah muda lembut */
+            background-color: #fddede;
             border: 2px solid #000000;
             border-radius: 6px;
             height: 45px;
@@ -94,16 +88,14 @@
             color: #cc2222;
         }
 
-        /* 3. Bagian Bawah: Tata Letak 3 Kolom */
         .bottom-layout {
             display: grid;
             grid-template-columns: 1.3fr 1fr 1fr;
             gap: 8px;
         }
 
-        /* Kolom 1: Panel Hijau Kiri */
         .green-panel {
-            background-color: #e2f0d9; /* Warna hijau lembut sketsa */
+            background-color: #e2f0d9;
             border: 2px solid #000000;
             border-radius: 6px;
             padding: 6px;
@@ -135,7 +127,6 @@
             white-space: nowrap;
         }
 
-        /* Tombol PILIH Teks Merah */
         .btn-pilih {
             background-color: #ffffff;
             border: 1px solid #000000;
@@ -148,7 +139,6 @@
             text-align: center;
         }
 
-        /* Kolom 2 & 3: Kolom Angka */
         .num-column {
             display: flex;
             flex-direction: column;
@@ -172,18 +162,12 @@
 </head>
 <body>
 
-    <!-- ==========================================
-         🌐 SEKSI STRUKTUR TOMBOL (HTML)
-         ========================================== -->
     <div class="calculator-container">
-        
-        <!-- Layar Tampilan Atas -->
         <div class="display-section">
             <div id="result-display">0</div>
             <div id="formula-display"></div>
         </div>
 
-        <!-- Baris Operator Tengah -->
         <div class="operator-row">
             <button class="btn-op" onclick="append('+')">+</button>
             <button class="btn-op" onclick="append('-')">-</button>
@@ -193,10 +177,7 @@
             <button class="btn-equal" onclick="calculate()">=</button>
         </div>
 
-        <!-- Bagian 3 Kolom Bawah -->
         <div class="bottom-layout">
-            
-            <!-- Kolom Kiri (Panel Hijau) -->
             <div class="green-panel">
                 <div class="radio-scroll">
                     <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
@@ -211,7 +192,6 @@
                 <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
             </div>
 
-            <!-- Kolom Tengah (6-0) -->
             <div class="num-column">
                 <button class="btn-num" onclick="append('6')">6</button>
                 <button class="btn-num" onclick="append('7')">7</button>
@@ -220,7 +200,6 @@
                 <button class="btn-num" onclick="append('0')">0</button>
             </div>
 
-            <!-- Kolom Kanan (1-5) -->
             <div class="num-column">
                 <button class="btn-num" onclick="append('1')">1</button>
                 <button class="btn-num" onclick="append('2')">2</button>
@@ -228,13 +207,9 @@
                 <button class="btn-num" onclick="append('4')">4</button>
                 <button class="btn-num" onclick="append('5')">5</button>
             </div>
-
         </div>
     </div>
 
-    <!-- ==========================================
-         ⚙️ SEKSI LOGIKA PERHITUNGAN (JAVASCRIPT)
-         ========================================== -->
     <script>
         let formulaDisplay = document.getElementById('formula-display');
         let resultDisplay = document.getElementById('result-display');
@@ -289,3 +264,35 @@
                 currentInput = '∫(0,5)[20000*e^(-0.08*t)]';
             } else if (mode === 'sigma') {
                 currentInput = '∑(t=1,4)[10000/(1+0.1)^t]';
+            }
+            formulaDisplay.innerText = currentInput;
+        }
+
+        function calculate() {
+            try {
+                let expression = currentInput;
+
+                if (activeMode === 'integral') {
+                    let f = (t) => 20000 * Math.exp(-0.08 * t);
+                    let a = 0, b = 5, n = 1000, h = (b - a) / n;
+                    let sum = 0.5 * (f(a) + f(b));
+                    for (let i = 1; i < n; i++) sum += f(a + i * h);
+                    resultDisplay.innerText = (sum * h).toFixed(2);
+                    return;
+                }
+
+                if (activeMode === 'sigma') {
+                    let total = 0;
+                    let cashFlow = 10000;
+                    let rate = 0.1;
+                    for (let t = 1; t <= 4; t++) {
+                        total += cashFlow / Math.pow(1 + rate, t);
+                    }
+                    resultDisplay.innerText = total.toFixed(2);
+                    return;
+                }
+
+                if (expression.includes('°')) {
+                    expression = expression.replace(/(\d+)(?=°)/g, (match) => {
+                        return (parseFloat(match) * Math.PI / 180).toFixed(6);
+                    });
