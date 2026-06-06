@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Multi-Rumus & Tabel Trigonometri Lengkap</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #0f172a;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Radio Button Grid */
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .radio-box {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .radio-box input {
+            margin-right: 8px;
+            accent-color: var(--primary);
+        }
+
+        .radio-box:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        /* Form Styling */
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Box Output */
+        .result-box {
+            margin-top: 15px;
+            padding: 14px;
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            border-radius: 4px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .result-box.error {
+            background: #fef2f2;
+            border-left-color: #dc2626;
+            color: #991b1b;
+        }
+
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Tables */
+        .table-responsive { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 500px;
+        }
+        th, td { padding: 10px; border: 1px solid var(--border); font-size: 14px; }
+        th { background-color: #f1f5f9; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+
+        .clickable {
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .clickable:hover {
+            background-color: #e0f2fe !important;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Multi-Rumus & Tabel Sudut</h1>
+
+    <!-- BAGIAN 1: KALKULATOR UTAMA (DENGAN PILIHAN RADIO BUTTON) -->
+    <div class="card">
+        <h2>1. Panel Perhitungan Nilai Sudut</h2>
+        <p style="text-align:center; font-size:13px; color:#64748b;">Pilih jenis rumus melalui tombol radio, masukkan angka, lalu jalankan hitungan.</p>
+        
+        <div class="grid-2">
+            <!-- Kolom Input & Kontrol -->
+            <div>
+                <label>Pilih Rumus Utama:</label>
+                <div class="radio-grid">
+                    <label class="radio-box"><input type="radio" name="main-func" value="sin" checked onclick="toggleInputs()"> Sin (sin)</label>
+                    <label class="radio-box"><input type="radio" name="main-func" value="cos" onclick="toggleInputs()"> Cos (cos)</label>
+                    <label class="radio-box"><input type="radio" name="main-func" value="tan" onclick="toggleInputs()"> Tan (tan)</label>
+                    <label class="radio-box"><input type="radio" name="main-func" value="csc" onclick="toggleInputs()"> Csc (1/sin)</label>
+                    <label class="radio-box"><input type="radio" name="main-func" value="sec" onclick="toggleInputs()"> Sec (1/cos)</label>
+                    <label class="radio-box"><input type="radio" name="main-func" value="cot" onclick="toggleInputs()"> Cot (1/tan)</label>
+                </div>
+
+                <label>Variasi Rumus Sudut:</label>
+                <div class="radio-grid">
+                    <label class="radio-box"><input type="radio" name="angle-var" value="single" checked onclick="toggleInputs()"> Sudut Tunggal (θ)</label>
+                    <label class="radio-box"><input type="radio" name="angle-var" value="double" onclick="toggleInputs()"> Sudut Ganda (2&alpha;)</label>
+                    <label class="radio-box"><input type="radio" name="angle-var" value="add" onclick="toggleInputs()"> Jumlah (&alpha;+&beta;)</label>
+                    <label class="radio-box"><input type="radio" name="angle-var" value="sub" onclick="toggleInputs()"> Selisih (&alpha;-&beta;)</label>
+                </div>
+
+                <div class="input-group" id="inputA-container">
+                    <label id="labelA" for="inputA">Besar Sudut Utama / &alpha; (&deg;):</label>
+                    <input type="number" id="inputA" placeholder="Contoh: 30" min="0" max="360" value="30">
+                </div>
+
+                <div class="input-group" id="inputB-container" style="display:none;">
+                    <label for="inputB">Besar Sudut Kedua / &beta; (&deg;):</label>
+                    <input type="number" id="inputB" placeholder="Contoh: 45" min="0" max="360" value="45">
+                </div>
+
+                <button onclick="prosesKalkulasiUtama()">Hitung Nilai Rumus</button>
+            </div>
+
+            <!-- Kolom Hasil Konten -->
+            <div>
+                <label>Hasil Perhitungan:</label>
+                <div id="main-result" class="result-box" style="display:block; background:#f8fafc; border-left-color:#cbd5e1;">
+                    Silakan tentukan parameter rumus dan klik tombol hitung untuk memproses angka.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAGIAN 2: RUMUS BANGUN DATAR / POLIGON -->
+    <div class="card">
+        <h2>2. Rumus Jumlah Sudut Dalam Poligon (Bangun Datar)</h2>
+        <div class="grid-2">
+            <div>
+                <div class="input-group">
+                    <label for="sisiPoligon">Masukkan Jumlah Sisi Bangun Datar (n):</label>
+                    <input type="number" id="sisiPoligon" placeholder="Contoh: 3 untuk segitiga, 4 segi empat" min="3" value="3">
+                </div>
+                <button onclick="hitungSudutPoligon()">Hitung Total Sudut Internal</button>
+            </div>
+            <div>
+                <div id="poligon-result" class="result-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BAGIAN 3: TABEL INTERAKTIF EMPAT KUADRAN -->
+    <div class="card">
+        <h2>3. Tabel Sudut Istimewa Terintegrasi (0&deg; - 360&deg;)</h2>
+        <p style="font-size: 13px; text-align: center; color: #64748b; margin-bottom: 15px;">💡 Tips: Klik nilai sel angka pada tabel untuk memuat dan menghitung otomatis di panel utama.</p>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="gantiTab('k1')">Kuadran I (0°-90°)</button>
+            <button class="tab-btn" onclick="gantiTab('k2')">Kuadran II (90°-180°)</button>
+            <button class="tab-btn" onclick="gantiTab('k3')">Kuadran III (180°-270°)</button>
+            <button class="tab-btn" onclick="gantiTab('k4')">Kuadran IV (270°-360°)</button>
+        </div>
+
+        <!-- Kuadran I -->
+        <div id="k1" class="tab-content active"><div class="table-responsive"><table>
+            <thead><tr><th>Fungsi</th><th>0&deg;</th><th>30&deg;</th><th>45&deg;</th><th>60&deg;</th><th>90&deg;</th></tr></thead>
+            <tbody>
