@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Minimalis Teknik Ekonomi IT</title>
-    <link rel="stylesheet" href="styles.css">
+    
+    <!-- MENGHUBUNGKAN KE FILE CSS DENGAN NAMA SIMBOL ∠.css -->
+    <link rel="stylesheet" href="∠.css">
 </head>
 <body>
     <div class="calculator-container">
@@ -16,35 +18,35 @@
         </div>
 
         <div class="main-layout">
-            <!-- Panel Kiri: Radio Button -->
+            <!-- Panel Kiri: Pilihan Opsi Radio -->
             <div class="radio-panel">
                 <h3>Pilih Angka / Fungsi:</h3>
                 <div class="radio-group scrollable">
-                    <label><input type="radio" name="calc-option" value="1" checked> Angka 1</label>
-                    <label><input type="radio" name="calc-option" value="2"> Angka 2</label>
-                    <label><input type="radio" name="calc-option" value="3"> Angka 3</label>
-                    <label><input type="radio" name="calc-option" value="4"> Angka 4</label>
-                    <label><input type="radio" name="calc-option" value="5"> Angka 5</label>
-                    <label><input type="radio" name="calc-option" value="6"> Angka 6</label>
-                    <label><input type="radio" name="calc-option" value="7"> Angka 7</label>
-                    <label><input type="radio" name="calc-option" value="8"> Angka 8</label>
-                    <label><input type="radio" name="calc-option" value="9"> Angka 9</label>
-                    <label><input type="radio" name="calc-option" value="0"> Angka 0</label>
-                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
-                    <label><input type="radio" name="calc-option" value="integral"> ∫ dx (PV Kontinu)</label>
-                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (Total NPV Manual)</label>
-                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
-                    <label><input type="radio" name="calc-option" value="°"> Sudut (&deg;)</label>
-                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
-                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
-                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
+                    <label><input type="radio" name="calc-option" value="1" checked> 🔢 Angka 1</label>
+                    <label><input type="radio" name="calc-option" value="2"> 🔢 Angka 2</label>
+                    <label><input type="radio" name="calc-option" value="3"> 🔢 Angka 3</label>
+                    <label><input type="radio" name="calc-option" value="4"> 🔢 Angka 4</label>
+                    <label><input type="radio" name="calc-option" value="5"> 🔢 Angka 5</label>
+                    <label><input type="radio" name="calc-option" value="6"> 🔢 Angka 6</label>
+                    <label><input type="radio" name="calc-option" value="7"> 🔢 Angka 7</label>
+                    <label><input type="radio" name="calc-option" value="8"> 🔢 Angka 8</label>
+                    <label><input type="radio" name="calc-option" value="9"> 🔢 Angka 9</label>
+                    <label><input type="radio" name="calc-option" value="0"> 🔢 Angka 0</label>
+                    <label><input type="radio" name="calc-option" value="."> 🎯 Titik (.)</label>
+                    <label><input type="radio" name="calc-option" value="integral"> 🌐 ∫ dx (PV Kontinu)</label>
+                    <label><input type="radio" name="calc-option" value="sigma"> 📈 ∑ (Total NPV)</label>
+                    <label><input type="radio" name="calc-option" value="^"> ⚡ Pangkat (^)</label>
+                    <label><input type="radio" name="calc-option" value="°"> 📐 Sudut (&deg;)</label>
+                    <label><input type="radio" name="calc-option" value="%"> 📊 Persen (%)</label>
+                    <label><input type="radio" name="calc-option" value="("> 🔓 Kurung (</label>
+                    <label><input type="radio" name="calc-option" value=")"> 🔒 Kurung )</label>
                 </div>
-                <button class="btn btn-select" onclick="insertRadioValue()">PILIH</button>
+                <button class="btn btn-select" onclick="insertRadioValue()">📥 PILIH</button>
             </div>
 
-            <!-- Panel Kanan: Tombol Operator -->
+            <!-- Panel Kanan: Operator Dasar & Aksi -->
             <div class="buttons-grid">
-                <button class="btn btn-action" onclick="clearAll()">AC</button>
+                <button class="btn btn-action" onclick="clearAll()">❌ AC</button>
                 <button class="btn btn-operator" onclick="append('/')">&divide;</button>
                 <button class="btn btn-operator" onclick="append('*')">&times;</button>
                 <button class="btn btn-operator" onclick="append('-')">&minus;</button>
@@ -54,6 +56,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- MENGHUBUNGKAN KE FILE JAVASCRIPT DENGAN NAMA SIMBOL ∠.js -->
+    <script src="∠.js"></script>
 </body>
 </html>
