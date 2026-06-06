@@ -2,12 +2,290 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=Folder/index.html">
-    <title>Mengalihkan ke Kalkulator...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kustom Ekonomi IT</title>
+    <style>
+        /* ==========================================
+           🎨 SEKSI DESAIN TAMPILAN (CSS KUNCI SKETSA)
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        /* Kotak Utama Kalkulator */
+        .calculator-container {
+            background-image: url('Folder/gambar/bodykal.jpg'); /* Jalur gambar latar Anda */
+            background-size: cover;
+            background-position: center;
+            background-color: #ffffff; /* Cadangan jika gambar belum termuat */
+            border: 3px solid #000000;
+            padding: 15px;
+            width: 100%;
+            max-width: 360px; /* Lebar ideal untuk layar HP Anda */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-radius: 8px;
+        }
+
+        /* 1. Layar Putih Besar */
+        .display-section {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            height: 120px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border-radius: 4px;
+        }
+
+        #result-display {
+            color: #cc2222; /* Angka merah di kiri atas sesuai sketsa */
+            font-size: 2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        #formula-display {
+            color: #555555;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+
+        /* 2. Baris Operator Tengah Horizontal (5 Tombol + AC) */
+        .operator-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+        }
+
+        .btn-op, .btn-equal, .btn-delete {
+            background-color: #fddede; /* Warna merah muda lembut */
+            border: 2px solid #000000;
+            border-radius: 6px;
+            height: 45px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000000;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-delete {
+            background-color: #ffcccc;
+            color: #cc2222;
+        }
+
+        /* 3. Bagian Bawah: Tata Letak 3 Kolom */
+        .bottom-layout {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        /* Kolom 1: Panel Hijau Kiri */
+        .green-panel {
+            background-color: #e2f0d9; /* Warna hijau lembut sketsa */
+            border: 2px solid #000000;
+            border-radius: 6px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 250px;
+        }
+
+        .radio-scroll {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            max-height: 195px;
+        }
+
+        .radio-scroll label {
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            padding: 5px;
+            font-size: 0.75rem;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* Tombol PILIH Teks Merah */
+        .btn-pilih {
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            color: #cc2222;
+            font-weight: bold;
+            padding: 6px 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Kolom 2 & 3: Kolom Angka */
+        .num-column {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-num {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000000;
+            cursor: pointer;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- ==========================================
+         🌐 SEKSI STRUKTUR TOMBOL (HTML)
+         ========================================== -->
+    <div class="calculator-container">
+        
+        <!-- Layar Tampilan Atas -->
+        <div class="display-section">
+            <div id="result-display">0</div>
+            <div id="formula-display"></div>
+        </div>
+
+        <!-- Baris Operator Tengah -->
+        <div class="operator-row">
+            <button class="btn-op" onclick="append('+')">+</button>
+            <button class="btn-op" onclick="append('-')">-</button>
+            <button class="btn-op" onclick="append('*')">&times;</button>
+            <button class="btn-op" onclick="append('/')">:</button>
+            <button class="btn-delete" onclick="clearAll()">AC</button>
+            <button class="btn-equal" onclick="calculate()">=</button>
+        </div>
+
+        <!-- Bagian 3 Kolom Bawah -->
+        <div class="bottom-layout">
+            
+            <!-- Kolom Kiri (Panel Hijau) -->
+            <div class="green-panel">
+                <div class="radio-scroll">
+                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
+                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (NPV)</label>
+                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
+                    <label><input type="radio" name="calc-option" value="°"> Sudut (°)</label>
+                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
+                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
+                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
+                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
+                </div>
+                <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
+            </div>
+
+            <!-- Kolom Tengah (6-0) -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('6')">6</button>
+                <button class="btn-num" onclick="append('7')">7</button>
+                <button class="btn-num" onclick="append('8')">8</button>
+                <button class="btn-num" onclick="append('9')">9</button>
+                <button class="btn-num" onclick="append('0')">0</button>
+            </div>
+
+            <!-- Kolom Kanan (1-5) -->
+            <div class="num-column">
+                <button class="btn-num" onclick="append('1')">1</button>
+                <button class="btn-num" onclick="append('2')">2</button>
+                <button class="btn-num" onclick="append('3')">3</button>
+                <button class="btn-num" onclick="append('4')">4</button>
+                <button class="btn-num" onclick="append('5')">5</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ⚙️ SEKSI LOGIKA PERHITUNGAN (JAVASCRIPT)
+         ========================================== -->
     <script>
-        window.location.href = "Folder/index.html";
-    </script>
-</body>
-</html>
+        let formulaDisplay = document.getElementById('formula-display');
+        let resultDisplay = document.getElementById('result-display');
+        let currentInput = '';
+        let activeMode = null;
+
+        function append(value) {
+            currentInput += value;
+            formulaDisplay.innerText = currentInput;
+        }
+
+        function clearAll() {
+            currentInput = '';
+            activeMode = null;
+            formulaDisplay.innerText = '';
+            resultDisplay.innerText = '0';
+        }
+
+        function insertRadioValue() {
+            const selectedRadio = document.querySelector('input[name="calc-option"]:checked');
+            if (selectedRadio) {
+                const val = selectedRadio.value;
+                if (val === 'integral' || val === 'sigma') {
+                    setMode(val);
+                } else if (val === '%') {
+                    processPercent();
+                } else {
+                    append(val);
+                }
+            }
+        }
+
+        function processPercent() {
+            if (currentInput) {
+                try {
+                    let tokens = currentInput.split(/([\+\-\*\/])/);
+                    let lastToken = tokens.pop();
+                    if (!isNaN(lastToken) && lastToken !== '') {
+                        let percentValue = parseFloat(lastToken) / 100;
+                        currentInput = tokens.join('') + percentValue;
+                        formulaDisplay.innerText = currentInput;
+                    }
+                } catch (e) {
+                    resultDisplay.innerText = 'Error %';
+                }
+            }
+        }
+
+        function setMode(mode) {
+            activeMode = mode;
+            if (mode === 'integral') {
+                currentInput = '∫(0,5)[20000*e^(-0.08*t)]';
+            } else if (mode === 'sigma') {
+                currentInput = '∑(t=1,4)[10000/(1+0.1)^t]';
