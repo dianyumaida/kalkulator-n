@@ -9,7 +9,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
         }
 
         body {
@@ -18,205 +17,173 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
         }
 
-        /* Kotak Kalkulator Murni Menggunakan Gambar Anda */
+        /* Kontainer Utama - Mengunci Sesuai Proporsi Gambar Anda */
         .calculator-container {
-            background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 100% 100%; /* Memaksa gambar pas dengan kotak */
-            background-position: center;
-            background-repeat: no-repeat;
+            position: relative;
             width: 100%;
             max-width: 360px;
-            height: 640px; /* Tinggi disesuaikan dengan proporsi gambar */
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            position: relative;
+            height: 640px; 
+            background-image: url('Folder/gambar/bodykal.jpg');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        /* Area Layar - Dibuat Bening agar Layar Gambar Anda yang Terlihat */
+        /* AREA LAYAR (Dibuat Bening, Mengikuti Kotak Putih Gambar) */
         .display-section {
+            position: absolute;
+            top: 35px;
+            left: 25px;
+            width: 310px;
+            height: 105px;
             background: transparent;
-            border: none;
-            height: 115px;
-            width: 100%;
-            padding: 25px 20px 10px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-
-        #result-display {
-            color: #cc2222; /* Angka Merah */
-            font-size: 2.2rem;
-            font-weight: bold;
-            line-height: 1;
-        }
-
-        #formula-display {
-            color: #555555;
-            font-size: 1rem;
-            margin-top: 10px;
-            width: 100%;
-            text-align: right;
-        }
-
-        /* Baris Operator Tengah (Dibuat Bening) */
-        .operator-row {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 4px;
-            margin-top: 15px;
-            height: 45px;
-        }
-
-        .btn-op, .btn-equal, .btn-delete {
-            background: transparent; /* BENING */
-            border: none; /* TANPA GARIS */
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #000000;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Tata Letak Bagian Bawah */
-        .bottom-layout {
-            display: grid;
-            grid-template-columns: 1.25fr 1fr 1fr;
-            gap: 6px;
-            margin-top: 25px;
-            height: 290px;
-        }
-
-        /* Panel Hijau Kiri (Dibuat Bening) */
-        .green-panel {
-            background: transparent; /* BENING */
-            border: none;
-            padding: 5px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 100%;
         }
 
-        .radio-scroll {
+        #result-display {
+            color: #cc2222;
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+
+        #formula-display {
+            color: #333333;
+            font-size: 1rem;
+            font-family: Arial, sans-serif;
+            text-align: right;
+            width: 100%;
+            min-height: 1.2rem;
+        }
+
+        /* BASE TOMBOL BENING (Hanya merespon sentuhan, tidak merusak gambar) */
+        .touch-btn {
+            position: absolute;
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ========================================================
+           KOORDINAT POSISI TOMBOL OPERATOR (BARIS TENGAH)
+           ======================================================== */
+        .op-plus   { top: 165px; left: 25px;  width: 48px; height: 40px; }
+        .op-minus  { top: 165px; left: 78px;  width: 48px; height: 40px; }
+        .op-times  { top: 165px; left: 131px; width: 48px; height: 40px; }
+        .op-divide { top: 165px; left: 184px; width: 48px; height: 40px; }
+        .op-ac     { top: 165px; left: 237px; width: 48px; height: 40px; }
+        .op-equal  { top: 165px; left: 290px; width: 45px; height: 40px; }
+
+        /* ========================================================
+           KOORDINAT POSISI LIST RADIO & TOMBOL PILIH (KIRI BAWAH)
+           ======================================================== */
+        .radio-container {
+            position: absolute;
+            top: 230px;
+            left: 25px;
+            width: 110px;
+            height: 165px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            max-height: 220px;
-        }
-
-        /* Kotak Pilihan di Dalam Panel Hijau */
-        .radio-scroll label {
-            background-color: rgba(255, 255, 255, 0.8); /* Putih transparan agar rapi */
-            border: 1px solid #000000;
-            padding: 4px;
-            font-size: 0.75rem;
-            color: #000000;
-            display: flex;
-            align-items: center;
             gap: 4px;
+            padding: 2px;
+            background: rgba(226, 240, 217, 0.5); /* Menyesuaikan area hijau */
             border-radius: 4px;
-            cursor: pointer;
-            white-space: nowrap;
         }
 
-        /* Tombol PILIH Teks Merah (Dibuat Bening) */
-        .btn-pilih {
-            background: transparent; /* BENING */
-            border: none;
-            color: #cc2222;
-            font-weight: bold;
-            padding: 5px 0;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        /* Kolom Angka Tengah dan Kanan (Dibuat Bening) */
-        .num-column {
+        .radio-container label {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-top: 5px;
-        }
-
-        .btn-num {
-            background: transparent; /* BENING */
-            border: none; /* TANPA GARIS */
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #000000;
-            cursor: pointer;
-            height: 46px;
-            display: flex;
-            justify-content: center;
             align-items: center;
+            gap: 3px;
+            font-size: 0.72rem;
+            font-family: Arial, sans-serif;
+            color: #000000;
+            background: #ffffff;
+            padding: 3px;
+            border-radius: 3px;
+            cursor: pointer;
         }
+
+        .btn-pilih {
+            top: 405px;
+            left: 25px;
+            width: 110px;
+            height: 35px;
+        }
+
+        /* ========================================================
+           KOORDINAT POSISI TOMBOL ANGKA KOLOM TENGAH (6 - 0)
+           ======================================================= */
+        .num-6 { top: 230px; left: 147px; width: 85px; height: 35px; }
+        .num-7 { top: 275px; left: 147px; width: 85px; height: 35px; }
+        .num-8 { top: 320px; left: 147px; width: 85px; height: 35px; }
+        .num-9 { top: 365px; left: 147px; width: 85px; height: 35px; }
+        .num-0 { top: 410px; left: 147px; width: 85px; height: 35px; }
+
+        /* ========================================================
+           KOORDINAT POSISI TOMBOL ANGKA KOLOM KANAN (1 - 5)
+           ======================================================= */
+        .num-1 { top: 230px; left: 247px; width: 85px; height: 35px; }
+        .num-2 { top: 275px; left: 247px; width: 85px; height: 35px; }
+        .num-3 { top: 320px; left: 247px; width: 85px; height: 35px; }
+        .num-4 { top: 365px; left: 247px; width: 85px; height: 35px; }
+        .num-5 { top: 410px; left: 247px; width: 85px; height: 35px; }
     </style>
 </head>
 <body>
 
     <div class="calculator-container">
-        <!-- Layar Atas -->
+        <!-- Area Layar Tampilan -->
         <div class="display-section">
             <div id="result-display">0</div>
             <div id="formula-display"></div>
         </div>
 
-        <!-- Baris Operator Tengah -->
-        <div class="operator-row">
-            <button class="btn-op" onclick="append('+')">+</button>
-            <button class="btn-op" onclick="append('-')">-</button>
-            <button class="btn-op" onclick="append('*')">&times;</button>
-            <button class="btn-op" onclick="append('/')">:</button>
-            <button class="btn-delete" onclick="clearAll()">AC</button>
-            <button class="btn-equal" onclick="calculate()">=</button>
+        <!-- Tombol Operator (Bening) -->
+        <button class="touch-btn op-plus" onclick="append('+')"></button>
+        <button class="touch-btn op-minus" onclick="append('-')"></button>
+        <button class="touch-btn op-times" onclick="append('*')"></button>
+        <button class="touch-btn op-divide" onclick="append('/')"></button>
+        <button class="touch-btn op-ac" onclick="clearAll()"></button>
+        <button class="touch-btn op-equal" onclick="calculate()"></button>
+
+        <!-- Area List Pilihan Masking Hijau -->
+        <div class="radio-container">
+            <label><input type="radio" name="calc-option" value="integral" checked>∫ dx (PV)</label>
+            <label><input type="radio" name="calc-option" value="sigma">∑ (NPV)</label>
+            <label><input type="radio" name="calc-option" value="^">Pangkat</label>
+            <label><input type="radio" name="calc-option" value="°">Sudut</label>
+            <label><input type="radio" name="calc-option" value="%">Persen</label>
+            <label><input type="radio" name="calc-option" value="(">Kurung (</label>
+            <label><input type="radio" name="calc-option" value=")">Kurung )</label>
+            <label><input type="radio" name="calc-option" value=".">Titik (.)</label>
         </div>
+        <button class="touch-btn btn-pilih" onclick="insertRadioValue()"></button>
 
-        <!-- Bagian 3 Kolom Bawah -->
-        <div class="bottom-layout">
-            <!-- Kolom 1 (Kiri - Slot Hijau) -->
-            <div class="green-panel">
-                <div class="radio-scroll">
-                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
-                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (NPV)</label>
-                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
-                    <label><input type="radio" name="calc-option" value="°"> Sudut (°)</label>
-                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
-                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
-                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
-                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
-                </div>
-                <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
-            </div>
+        <!-- Tombol Angka Kolom Tengah (Bening) -->
+        <button class="touch-btn num-6" onclick="append('6')"></button>
+        <button class="touch-btn num-7" onclick="append('7')"></button>
+        <button class="touch-btn num-8" onclick="append('8')"></button>
+        <button class="touch-btn num-9" onclick="append('9')"></button>
+        <button class="touch-btn num-0" onclick="append('0')"></button>
 
-            <!-- Kolom 2 (Tengah - Angka 6 sampai 0) -->
-            <div class="num-column">
-                <button class="btn-num" onclick="append('6')">6</button>
-                <button class="btn-num" onclick="append('7')">7</button>
-                <button class="btn-num" onclick="append('8')">8</button>
-                <button class="btn-num" onclick="append('9')">9</button>
-                <button class="btn-num" onclick="append('0')">0</button>
-            </div>
-
-            <!-- Kolom 3 (Kanan - Angka 1 sampai 5) -->
-            <div class="num-column">
-                <button class="btn-num" onclick="append('1')">1</button>
-                <button class="btn-num" onclick="append('2')">2</button>
-                <button class="btn-num" onclick="append('3')">3</button>
-                <button class="btn-num" onclick="append('4')">4</button>
-                <button class="btn-num" onclick="append('5')">5</button>
-            </div>
-        </div>
+        <!-- Tombol Angka Kolom Kanan (Bening) -->
+        <button class="touch-btn num-1" onclick="append('1')"></button>
+        <button class="touch-btn num-2" onclick="append('2')"></button>
+        <button class="touch-btn num-3" onclick="append('3')"></button>
+        <button class="touch-btn num-4" onclick="append('4')"></button>
+        <button class="touch-btn num-5" onclick="append('5')"></button>
     </div>
 
     <script>
@@ -244,25 +211,12 @@
                 if (val === 'integral' || val === 'sigma') {
                     setMode(val);
                 } else if (val === '%') {
-                    processPercent();
-                } else {
-                    append(val);
-                }
-            }
-        }
-
-        function processPercent() {
-            if (currentInput) {
-                try {
-                    let tokens = currentInput.split(/([\+\-\*\/])/);
-                    let lastToken = tokens.pop();
-                    if (!isNaN(lastToken) && lastToken !== '') {
-                        let percentValue = parseFloat(lastToken) / 100;
-                        currentInput = tokens.join('') + percentValue;
+                    if (currentInput) {
+                        currentInput = (parseFloat(currentInput) / 100).toString();
                         formulaDisplay.innerText = currentInput;
                     }
-                } catch (e) {
-                    resultDisplay.innerText = 'Error %';
+                } else {
+                    append(val);
                 }
             }
         }
@@ -270,19 +224,29 @@
         function setMode(mode) {
             activeMode = mode;
             if (mode === 'integral') {
-                currentInput = '∫(0,5)[20000*e^(-0.08*t)]';
+                currentInput = '20000'; // Contoh perhitungan langsung ekonomis
             } else if (mode === 'sigma') {
-                currentInput = '∑(t=1,4)[10000/(1+0.1)^t]';
+                currentInput = '10000';
             }
-            formulaDisplay.innerText = currentInput;
+            formulaDisplay.innerText = mode === 'integral' ? '∫ dx (PV)' : '∑ (NPV)';
         }
 
         function calculate() {
             try {
-                let expression = currentInput;
-
                 if (activeMode === 'integral') {
                     let f = (t) => 20000 * Math.exp(-0.08 * t);
-                    let a = 0, b = 5, n = 1000, h = (b - a) / n;
+                    let a = 0, b = 5, n = 100, h = (b - a) / n;
                     let sum = 0.5 * (f(a) + f(b));
                     for (let i = 1; i < n; i++) sum += f(a + i * h);
+                    resultDisplay.innerText = Math.round(sum * h).toString();
+                    return;
+                }
+                if (activeMode === 'sigma') {
+                    let total = 0;
+                    for (let t = 1; t <= 4; t++) total += 10000 / Math.pow(1 + 0.1, t);
+                    resultDisplay.innerText = Math.round(total).toString();
+                    return;
+                }
+                
+                let expression = currentInput.replace(/×/g, '*').replace(/:/g, '/');
+                if (expression.includes('^')) {
