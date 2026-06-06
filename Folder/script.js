@@ -5,14 +5,14 @@ let activeMode = null;
 
 function append(value) {
     currentInput += value;
-    formulaDisplay.value = currentInput;
+    formulaDisplay.innerText = currentInput;
 }
 
 function clearAll() {
     currentInput = '';
     activeMode = null;
-    formulaDisplay.value = '';
-    resultDisplay.value = '0';
+    formulaDisplay.innerText = '';
+    resultDisplay.innerText = '0';
 }
 
 function insertRadioValue() {
@@ -40,7 +40,7 @@ function processPercent() {
                 formulaDisplay.value = currentInput;
             }
         } catch (e) {
-            resultDisplay.value = 'Error %';
+            resultDisplay.innerText = 'Error %';
         }
     }
 }
@@ -52,7 +52,7 @@ function setMode(mode) {
     } else if (mode === 'sigma') {
         currentInput = '∑(t=1,4)[10000/(1+0.1)^t]';
     }
-    formulaDisplay.value = currentInput;
+    formulaDisplay.innerText = currentInput;
 }
 
 function calculate() {
@@ -64,7 +64,7 @@ function calculate() {
             let a = 0, b = 5, n = 1000, h = (b - a) / n;
             let sum = 0.5 * (f(a) + f(b));
             for (let i = 1; i < n; i++) sum += f(a + i * h);
-            resultDisplay.value = (sum * h).toFixed(2) + " (PV Kontinu)";
+            resultDisplay.innerText = (sum * h).toFixed(2);
             return;
         }
 
@@ -75,7 +75,7 @@ function calculate() {
             for (let t = 1; t <= 4; t++) {
                 total += cashFlow / Math.pow(1 + rate, t);
             }
-            resultDisplay.value = total.toFixed(2) + " (Total NPV)";
+            resultDisplay.innerText = total.toFixed(2);
             return;
         }
 
@@ -88,14 +88,14 @@ function calculate() {
 
         if (expression.includes('^')) {
             let parts = expression.split('^');
-            expression = `Math.pow(${parts}, ${parts})`;
+            expression = `Math.pow(${parts[0]}, ${parts[1]})`;
         }
 
         let finalResult = Function('"use strict";return (' + expression + ')')();
         if (finalResult !== undefined) {
-            resultDisplay.value = Number(finalResult.toFixed(4)).toString();
+            resultDisplay.innerText = Number(finalResult.toFixed(4)).toString();
         }
     } catch (error) {
-        resultDisplay.value = 'Syntax Error';
+        resultDisplay.innerText = 'Syntax Error';
     }
 }
