@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator & Tabel Trigonometri Kebalikan</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #0f172a;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        /* Radio Button Styling */
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .radio-label input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .radio-label:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .radio-label input:checked + span {
+            color: var(--primary);
+        }
+
+        /* Form Controls */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Hasil Perhitungan */
+        .result-box {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result-box.error {
+            background: #fef2f2;
+            border-left-color: #dc2626;
+            color: #991b1b;
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .clickable-cell {
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .clickable-cell:hover {
+            text-decoration: underline;
+            background-color: #e0f2fe !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kalkulator Trigonometri Kebalikan</h1>
+    
+    <!-- Bagian 1: Panel Perhitungan -->
+    <div class="card">
+        <h2>1. Hitung Nilai Berdasarkan Sudut</h2>
+        
+        <label>Pilih Rumus Fungsi:</label>
+        <div class="radio-group">
+            <label class="radio-label">
+                <input type="radio" name="trig-func" value="csc" checked>
+                <span>Cosec (&csc;&theta; = 1/sin&theta;)</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="trig-func" value="sec">
+                <span>Secan (&sec;&theta; = 1/cos&theta;)</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="trig-func" value="cot">
+                <span>Cotan (&cot;&theta; = 1/tan&theta;)</span>
+            </label>
+        </div>
+
+        <div class="input-group">
+            <label for="angleInput">Masukkan Besar Sudut (&deg;):</label>
+            <input type="number" id="angleInput" placeholder="Contoh: 30, 45, 90" min="0" max="360" required>
+        </div>
+
+        <button onclick="hitungTrig()">Jalankan Perhitungan</button>
+
+        <div id="result" class="result-box"></div>
+    </div>
+
+    <!-- Bagian 2: Tabel Interaktif -->
+    <div class="card">
+        <h2>2. Tabel Sudut Istimewa (Kuadran I)</h2>
+        <p style="font-size: 14px; text-align: center; color: #64748b;">💡 Tips: Klik angka sudut di tabel untuk memasukkannya langsung ke dalam kalkulator.</p>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fungsi / Sudut</th>
+                        <th>0&deg;</th>
+                        <th>30&deg;</th>
+                        <th>45&deg;</th>
+                        <th>60&deg;</th>
+                        <th>90&deg;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <strong><td>Cosec (Csc)</td></strong>
+                        <td class="clickable-cell" onclick="quickFill(0, 'csc')">&infin;</td>
+                        <td class="clickable-cell" onclick="quickFill(30, 'csc')">2</td>
+                        <td class="clickable-cell" onclick="quickFill(45, 'csc')">&radic;2</td>
+                        <td class="clickable-cell" onclick="quickFill(60, 'csc')">²&frasl;&thinsp;&radic;3</td>
+                        <td class="clickable-cell" onclick="quickFill(90, 'csc')">1</td>
+                    </tr>
+                    <tr>
+                        <strong><td>Secan (Sec)</td></strong>
+                        <td class="clickable-cell" onclick="quickFill(0, 'sec')">1</td>
+                        <td class="clickable-cell" onclick="quickFill(30, 'sec')">²&frasl;&thinsp;&radic;3</td>
+                        <td class="clickable-cell" onclick="quickFill(45, 'sec')">&radic;2</td>
+                        <td class="clickable-cell" onclick="quickFill(60, 'sec')">2</td>
+                        <td class="clickable-cell" onclick="quickFill(90, 'sec')">&infin;</td>
+                    </tr>
+                    <tr>
+                        <strong><td>Cotan (Cot)</td></strong>
+                        <td class="clickable-cell" onclick="quickFill(0, 'cot')">&infin;</td>
+                        <td class="clickable-cell" onclick="quickFill(30, 'cot')">&radic;3</td>
+                        <td class="clickable-cell" onclick="quickFill(45, 'cot')">1</td>
+                        <td class="clickable-cell" onclick="quickFill(60, 'cot')">¹&frasl;&thinsp;&radic;3</td>
+                        <td class="clickable-cell" onclick="quickFill(90, 'cot')">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fungsi untuk melakukan perhitungan kalkulator
+    function hitungTrig() {
+        const angleDegree = parseFloat(document.getElementById('angleInput').value);
+        const selectedFunc = document.querySelector('input[name="trig-func"]:checked').value;
+        const resultDiv = document.getElementById('result');
+
+        if (isNaN(angleDegree)) {
+            resultDiv.style.display = "block";
+            resultDiv.className = "result-box error";
+            resultDiv.innerHTML = "<strong>Error:</strong> Silakan isi nilai sudut terlebih dahulu!";
+            return;
+        }
+
+        // Konversi sudut dari Derajat ke Radian (wajib untuk JavaScript Math)
+        const angleRadian = angleDegree * (Math.PI / 180);
+        
+        let hasil = 0;
+        let deskripsiRumus = "";
+        let errorCheck = false;
+
+        // Toleransi error pembagian untuk angka presisi kecil mendekati nol
+        const sinVal = Math.sin(angleRadian);
+        const cosVal = Math.cos(angleRadian);
+        const tanVal = Math.tan(angleRadian);
+
+        switch (selectedFunc) {
+            case 'csc':
+                deskripsiRumus = `1 / sin(${angleDegree}°)`;
+                if (Math.abs(sinVal) < 1e-10) {
+                    hasil = "Tidak Terdefinisi (∞)";
+                    errorCheck = true;
+                } else {
+                    hasil = (1 / sinVal).toFixed(4);
+                }
+                break;
+                
+            case 'sec':
+                deskripsiRumus = `1 / cos(${angleDegree}°)`;
+                if (Math.abs(cosVal) < 1e-10) {
+                    hasil = "Tidak Terdefinisi (∞)";
+                    errorCheck = true;
+                } else {
+                    hasil = (1 / cosVal).toFixed(4);
+                }
+                break;
+                
+            case 'cot':
+                deskripsiRumus = `1 / tan(${angleDegree}°)`;
+                if (Math.abs(tanVal) < 1e-10) {
