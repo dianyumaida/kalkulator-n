@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berfungsi Normal</title>
+    <title>Kalkulator Pecahan KaTeX Berfungsi Sempurna</title>
     
-    <!-- Memuat MathJax untuk render pecahan -->
-    <script>
-        window.MathJax = {
-            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
-            svg: { fontCache: 'global' }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+    <!-- Memuat Library KaTeX (Jauh lebih stabil untuk input dinamis) -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
+    <script src="https://jsdelivr.net"></script>
 
     <style>
         * { box-sizing: border-box; font-family: Arial, sans-serif; }
@@ -22,7 +17,8 @@
         .calculator { width: 340px; background: white; border: 2px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
         
         /* Layar Utama Atas */
-        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; font-size: 1.4rem; background: #fff; }
+        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: #fff; }
+        #math-output { width: 100%; text-align: center; font-size: 1.3rem; margin-top: 10px; }
         
         /* Baris Tombol Operator Atas (+ - * : =) */
         .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
@@ -52,7 +48,7 @@
 <div class="calculator">
     <!-- Layar Hasil Atas -->
     <div class="display-screen" id="screen">
-        <div id="math-output">$$ \text{Masukkan Rumus...} $$</div>
+        <div id="math-output"></div>
     </div>
 
     <!-- Tombol Operator Utama -->
@@ -99,6 +95,13 @@
 
 <script>
     let history = []; 
+    const outputDiv = document.getElementById('math-output');
+
+    // Tampilan awal saat kalkulator kosong
+    function showPlaceholder() {
+        katex.render("\\text{Masukkan Rumus...}", outputDiv, { displayMode: true, throwOnError: false });
+    }
+    showPlaceholder();
 
     function press(visual, mathValue) {
         history.push({ visual: visual, math: mathValue });
@@ -112,22 +115,15 @@
 
     function clearAll() {
         history = [];
-        const outputDiv = document.getElementById('math-output');
-        
-        // Aturan Wajib MathJax v3: Clear elemen sebelum mengubah HTML internallnya
-        if (window.MathJax && MathJax.typesetClear) {
-            MathJax.typesetClear([outputDiv]);
-        }
-        outputDiv.innerHTML = "$$ \\text{Masukkan Rumus...} $$";
-        if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
+        showPlaceholder();
     }
 
-    // Fungsi pembuat pecahan bertingkat LaTeX secara berulang
+    // Fungsi pembuat string pecahan bertingkat KaTeX
     function generateLatex() {
         let tokens = history.map(item => item.visual);
         let str = tokens.join(" ");
         
-        // Regex pintar untuk membungkus komponen sebelum dan sesudah tanda ':' menjadi pecahan \frac{}{}
+        // Membungkus format titik dua (:) menjadi pecahan bertingkat \frac{}{} secara rekursif
         while (str.includes(":")) {
             str = str.replace(/(\S+)\s*:\s*(\S+)/, "\\frac{$1}{$2}");
         }
@@ -135,59 +131,33 @@
     }
 
     function updateDisplay() {
-        const outputDiv = document.getElementById('math-output');
-        
         if (history.length === 0) {
-            if (window.MathJax && MathJax.typesetClear) MathJax.typesetClear([outputDiv]);
-            outputDiv.innerHTML = "$$ \\text{Masukkan Rumus...} $$";
-            if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
+            showPlaceholder();
             return;
         }
         
         let latexFormula = generateLatex();
-        
-        // Bersihkan tracking MathJax lama pada elemen DOM ini agar teks mentah tidak bocor ke layar
-        if (window.MathJax && MathJax.typesetClear) {
-            MathJax.typesetClear([outputDiv]);
-        }
-        
-        outputDiv.innerHTML = "$$ " + latexFormula + " $$";
-        
-        // Picu kompilasi visual grafis pecahan yang baru
-        if (window.MathJax && MathJax.typeset) {
-            MathJax.typeset([outputDiv]);
-        }
+        // Langsung render secara instan menggunakan fungsi sinkronus KaTeX
+        katex.render(latexFormula, outputDiv, { displayMode: true, throwOnError: false });
     }
 
     function hitung() {
         if (history.length === 0) return;
-        const outputDiv = document.getElementById('math-output');
         
         try {
-            // Mengubah token internal ':' menjadi '/' agar dimengerti Javascript secara matematika asli
+            // Gabungkan token ekspresi matematika asli untuk JavaScript
             let expr = history.map(item => item.math === ':' ? '/' : item.math).join("");
-            
-            // Evaluasi perhitungan matematika murni di sistem latar belakang
             let hasil = eval(expr); 
             
             if (hasil !== undefined) {
                 let rumusAwal = generateLatex();
+                // Gabungkan rumus bertingkat dan hasil akhir secara vertikal ke bawah
+                let latexFinal = rumusAwal + " \\\\ \\hline \\\\ = " + hasil;
                 
-                if (window.MathJax && MathJax.typesetClear) {
-                    MathJax.typesetClear([outputDiv]);
-                }
-                
-                // Menampilkan rumus di atas, lalu hasil kalkulasi turun di bawahnya secara vertikal
-                outputDiv.innerHTML = `$$ ${rumusAwal} $$ <hr style="width:100%; border:0; border-top:1px dashed #ccc; margin:10px 0;"> $$ = ${hasil} $$`;
-                
-                if (window.MathJax && MathJax.typeset) {
-                    MathJax.typeset([outputDiv]);
-                }
+                katex.render(latexFinal, outputDiv, { displayMode: true, throwOnError: false });
             }
         } catch (error) {
-            if (window.MathJax && MathJax.typesetClear) MathJax.typesetClear([outputDiv]);
-            outputDiv.innerHTML = "$$ \\text{Format Salah} $$";
-            if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
+            katex.render("\\text{Format Salah}", outputDiv, { displayMode: true, throwOnError: false });
         }
     }
 </script>
