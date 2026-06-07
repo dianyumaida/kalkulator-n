@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Rumus Pecahan</title>
+    <title>Kalkulator Pecahan Dinamis</title>
     
-    <!-- Memuat MathJax untuk render pecahan bertingkat secara dinamis -->
+    <!-- Memuat MathJax versi terbaru untuk render pecahan bertingkat -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
@@ -22,7 +22,7 @@
         .calculator { width: 340px; background: white; border: 2px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
         
         /* Layar Utama Atas */
-        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; font-size: 1.2rem; background: #fff; }
+        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; font-size: 1.4rem; background: #fff; }
         
         /* Baris Tombol Operator Atas (+ - * : =) */
         .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
@@ -44,7 +44,6 @@
         .btn-back { background-color: #fff2cc; }
         .btn-delete { background-color: #f8cecc; font-size: 0.9rem; font-weight: bold; }
         
-        /* Hover effect sederhana */
         button:active { opacity: 0.7; }
     </style>
 </head>
@@ -58,10 +57,10 @@
 
     <!-- Tombol Operator Utama -->
     <div class="operator-row">
-        <button class="btn-op" onclick="press(' + ')">+</button>
-        <button class="btn-op" onclick="press(' - ')">-</button>
-        <button class="btn-op" onclick="press(' \\times ')">×</button>
-        <button class="btn-op" onclick="press(' : ')">:</button>
+        <button class="btn-op" onclick="press('+', '+')">+</button>
+        <button class="btn-op" onclick="press('-', '-')">-</button>
+        <button class="btn-op" onclick="press('\\times', '*')">×</button>
+        <button class="btn-op" onclick="press(':', ':')">:</button>
         <button class="btn-op" onclick="hitung()">=</button>
     </div>
 
@@ -77,20 +76,20 @@
 
         <!-- Panel Angka Kanan -->
         <div class="num-panel">
-            <button class="btn-num" onclick="press('6')">6</button>
-            <button class="btn-num" onclick="press('1')">1</button>
+            <button class="btn-num" onclick="press('6', '6')">6</button>
+            <button class="btn-num" onclick="press('1', '1')">1</button>
             
-            <button class="btn-num" onclick="press('7')">7</button>
-            <button class="btn-num" onclick="press('2')">2</button>
+            <button class="btn-num" onclick="press('7', '7')">7</button>
+            <button class="btn-num" onclick="press('2', '2')">2</button>
             
-            <button class="btn-num" onclick="press('8')">8</button>
-            <button class="btn-num" onclick="press('3')">3</button>
+            <button class="btn-num" onclick="press('8', '8')">8</button>
+            <button class="btn-num" onclick="press('3', '3')">3</button>
             
-            <button class="btn-num" onclick="press('9')">9</button>
-            <button class="btn-num" onclick="press('4')">4</button>
+            <button class="btn-num" onclick="press('9', '9')">9</button>
+            <button class="btn-num" onclick="press('4', '4')">4</button>
             
-            <button class="btn-num" onclick="press('0')">0</button>
-            <button class="btn-num" onclick="press('5')">5</button>
+            <button class="btn-num" onclick="press('0', '0')">0</button>
+            <button class="btn-num" onclick="press('5', '5')">5</button>
             
             <button class="btn-num btn-back" onclick="backspace()">←</button>
             <button class="btn-num btn-delete" onclick="clearAll()">DELETE</button>
@@ -99,74 +98,74 @@
 </div>
 
 <script>
-    let currentInput = "";
+    // Menyimpan riwayat input secara terpisah antara tampilan layar dan nilai kalkulasi asli
+    let history = []; 
 
-    // Fungsi saat tombol angka/operator ditekan
-    function press(val) {
-        currentInput += val;
+    function press(visual, mathValue) {
+        history.push({ visual: visual, math: mathValue });
         updateDisplay();
     }
 
-    // Fungsi hapus satu karakter per satu (Backspace)
     function backspace() {
-        if(currentInput.endsWith(' \\times ') || currentInput.endsWith(' : ')) {
-            currentInput = currentInput.slice(0, -9);
-        } else if(currentInput.endsWith(' + ') || currentInput.endsWith(' - ')) {
-            currentInput = currentInput.slice(0, -3);
-        } else {
-            currentInput = currentInput.slice(0, -1);
-        }
+        history.pop();
         updateDisplay();
     }
 
-    // Fungsi hapus total
     function clearAll() {
-        currentInput = "";
+        history = [];
         document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
-        MathJax.typeset();
+        if (window.MathJax && MathJax.typeset) MathJax.typeset();
     }
 
-    // Memperbarui tampilan rumus di layar secara real-time
-    function updateDisplay() {
-        if(currentInput === "") {
-            document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
-            return;
-        }
+    // Fungsi pembuat format pecahan bertingkat otomatis dari riwayat input
+    function generateLatex() {
+        let tokens = history.map(item => item.visual);
+        let str = tokens.join(" ");
         
-        // Mengubah input teks biasa menjadi format LaTeX Pecahan Bertingkat jika ada pembagian
-        let latexFormula = formatToLatex(currentInput);
-        
-        document.getElementById('math-output').innerHTML = "$$ " + latexFormula + " $$";
-        // Memicu MathJax untuk merender ulang kode matematika menjadi visual grafis pecahan
-        MathJax.typeset();
-    }
-
-    // Pengubah input menjadi bentuk pecahan LaTeX bertingkat secara otomatis
-    function formatToLatex(str) {
-        let parts = str.split(' : ');
-        if(parts.length > 1) {
-            // Jika ada tanda titik dua (:), otomatis diubah jadi pecahan \frac{atas}{bawah}
-            return `\\frac{${parts[0]}}{${parts[1]}}`;
+        // Memproses penanda titik dua (:) menjadi pecahan LaTeX \frac{}{} secara berulang (rekursif)
+        while (str.includes(":")) {
+            str = str.replace(/(\S+)\s*:\s*(\S+)/, "\\frac{$1}{$2}");
         }
         return str;
     }
 
-    // Fungsi ketika tombol (=) ditekan untuk menghitung hasil evaluasi rumus asli
+    function updateDisplay() {
+        if (history.length === 0) {
+            document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+            return;
+        }
+        
+        let latexFormula = generateLatex();
+        document.getElementById('math-output').innerHTML = "$$ " + latexFormula + " $$";
+        
+        // Render ulang tampilan agar memproses struktur pecahan baru
+        if (window.MathJax && MathJax.typeset) {
+            MathJax.typeset();
+        }
+    }
+
     function hitung() {
+        if (history.length === 0) return;
+        
         try {
-            // Ubah simbol visual menjadi simbol operasi asli JavaScript untuk kalkulasi
-            let jsExpression = currentInput.replace(/\\times/g, '*').replace(/:/g, '/');
-            let hasil = eval(jsExpression);
+            // Menggabungkan karakter matematika asli yang bersih dari kode-kode LaTeX
+            let expr = history.map(item => item.math === ':' ? '/' : item.math).join("");
             
-            if(hasil !== undefined) {
-                let formulaAsli = formatToLatex(currentInput);
-                // Menampilkan rumus awal dan hasil akhirnya tepat di bawahnya secara vertikal
-                document.getElementById('math-output').innerHTML = `$$ ${formulaAsli} $$ $$ = ${hasil} $$`;
-                MathJax.typeset();
+            // Eksekusi kalkulasi angka di latar belakang secara akurat
+            let hasil = eval(expr); 
+            
+            if (hasil !== undefined) {
+                let rumusAwal = generateLatex();
+                // Menampilkan rumus bertingkat awal dan hasilnya turun ke bawah (vertikal)
+                document.getElementById('math-output').innerHTML = `$$ ${rumusAwal} $$ <hr style="width:100%; border:0; border-top:1px dashed #ccc; margin:10px 0;"> $$ = ${hasil} $$`;
+                
+                if (window.MathJax && MathJax.typeset) {
+                    MathJax.typeset();
+                }
             }
         } catch (error) {
             document.getElementById('math-output').innerHTML = "$$ \\text{Format Salah} $$";
-            MathJax.typeset();
+            if (window.MathJax && MathJax.typeset) MathJax.typeset();
         }
     }
 </script>
