@@ -208,7 +208,7 @@
         let formatMatematikaVisual = parseToLaTeX(currentInput);
         
         // Render ke layar utama
-        mathOutputDiv.innerHTML = "$$" + formatMatematikaVisual + "$$";
+        mathOutputDiv.innerHTML = "" + formatMatematikaVisual + "";
         MathJax.typesetPromise([mathOutputDiv]);
     }
 
