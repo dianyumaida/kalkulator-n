@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis Visual</title>
+    <title></title>
     <!-- Library untuk hitungan pecahan akurat -->
     <script src="https://cloudflare.com"></script>
     <!-- Library MathJax untuk mengubah teks menjadi visual rumus pecahan bertingkat asli -->
@@ -64,7 +64,7 @@
             font-size: 2.2rem; /* Ukuran rumus matematika sangat besar */
             min-height: 120px;
             display: flex;
-            justify-content: center; /* Posisi rumus di tengah layar besar */
+            justify-content: center; /* Posisi rumus di kiri atas layar besar */
             align-items: center;
             overflow-x: auto;
             overflow-y: auto;
@@ -245,7 +245,7 @@
             currentInput = hasilFormatPecahan;
             perbaruiLayar();
         } catch (error) {
-            mathOutputDiv.innerHTML = "<span style='color:#ef4444; font-size:1.6rem; font-weight:bold;'>Format Rumus Salah!</span>";
+            mathOutputDiv.innerHTML = "<span style='color:#ef4444; font-size:1.6rem; font-weight:bold;'></span>";
         }
     }
 </script>
