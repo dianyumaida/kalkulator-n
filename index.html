@@ -3,143 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Berlapis</title>
-    <!-- Memuat Math.js dari CDN untuk akurasi pecahan murni -->
+    <title>Kalkulator Pecahan Visual Pro</title>
+    <!-- Memuat Math.js untuk perhitungan pecahan presisi -->
     <script src="https://cloudflare.com"></script>
+    <!-- Memuat MathJax untuk merender rumus pecahan visual bertingkat -->
+    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+    
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+            background-color: #0f172a;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 20px;
         }
         .calculator {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-            width: 350px;
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            width: 500px; /* Ukuran kalkulator lebih besar */
         }
-        h3 {
+        h2 {
             margin-top: 0;
-            color: #333;
+            color: #f8fafc;
             text-align: center;
-        }
-        #display {
-            width: 100%;
-            height: 60px;
-            font-size: 1.2rem;
-            text-align: right;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            box-sizing: border-box;
+            font-size: 1.5rem;
             margin-bottom: 20px;
-            background-color: #fafafa;
+        }
+        /* Layar Utama Besar */
+        .screen-container {
+            background-color: #020617;
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 140px; /* Layar tinggi untuk pecahan bertingkat */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        /* Baris Input Teks Biasa */
+        #input-text {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            text-align: right;
+            word-wrap: break-word;
+            margin-bottom: 10px;
+        }
+        /* Baris Render Visual Matematika (Layar Utama) */
+        #math-output {
+            color: #38bdf8;
+            font-size: 2rem; /* Ukuran font rumus sangat besar */
+            text-align: right;
+            min-height: 60px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        /* Aturan CSS khusus MathJax agar rata kanan di dalam layar */
+        #math-output mjx-container {
+            margin: 0 !important;
+            text-align: right !important;
         }
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
         button {
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            padding: 18px;
+            font-size: 1.25rem;
+            font-weight: 600;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.15s ease;
         }
-        button:hover {
-            opacity: 0.9;
+        button:active {
+            transform: scale(0.95);
         }
-        .num { background-color: #e3f2fd; color: #0d47a1; }
-        .op { background-color: #ffe0b2; color: #e65100; }
-        .bracket { background-color: #e8f5e9; color: #1b5e20; }
-        .clear { background-color: #ffcdd2; color: #b71c1c; grid-column: span 2; }
-        .equal { background-color: #2e7d32; color: white; grid-column: span 2; }
+        .num { background-color: #334155; color: #f8fafc; }
+        .num:hover { background-color: #475569; }
+        
+        .op { background-color: #f97316; color: white; }
+        .op:hover { background-color: #ea580c; }
+        
+        .bracket { background-color: #0ea5e9; color: white; }
+        .bracket:hover { background-color: #0284c7; }
+        
+        .clear { background-color: #ef4444; color: white; grid-column: span 2; }
+        .clear:hover { background-color: #dc2626; }
+        
+        .equal { background-color: #22c55e; color: white; grid-column: span 2; }
+        .equal:hover { background-color: #16a34a; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <h3>Kalkulator Pecahan</h3>
-    <input type="text" id="display" placeholder="Contoh: {[(1/2)+(1/3)]/(1/4)}" autofocus>
+    <h2>Kalkulator Pecahan Visual</h2>
+    
+    <!-- Wadah Layar Besar -->
+    <div class="screen-container">
+        <div id="input-text">Layar Input</div>
+        <div id="math-output">$$ $$</div>
+    </div>
     
     <div class="buttons">
-        <!-- Tombol Clear & Kurung -->
-        <button class="clear" onclick="clearDisplay()">C</button>
-        <button class="bracket" onclick="append('(')">(</button>
-        <button class="bracket" onclick="append(')')">)</button>
+        <!-- Baris Kontrol -->
+        <button class="clear" onclick="clearDisplay()">CLEAR</button>
+        <button class="op" onclick="hapusSatu()">⌫</button>
+        <button class="op" onclick="append('/')">/</button>
         
+        <!-- Kurung Berlapis -->
         <button class="bracket" onclick="append('{')">{</button>
         <button class="bracket" onclick="append('}')">}</button>
         <button class="bracket" onclick="append('[')">[</button>
         <button class="bracket" onclick="append(']')">]</button>
+        
+        <button class="bracket" onclick="append('(')">(</button>
+        <button class="bracket" onclick="append(')')">)</button>
+        <button class="num" onclick="append('.')">.</button>
+        <button class="op" onclick="append('*')">×</button>
 
-        <!-- Angka dan Operator -->
+        <!-- Angka-angka -->
         <button class="num" onclick="append('7')">7</button>
         <button class="num" onclick="append('8')">8</button>
         <button class="num" onclick="append('9')">9</button>
-        <button class="op" onclick="append('/')">/</button>
+        <button class="op" onclick="append('-')">-</button>
 
         <button class="num" onclick="append('4')">4</button>
         <button class="num" onclick="append('5')">5</button>
         <button class="num" onclick="append('6')">6</button>
-        <button class="op" onclick="append('*')">×</button>
+        <button class="op" onclick="append('+')">+</button>
 
         <button class="num" onclick="append('1')">1</button>
         <button class="num" onclick="append('2')">2</button>
         <button class="num" onclick="append('3')">3</button>
-        <button class="op" onclick="append('+')">+</button>
+        <button class="equal" onclick="hitung()">= HITUNG</button>
 
-        <button class="num" onclick="append('0')">0</button>
-        <button class="num" onclick="append('.')">.</button>
-        <button class="op" onclick="append('-')">-</button>
-        <button class="op" onclick="hapusSatu()">⌫</button>
-
-        <!-- Tombol Sama Dengan -->
-        <button class="equal" onclick="hitung()">=</button>
+        <!-- Baris Nol -->
+        <button class="num" style="grid-column: span 2;" onclick="append('0')">0</button>
     </div>
 </div>
 
 <script>
-    const display = document.getElementById('display');
+    let currentInput = "";
+    const inputTextDiv = document.getElementById('input-text');
+    const mathOutputDiv = document.getElementById('math-output');
+
+    // Fungsi mengubah ketikan teks biasa menjadi format LaTeX matematika
+    function textToLaTeX(text) {
+        if (!text) return "";
+        let latex = text;
+        
+        // Ubah perkalian bintang menjadi simbol perkalian silang matematika
+        latex = latex.replace(/\*/g, ' \\times ');
+        
+        // Pola Regex untuk mendeteksi pecahan mendatar (angka/angka) atau (kurung/kurung)
+        // Diubah menjadi perintah \frac{pembilang}{penyebut} milik LaTeX
+        let formatBerubah;
+        do {
+            formatBerubah = false;
+            
+            // 1. Pecahan ekspresi di dalam kurung: (ekspresi)/(ekspresi)
+            let regexKurung = /\(([^()]+)\)\/\(([^()]+)\)/g;
+            if (regexKurung.test(latex)) {
+                latex = latex.replace(regexKurung, '\\frac{$1}{$2}');
+                formatBerubah = true;
+            }
+            
+            // 2. Pecahan angka biasa: angka/angka
+            let regexAngka = /(\d+)\/(\d+)/g;
+            if (regexAngka.test(latex)) {
+                latex = latex.replace(regexAngka, '\\frac{$1}{$2}');
+                formatBerubah = true;
+            }
+        } while (formatBerubah);
+
+        return latex;
+    }
+
+    // Fungsi memperbarui tampilan layar
+    function perbaruiLayar() {
+        inputTextDiv.innerText = currentInput || "0";
+        
+        // Konversi input ke bentuk rumus visual
+        let kodeLaTeX = textToLaTeX(currentInput);
+        
+        // Masukkan kode ke dalam elemen MathJax
+        mathOutputDiv.innerHTML = "$$" + kodeLaTeX + "$$";
+        
+        // Perintahkan MathJax untuk memproses ulang grafis layar
+        MathJax.typesetPromise([mathOutputDiv]);
+    }
 
     function append(val) {
-        display.value += val;
+        currentInput += val;
+        perbaruiLayar();
     }
 
     function clearDisplay() {
-        display.value = '';
+        currentInput = "";
+        perbaruiLayar();
     }
 
     function hapusSatu() {
-        display.value = display.value.slice(0, -1);
+        currentInput = currentInput.slice(0, -1);
+        perbaruiLayar();
     }
 
     function hitung() {
-        let rumus = display.value;
-        if (!rumus) return;
+        if (!currentInput) return;
 
         try {
-            // 1. Ubah kurung kurawal {} dan siku [] menjadi kurung biasa () agar dipahami mesin
-            let rumusBersih = rumus
+            // Standarisasi tanda kurung {} dan [] menjadi () untuk dievaluasi mesin
+            let rumusBersih = currentInput
                 .replace(/\{/g, '(').replace(/\}/g, ')')
                 .replace(/\[/g, '(').replace(/\]/g, ')');
 
-            // 2. Evaluasi rumus menggunakan fungsi fraction dari math.js
-            // ini mencegah hasil otomatis berubah jadi desimal berkoma
-            let hasilPecahan = math.evaluate(rumusBersih);
+            // Hitung menggunakan Math.js agar tetap mempertahankan tipe pecahan murni
+            let evaluasi = math.evaluate(rumusBersih);
             
-            // 3. Format hasil agar muncul dalam bentuk pecahan murni (misal: 5/6 atau angka bulat)
-            display.value = math.format(hasilPecahan, { fraction: 'ratio' });
+            // Ambil hasil dalam format rasio pecahan string (misal "5/6")
+            let hasilString = math.format(evaluasi, { fraction: 'ratio' });
+            
+            // Tampilkan hasil di layar utama
+            currentInput = hasilString;
+            perbaruiLayar();
         } catch (error) {
-            display.value = "Format Error!";
+            mathOutputDiv.innerHTML = "<span style='color:#ef4444; font-size:1.5rem;'>Format Error!</span>";
         }
     }
 </script>
