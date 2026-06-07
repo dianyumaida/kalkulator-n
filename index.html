@@ -3,161 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan KaTeX Berfungsi Sempurna</title>
-    
-    <!-- Memuat Library KaTeX (Jauh lebih stabil untuk input dinamis) -->
-    <link rel="stylesheet" href="https://jsdelivr.net">
-    <script src="https://jsdelivr.net"></script>
-
+    <title>Kalkulator Pecahan Berlapis</title>
+    <!-- Memuat Math.js dari CDN untuk akurasi pecahan murni -->
+    <script src="https://cloudflare.com"></script>
     <style>
-        * { box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f0f0; margin: 0; }
-        
-        /* Wadah Utama Kalkulator */
-        .calculator { width: 340px; background: white; border: 2px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Layar Utama Atas */
-        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: #fff; }
-        #math-output { width: 100%; text-align: center; font-size: 1.3rem; margin-top: 10px; }
-        
-        /* Baris Tombol Operator Atas (+ - * : =) */
-        .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        .btn-op { background-color: #ffe5d9; border: 1px solid #000; border-radius: 5px; padding: 10px 0; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-        
-        /* Bagian Bawah: Panel Kiri dan Panel Angka */
-        .bottom-section { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
-        
-        /* Panel Kiri (Hijau) */
-        .left-panel { background-color: #e2efda; border: 1px solid #000; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
-        .input-box { background: white; border: 1px solid #000; border-radius: 5px; height: 35px; }
-        .btn-pilih { background: white; border: 1px solid #000; border-radius: 5px; color: red; font-weight: bold; font-size: 0.9rem; padding: 6px 0; cursor: pointer; text-align: center; }
-        
-        /* Panel Kanan (Tombol Angka) */
-        .num-panel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-        .btn-num { background: white; border: 1px solid #000; border-radius: 5px; padding: 12px 0; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-align: center; }
-        
-        /* Tombol Khusus Bawah */
-        .btn-back { background-color: #fff2cc; }
-        .btn-delete { background-color: #f8cecc; font-size: 0.9rem; font-weight: bold; }
-        
-        button:active { opacity: 0.7; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h3 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 1.2rem;
+            text-align: right;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        .num { background-color: #e3f2fd; color: #0d47a1; }
+        .op { background-color: #ffe0b2; color: #e65100; }
+        .bracket { background-color: #e8f5e9; color: #1b5e20; }
+        .clear { background-color: #ffcdd2; color: #b71c1c; grid-column: span 2; }
+        .equal { background-color: #2e7d32; color: white; grid-column: span 2; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <!-- Layar Hasil Atas -->
-    <div class="display-screen" id="screen">
-        <div id="math-output"></div>
-    </div>
+    <h3>Kalkulator Pecahan</h3>
+    <input type="text" id="display" placeholder="Contoh: {[(1/2)+(1/3)]/(1/4)}" autofocus>
+    
+    <div class="buttons">
+        <!-- Tombol Clear & Kurung -->
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="bracket" onclick="append('(')">(</button>
+        <button class="bracket" onclick="append(')')">)</button>
+        
+        <button class="bracket" onclick="append('{')">{</button>
+        <button class="bracket" onclick="append('}')">}</button>
+        <button class="bracket" onclick="append('[')">[</button>
+        <button class="bracket" onclick="append(']')">]</button>
 
-    <!-- Tombol Operator Utama -->
-    <div class="operator-row">
-        <button class="btn-op" onclick="press('+', '+')">+</button>
-        <button class="btn-op" onclick="press('-', '-')">-</button>
-        <button class="btn-op" onclick="press('\\times', '*')">×</button>
-        <button class="btn-op" onclick="press(':', ':')">:</button>
-        <button class="btn-op" onclick="hitung()">=</button>
-    </div>
+        <!-- Angka dan Operator -->
+        <button class="num" onclick="append('7')">7</button>
+        <button class="num" onclick="append('8')">8</button>
+        <button class="num" onclick="append('9')">9</button>
+        <button class="op" onclick="append('/')">/</button>
 
-    <!-- Bagian Bawah -->
-    <div class="bottom-section">
-        <!-- Panel Hijau Kiri -->
-        <div class="left-panel">
-            <div class="input-box"></div>
-            <div class="input-box"></div>
-            <div class="input-box"></div>
-            <button class="btn-pilih">&lt; PILIH &gt;</button>
-        </div>
+        <button class="num" onclick="append('4')">4</button>
+        <button class="num" onclick="append('5')">5</button>
+        <button class="num" onclick="append('6')">6</button>
+        <button class="op" onclick="append('*')">×</button>
 
-        <!-- Panel Angka Kanan -->
-        <div class="num-panel">
-            <button class="btn-num" onclick="press('6', '6')">6</button>
-            <button class="btn-num" onclick="press('1', '1')">1</button>
-            
-            <button class="btn-num" onclick="press('7', '7')">7</button>
-            <button class="btn-num" onclick="press('2', '2')">2</button>
-            
-            <button class="btn-num" onclick="press('8', '8')">8</button>
-            <button class="btn-num" onclick="press('3', '3')">3</button>
-            
-            <button class="btn-num" onclick="press('9', '9')">9</button>
-            <button class="btn-num" onclick="press('4', '4')">4</button>
-            
-            <button class="btn-num" onclick="press('0', '0')">0</button>
-            <button class="btn-num" onclick="press('5', '5')">5</button>
-            
-            <button class="btn-num btn-back" onclick="backspace()">←</button>
-            <button class="btn-num btn-delete" onclick="clearAll()">DELETE</button>
-        </div>
+        <button class="num" onclick="append('1')">1</button>
+        <button class="num" onclick="append('2')">2</button>
+        <button class="num" onclick="append('3')">3</button>
+        <button class="op" onclick="append('+')">+</button>
+
+        <button class="num" onclick="append('0')">0</button>
+        <button class="num" onclick="append('.')">.</button>
+        <button class="op" onclick="append('-')">-</button>
+        <button class="op" onclick="hapusSatu()">⌫</button>
+
+        <!-- Tombol Sama Dengan -->
+        <button class="equal" onclick="hitung()">=</button>
     </div>
 </div>
 
 <script>
-    let history = []; 
-    const outputDiv = document.getElementById('math-output');
+    const display = document.getElementById('display');
 
-    // Tampilan awal saat kalkulator kosong
-    function showPlaceholder() {
-        katex.render("\\text{Masukkan Rumus...}", outputDiv, { displayMode: true, throwOnError: false });
-    }
-    showPlaceholder();
-
-    function press(visual, mathValue) {
-        history.push({ visual: visual, math: mathValue });
-        updateDisplay();
+    function append(val) {
+        display.value += val;
     }
 
-    function backspace() {
-        history.pop();
-        updateDisplay();
+    function clearDisplay() {
+        display.value = '';
     }
 
-    function clearAll() {
-        history = [];
-        showPlaceholder();
-    }
-
-    // Fungsi pembuat string pecahan bertingkat KaTeX
-    function generateLatex() {
-        let tokens = history.map(item => item.visual);
-        let str = tokens.join(" ");
-        
-        // Membungkus format titik dua (:) menjadi pecahan bertingkat \frac{}{} secara rekursif
-        while (str.includes(":")) {
-            str = str.replace(/(\S+)\s*:\s*(\S+)/, "\\frac{$1}{$2}");
-        }
-        return str;
-    }
-
-    function updateDisplay() {
-        if (history.length === 0) {
-            showPlaceholder();
-            return;
-        }
-        
-        let latexFormula = generateLatex();
-        // Langsung render secara instan menggunakan fungsi sinkronus KaTeX
-        katex.render(latexFormula, outputDiv, { displayMode: true, throwOnError: false });
+    function hapusSatu() {
+        display.value = display.value.slice(0, -1);
     }
 
     function hitung() {
-        if (history.length === 0) return;
-        
+        let rumus = display.value;
+        if (!rumus) return;
+
         try {
-            // Gabungkan token ekspresi matematika asli untuk JavaScript
-            let expr = history.map(item => item.math === ':' ? '/' : item.math).join("");
-            let hasil = eval(expr); 
+            // 1. Ubah kurung kurawal {} dan siku [] menjadi kurung biasa () agar dipahami mesin
+            let rumusBersih = rumus
+                .replace(/\{/g, '(').replace(/\}/g, ')')
+                .replace(/\[/g, '(').replace(/\]/g, ')');
+
+            // 2. Evaluasi rumus menggunakan fungsi fraction dari math.js
+            // ini mencegah hasil otomatis berubah jadi desimal berkoma
+            let hasilPecahan = math.evaluate(rumusBersih);
             
-            if (hasil !== undefined) {
-                let rumusAwal = generateLatex();
-                // Gabungkan rumus bertingkat dan hasil akhir secara vertikal ke bawah
-                let latexFinal = rumusAwal + " \\\\ \\hline \\\\ = " + hasil;
-                
-                katex.render(latexFinal, outputDiv, { displayMode: true, throwOnError: false });
-            }
+            // 3. Format hasil agar muncul dalam bentuk pecahan murni (misal: 5/6 atau angka bulat)
+            display.value = math.format(hasilPecahan, { fraction: 'ratio' });
         } catch (error) {
-            katex.render("\\text{Format Salah}", outputDiv, { displayMode: true, throwOnError: false });
+            display.value = "Format Error!";
         }
     }
 </script>
