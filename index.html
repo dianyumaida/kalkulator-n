@@ -3,250 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Ekonomi IT</title>
+    <title>Kalkulator Rumus Pecahan</title>
+    
+    <!-- Memuat MathJax untuk render pecahan bertingkat secara dinamis -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #0d1117;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        /* Kontainer Utama - Mengunci Sesuai Proporsi Gambar Anda */
-        .calculator-container {
-            position: relative;
-            width: 100%;
-            max-width: 360px;
-            height: 640px; 
-            background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        /* AREA LAYAR (Dibuat Bening, Mengikuti Kotak Putih Gambar) */
-        .display-section {
-            position: absolute;
-            top: 35px;
-            left: 25px;
-            width: 310px;
-            height: 105px;
-            background: transparent;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        #result-display {
-            color: #cc2222;
-            font-size: 2.2rem;
-            font-weight: bold;
-            font-family: Arial, sans-serif;
-        }
-
-        #formula-display {
-            color: #333333;
-            font-size: 1rem;
-            font-family: Arial, sans-serif;
-            text-align: right;
-            width: 100%;
-            min-height: 1.2rem;
-        }
-
-        /* BASE TOMBOL BENING (Hanya merespon sentuhan, tidak merusak gambar) */
-        .touch-btn {
-            position: absolute;
-            background: transparent;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* ========================================================
-           KOORDINAT POSISI TOMBOL OPERATOR (BARIS TENGAH)
-           ======================================================== */
-        .op-plus   { top: 165px; left: 25px;  width: 48px; height: 40px; }
-        .op-minus  { top: 165px; left: 78px;  width: 48px; height: 40px; }
-        .op-times  { top: 165px; left: 131px; width: 48px; height: 40px; }
-        .op-divide { top: 165px; left: 184px; width: 48px; height: 40px; }
-        .op-ac     { top: 165px; left: 237px; width: 48px; height: 40px; }
-        .op-equal  { top: 165px; left: 290px; width: 45px; height: 40px; }
-
-        /* ========================================================
-           KOORDINAT POSISI LIST RADIO & TOMBOL PILIH (KIRI BAWAH)
-           ======================================================== */
-        .radio-container {
-            position: absolute;
-            top: 230px;
-            left: 25px;
-            width: 110px;
-            height: 165px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 2px;
-            background: rgba(226, 240, 217, 0.5); /* Menyesuaikan area hijau */
-            border-radius: 4px;
-        }
-
-        .radio-container label {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 0.72rem;
-            font-family: Arial, sans-serif;
-            color: #000000;
-            background: #ffffff;
-            padding: 3px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .btn-pilih {
-            top: 405px;
-            left: 25px;
-            width: 110px;
-            height: 35px;
-        }
-
-        /* ========================================================
-           KOORDINAT POSISI TOMBOL ANGKA KOLOM TENGAH (6 - 0)
-           ======================================================= */
-        .num-6 { top: 230px; left: 147px; width: 85px; height: 35px; }
-        .num-7 { top: 275px; left: 147px; width: 85px; height: 35px; }
-        .num-8 { top: 320px; left: 147px; width: 85px; height: 35px; }
-        .num-9 { top: 365px; left: 147px; width: 85px; height: 35px; }
-        .num-0 { top: 410px; left: 147px; width: 85px; height: 35px; }
-
-        /* ========================================================
-           KOORDINAT POSISI TOMBOL ANGKA KOLOM KANAN (1 - 5)
-           ======================================================= */
-        .num-1 { top: 230px; left: 247px; width: 85px; height: 35px; }
-        .num-2 { top: 275px; left: 247px; width: 85px; height: 35px; }
-        .num-3 { top: 320px; left: 247px; width: 85px; height: 35px; }
-        .num-4 { top: 365px; left: 247px; width: 85px; height: 35px; }
-        .num-5 { top: 410px; left: 247px; width: 85px; height: 35px; }
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f0f0f0; margin: 0; }
+        
+        /* Wadah Utama Kalkulator */
+        .calculator { width: 340px; background: white; border: 2px solid #000; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Layar Utama Atas */
+        .display-screen { border: 2px solid #000; height: 220px; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; font-size: 1.2rem; background: #fff; }
+        
+        /* Baris Tombol Operator Atas (+ - * : =) */
+        .operator-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .btn-op { background-color: #ffe5d9; border: 1px solid #000; border-radius: 5px; padding: 10px 0; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
+        
+        /* Bagian Bawah: Panel Kiri dan Panel Angka */
+        .bottom-section { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
+        
+        /* Panel Kiri (Hijau) */
+        .left-panel { background-color: #e2efda; border: 1px solid #000; padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+        .input-box { background: white; border: 1px solid #000; border-radius: 5px; height: 35px; }
+        .btn-pilih { background: white; border: 1px solid #000; border-radius: 5px; color: red; font-weight: bold; font-size: 0.9rem; padding: 6px 0; cursor: pointer; text-align: center; }
+        
+        /* Panel Kanan (Tombol Angka) */
+        .num-panel { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+        .btn-num { background: white; border: 1px solid #000; border-radius: 5px; padding: 12px 0; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-align: center; }
+        
+        /* Tombol Khusus Bawah */
+        .btn-back { background-color: #fff2cc; }
+        .btn-delete { background-color: #f8cecc; font-size: 0.9rem; font-weight: bold; }
+        
+        /* Hover effect sederhana */
+        button:active { opacity: 0.7; }
     </style>
 </head>
 <body>
 
-    <div class="calculator-container">
-        <!-- Area Layar Tampilan -->
-        <div class="display-section">
-            <div id="result-display">0</div>
-            <div id="formula-display"></div>
-        </div>
-
-        <!-- Tombol Operator (Bening) -->
-        <button class="touch-btn op-plus" onclick="append('+')"></button>
-        <button class="touch-btn op-minus" onclick="append('-')"></button>
-        <button class="touch-btn op-times" onclick="append('*')"></button>
-        <button class="touch-btn op-divide" onclick="append('/')"></button>
-        <button class="touch-btn op-ac" onclick="clearAll()"></button>
-        <button class="touch-btn op-equal" onclick="calculate()"></button>
-
-        <!-- Area List Pilihan Masking Hijau -->
-        <div class="radio-container">
-            <label><input type="radio" name="calc-option" value="integral" checked>∫ dx (PV)</label>
-            <label><input type="radio" name="calc-option" value="sigma">∑ (NPV)</label>
-            <label><input type="radio" name="calc-option" value="^">Pangkat</label>
-            <label><input type="radio" name="calc-option" value="°">Sudut</label>
-            <label><input type="radio" name="calc-option" value="%">Persen</label>
-            <label><input type="radio" name="calc-option" value="(">Kurung (</label>
-            <label><input type="radio" name="calc-option" value=")">Kurung )</label>
-            <label><input type="radio" name="calc-option" value=".">Titik (.)</label>
-        </div>
-        <button class="touch-btn btn-pilih" onclick="insertRadioValue()"></button>
-
-        <!-- Tombol Angka Kolom Tengah (Bening) -->
-        <button class="touch-btn num-6" onclick="append('6')"></button>
-        <button class="touch-btn num-7" onclick="append('7')"></button>
-        <button class="touch-btn num-8" onclick="append('8')"></button>
-        <button class="touch-btn num-9" onclick="append('9')"></button>
-        <button class="touch-btn num-0" onclick="append('0')"></button>
-
-        <!-- Tombol Angka Kolom Kanan (Bening) -->
-        <button class="touch-btn num-1" onclick="append('1')"></button>
-        <button class="touch-btn num-2" onclick="append('2')"></button>
-        <button class="touch-btn num-3" onclick="append('3')"></button>
-        <button class="touch-btn num-4" onclick="append('4')"></button>
-        <button class="touch-btn num-5" onclick="append('5')"></button>
+<div class="calculator">
+    <!-- Layar Hasil Atas -->
+    <div class="display-screen" id="screen">
+        <div id="math-output">$$ \text{Masukkan Rumus...} $$</div>
     </div>
 
-    <script>
-        let formulaDisplay = document.getElementById('formula-display');
-        let resultDisplay = document.getElementById('result-display');
-        let currentInput = '';
-        let activeMode = null;
+    <!-- Tombol Operator Utama -->
+    <div class="operator-row">
+        <button class="btn-op" onclick="press(' + ')">+</button>
+        <button class="btn-op" onclick="press(' - ')">-</button>
+        <button class="btn-op" onclick="press(' \\times ')">×</button>
+        <button class="btn-op" onclick="press(' : ')">:</button>
+        <button class="btn-op" onclick="hitung()">=</button>
+    </div>
 
-        function append(value) {
-            currentInput += value;
-            formulaDisplay.innerText = currentInput;
+    <!-- Bagian Bawah -->
+    <div class="bottom-section">
+        <!-- Panel Hijau Kiri -->
+        <div class="left-panel">
+            <div class="input-box"></div>
+            <div class="input-box"></div>
+            <div class="input-box"></div>
+            <button class="btn-pilih">&lt; PILIH &gt;</button>
+        </div>
+
+        <!-- Panel Angka Kanan -->
+        <div class="num-panel">
+            <button class="btn-num" onclick="press('6')">6</button>
+            <button class="btn-num" onclick="press('1')">1</button>
+            
+            <button class="btn-num" onclick="press('7')">7</button>
+            <button class="btn-num" onclick="press('2')">2</button>
+            
+            <button class="btn-num" onclick="press('8')">8</button>
+            <button class="btn-num" onclick="press('3')">3</button>
+            
+            <button class="btn-num" onclick="press('9')">9</button>
+            <button class="btn-num" onclick="press('4')">4</button>
+            
+            <button class="btn-num" onclick="press('0')">0</button>
+            <button class="btn-num" onclick="press('5')">5</button>
+            
+            <button class="btn-num btn-back" onclick="backspace()">←</button>
+            <button class="btn-num btn-delete" onclick="clearAll()">DELETE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentInput = "";
+
+    // Fungsi saat tombol angka/operator ditekan
+    function press(val) {
+        currentInput += val;
+        updateDisplay();
+    }
+
+    // Fungsi hapus satu karakter per satu (Backspace)
+    function backspace() {
+        if(currentInput.endsWith(' \\times ') || currentInput.endsWith(' : ')) {
+            currentInput = currentInput.slice(0, -9);
+        } else if(currentInput.endsWith(' + ') || currentInput.endsWith(' - ')) {
+            currentInput = currentInput.slice(0, -3);
+        } else {
+            currentInput = currentInput.slice(0, -1);
         }
+        updateDisplay();
+    }
 
-        function clearAll() {
-            currentInput = '';
-            activeMode = null;
-            formulaDisplay.innerText = '';
-            resultDisplay.innerText = '0';
+    // Fungsi hapus total
+    function clearAll() {
+        currentInput = "";
+        document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+        MathJax.typeset();
+    }
+
+    // Memperbarui tampilan rumus di layar secara real-time
+    function updateDisplay() {
+        if(currentInput === "") {
+            document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+            return;
         }
+        
+        // Mengubah input teks biasa menjadi format LaTeX Pecahan Bertingkat jika ada pembagian
+        let latexFormula = formatToLatex(currentInput);
+        
+        document.getElementById('math-output').innerHTML = "$$ " + latexFormula + " $$";
+        // Memicu MathJax untuk merender ulang kode matematika menjadi visual grafis pecahan
+        MathJax.typeset();
+    }
 
-        function insertRadioValue() {
-            const selectedRadio = document.querySelector('input[name="calc-option"]:checked');
-            if (selectedRadio) {
-                const val = selectedRadio.value;
-                if (val === 'integral' || val === 'sigma') {
-                    setMode(val);
-                } else if (val === '%') {
-                    if (currentInput) {
-                        currentInput = (parseFloat(currentInput) / 100).toString();
-                        formulaDisplay.innerText = currentInput;
-                    }
-                } else {
-                    append(val);
-                }
+    // Pengubah input menjadi bentuk pecahan LaTeX bertingkat secara otomatis
+    function formatToLatex(str) {
+        let parts = str.split(' : ');
+        if(parts.length > 1) {
+            // Jika ada tanda titik dua (:), otomatis diubah jadi pecahan \frac{atas}{bawah}
+            return `\\frac{${parts[0]}}{${parts[1]}}`;
+        }
+        return str;
+    }
+
+    // Fungsi ketika tombol (=) ditekan untuk menghitung hasil evaluasi rumus asli
+    function hitung() {
+        try {
+            // Ubah simbol visual menjadi simbol operasi asli JavaScript untuk kalkulasi
+            let jsExpression = currentInput.replace(/\\times/g, '*').replace(/:/g, '/');
+            let hasil = eval(jsExpression);
+            
+            if(hasil !== undefined) {
+                let formulaAsli = formatToLatex(currentInput);
+                // Menampilkan rumus awal dan hasil akhirnya tepat di bawahnya secara vertikal
+                document.getElementById('math-output').innerHTML = `$$ ${formulaAsli} $$ $$ = ${hasil} $$`;
+                MathJax.typeset();
             }
+        } catch (error) {
+            document.getElementById('math-output').innerHTML = "$$ \\text{Format Salah} $$";
+            MathJax.typeset();
         }
+    }
+</script>
 
-        function setMode(mode) {
-            activeMode = mode;
-            if (mode === 'integral') {
-                currentInput = '20000'; // Contoh perhitungan langsung ekonomis
-            } else if (mode === 'sigma') {
-                currentInput = '10000';
-            }
-            formulaDisplay.innerText = mode === 'integral' ? '∫ dx (PV)' : '∑ (NPV)';
-        }
-
-        function calculate() {
-            try {
-                if (activeMode === 'integral') {
-                    let f = (t) => 20000 * Math.exp(-0.08 * t);
-                    let a = 0, b = 5, n = 100, h = (b - a) / n;
-                    let sum = 0.5 * (f(a) + f(b));
-                    for (let i = 1; i < n; i++) sum += f(a + i * h);
-                    resultDisplay.innerText = Math.round(sum * h).toString();
-                    return;
-                }
-                if (activeMode === 'sigma') {
-                    let total = 0;
-                    for (let t = 1; t <= 4; t++) total += 10000 / Math.pow(1 + 0.1, t);
-                    resultDisplay.innerText = Math.round(total).toString();
-                    return;
-                }
-                
-                let expression = currentInput.replace(/×/g, '*').replace(/:/g, '/');
-                if (expression.includes('^')) {
+</body>
+</html>
