@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Dinamis</title>
+    <title>Kalkulator Pecahan Berfungsi Normal</title>
     
-    <!-- Memuat MathJax versi terbaru untuk render pecahan bertingkat -->
+    <!-- Memuat MathJax untuk render pecahan -->
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
+            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -98,7 +98,6 @@
 </div>
 
 <script>
-    // Menyimpan riwayat input secara terpisah antara tampilan layar dan nilai kalkulasi asli
     let history = []; 
 
     function press(visual, mathValue) {
@@ -113,16 +112,22 @@
 
     function clearAll() {
         history = [];
-        document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
-        if (window.MathJax && MathJax.typeset) MathJax.typeset();
+        const outputDiv = document.getElementById('math-output');
+        
+        // Aturan Wajib MathJax v3: Clear elemen sebelum mengubah HTML internallnya
+        if (window.MathJax && MathJax.typesetClear) {
+            MathJax.typesetClear([outputDiv]);
+        }
+        outputDiv.innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+        if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
     }
 
-    // Fungsi pembuat format pecahan bertingkat otomatis dari riwayat input
+    // Fungsi pembuat pecahan bertingkat LaTeX secara berulang
     function generateLatex() {
         let tokens = history.map(item => item.visual);
         let str = tokens.join(" ");
         
-        // Memproses penanda titik dua (:) menjadi pecahan LaTeX \frac{}{} secara berulang (rekursif)
+        // Regex pintar untuk membungkus komponen sebelum dan sesudah tanda ':' menjadi pecahan \frac{}{}
         while (str.includes(":")) {
             str = str.replace(/(\S+)\s*:\s*(\S+)/, "\\frac{$1}{$2}");
         }
@@ -130,42 +135,59 @@
     }
 
     function updateDisplay() {
+        const outputDiv = document.getElementById('math-output');
+        
         if (history.length === 0) {
-            document.getElementById('math-output').innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+            if (window.MathJax && MathJax.typesetClear) MathJax.typesetClear([outputDiv]);
+            outputDiv.innerHTML = "$$ \\text{Masukkan Rumus...} $$";
+            if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
             return;
         }
         
         let latexFormula = generateLatex();
-        document.getElementById('math-output').innerHTML = "$$ " + latexFormula + " $$";
         
-        // Render ulang tampilan agar memproses struktur pecahan baru
+        // Bersihkan tracking MathJax lama pada elemen DOM ini agar teks mentah tidak bocor ke layar
+        if (window.MathJax && MathJax.typesetClear) {
+            MathJax.typesetClear([outputDiv]);
+        }
+        
+        outputDiv.innerHTML = "$$ " + latexFormula + " $$";
+        
+        // Picu kompilasi visual grafis pecahan yang baru
         if (window.MathJax && MathJax.typeset) {
-            MathJax.typeset();
+            MathJax.typeset([outputDiv]);
         }
     }
 
     function hitung() {
         if (history.length === 0) return;
+        const outputDiv = document.getElementById('math-output');
         
         try {
-            // Menggabungkan karakter matematika asli yang bersih dari kode-kode LaTeX
+            // Mengubah token internal ':' menjadi '/' agar dimengerti Javascript secara matematika asli
             let expr = history.map(item => item.math === ':' ? '/' : item.math).join("");
             
-            // Eksekusi kalkulasi angka di latar belakang secara akurat
+            // Evaluasi perhitungan matematika murni di sistem latar belakang
             let hasil = eval(expr); 
             
             if (hasil !== undefined) {
                 let rumusAwal = generateLatex();
-                // Menampilkan rumus bertingkat awal dan hasilnya turun ke bawah (vertikal)
-                document.getElementById('math-output').innerHTML = `$$ ${rumusAwal} $$ <hr style="width:100%; border:0; border-top:1px dashed #ccc; margin:10px 0;"> $$ = ${hasil} $$`;
+                
+                if (window.MathJax && MathJax.typesetClear) {
+                    MathJax.typesetClear([outputDiv]);
+                }
+                
+                // Menampilkan rumus di atas, lalu hasil kalkulasi turun di bawahnya secara vertikal
+                outputDiv.innerHTML = `$$ ${rumusAwal} $$ <hr style="width:100%; border:0; border-top:1px dashed #ccc; margin:10px 0;"> $$ = ${hasil} $$`;
                 
                 if (window.MathJax && MathJax.typeset) {
-                    MathJax.typeset();
+                    MathJax.typeset([outputDiv]);
                 }
             }
         } catch (error) {
-            document.getElementById('math-output').innerHTML = "$$ \\text{Format Salah} $$";
-            if (window.MathJax && MathJax.typeset) MathJax.typeset();
+            if (window.MathJax && MathJax.typesetClear) MathJax.typesetClear([outputDiv]);
+            outputDiv.innerHTML = "$$ \\text{Format Salah} $$";
+            if (window.MathJax && MathJax.typeset) MathJax.typeset([outputDiv]);
         }
     }
 </script>
