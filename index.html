@@ -2,35 +2,128 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Utama</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 10px; background: #fff; color: #333; }
-        h3 { margin-top: 0; font-size: 16px; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
-        .grid-simbol { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 16px; }
-        .radio-item { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-        .radio-item input { transform: scale(1.2); cursor: pointer; }
+        /* CSS Menyesuaikan Persis Gambar yang Anda Kirim */
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
+        .kalkulator-wadah { background: #2b2b2b; padding: 20px; border-radius: 12px; width: 340px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
+        #display { width: 100%; height: 65px; font-size: 32px; text-align: right; margin-bottom: 15px; padding: 10px; box-sizing: border-box; border: none; border-radius: 4px; background: #fff; }
+        .grid-numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .grid-numpad button { background: #e0e0e0; border: none; border-radius: 8px; padding: 18px 0; font-size: 20px; cursor: pointer; font-weight: bold; }
+        .btn-delete { grid-column: span 5; background: #ff4d4d !important; color: white !important; font-size: 18px !important; text-transform: uppercase; }
+        .btn-pilih { grid-column: span 5; background: #4caf50 !important; color: white !important; font-size: 18px !important; font-weight: bold; margin-top: 5px; }
+        
+        /* Gaya Pop-up untuk memuat file eksternal pilihan.html */
+        .box-file-terpisah { display: none; position: absolute; bottom: 90px; left: 20px; right: 20px; background: white; border: 3px solid #4caf50; border-radius: 8px; padding: 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.4); z-index: 10; }
+        iframe { width: 100%; height: 210px; border: none; }
+        .baris-aksi { display: flex; justify-content: space-between; margin-top: 5px; }
+        .baris-aksi button { padding: 5px 15px !important; font-size: 14px !important; }
     </style>
 </head>
 <body>
-    <h3>Pilih Anak Simbol:</h3>
-    <form id="formSimbol">
-        <div class="grid-simbol">
-            <!-- Kurung dipisah satu-satu sesuai permintaan Anda -->
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="{"> Kurung Buka {</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="}"> Kurung Tutup }</label></div>
+
+    <div class="kalkulator-wadah">
+        <!-- Tampilan Layar Utama -->
+        <input type="text" id="display" placeholder="0" autofocus>
+
+        <!-- Tombol Susunan Angka Mengikuti Aturan Gambar -->
+        <div class="grid-numpad">
+            <button onclick="klikAngka('1')">1</button>
+            <button onclick="klikAngka('2')">2</button>
+            <button onclick="klikAngka('3')">3</button>
+            <button onclick="klikAngka('4')">4</button>
+            <button onclick="klikAngka('5')">5</button>
+            <button onclick="klikAngka('6')">6</button>
+            <button onclick="klikAngka('7')">7</button>
+            <button onclick="klikAngka('8')">8</button>
+            <button onclick="klikAngka('9')">9</button>
+            <button onclick="klikAngka('0')">0</button>
             
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="["> Kurung Siku [</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="]"> Kurung Siku ]</label></div>
+            <!-- Tombol DELETE Lebar -->
+            <button class="btn-delete" onclick="hapusLayar()">DELETE</button>
             
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="("> Kurung Biasa (</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value=")"> Kurung Biasa )</label></div>
-            
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="%"> Persen %</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="~"> Tilde ~</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="√"> Akar √</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="^"> Pangkat ^</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="°"> Derajat °</label></div>
-            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="/"> Pecahan /</label></div>
+            <!-- Tombol PILIH Paling Bawah -->
+            <button class="btn-pilih" id="pemicuPilih">PILIH ▾</button>
         </div>
-    </form>
+
+        <!-- TEMPAT PEMANGGIL FILE TERPISAH (pilihan.html) -->
+        <div class="box-file-terpisah" id="containerPopUp">
+            <!-- Iframe memanggil file eksternal terpisah -->
+            <iframe src="pilihan.html" id="frameSimbol"></iframe>
+            <div class="baris-aksi">
+                <button onclick="tutupMenuTerpisah()" style="background:#bbb;">Batal</button>
+                <button onclick="ambilDanLetakkanSimbol()" style="background:#4caf50; color:white;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CODE PERINTAH PANGGIL DAN CARA MELETAKKAN KE INDEKS -->
+    <script>
+        const display = document.getElementById('display');
+        const pemicuPilih = document.getElementById('pemicuPilih');
+        const containerPopUp = document.getElementById('containerPopUp');
+        const frameSimbol = document.getElementById('frameSimbol');
+
+        // Variabel penanda lokasi urutan indeks kursor ketikan aktif
+        let lokasiIndeksKursor = 0;
+
+        // 1. CODE PERINTAH PANGGIL (Membuka Menu File Terpisah)
+        pemicuPilih.addEventListener('click', () => {
+            // Catat posisi indeks kursor di display sebelum membuka file menu
+            lokasiIndeksKursor = display.selectionStart;
+            // Munculkan kontainer file terpisah
+            containerPopUp.style.display = 'block';
+        });
+
+        function tutupMenuTerpisah() {
+            containerPopUp.style.display = 'none';
+        }
+
+        // 2. KODE MELETAKKAN HASIL RADIO KE INDEKS DISPLAY UTAMA
+        function ambilDanLetakkanSimbol() {
+            // Mengakses DOM di dalam dokumen file terpisah (iframe)
+            const dokumenInternalIframe = frameSimbol.contentDocument || frameSimbol.contentWindow.document;
+            
+            // Cari elemen radio yang sedang aktif dicentang di dalam pilihan.html
+            const radioTerpilih = dokumenInternalIframe.querySelector('input[name="sub_simbol"]:checked');
+            
+            if (radioTerpilih) {
+                const nilaiSimbol = radioTerpilih.value;
+                
+                // Masukkan simbol secara presisi tepat di urutan indeks kursor saat ini
+                const teksAwal = display.value.substring(0, lokasiIndeksKursor);
+                const teksAkhir = display.value.substring(lokasiIndeksKursor);
+                
+                // Atur nilai display baru hasil penggabungan indeks
+                display.value = teksAwal + nilaiSimbol + teksAkhir;
+                
+                // Kembalikan fokus kursor ke posisi setelah simbol yang baru dimasukkan
+                display.focus();
+                const posisiKursorBaru = lokasiIndeksKursor + nilaiSimbol.length;
+                display.setSelectionRange(posisiKursorBaru, posisiKursorBaru);
+                
+                // Reset radio button di file terpisah agar kosong kembali
+                radioTerpilih.checked = false;
+            }
+            
+            // Tutup kembali pop-up file terpisah
+            tutupMenuTerpisah();
+        }
+
+        // Fungsi input angka standar
+        function klikAngka(num) {
+            display.focus();
+            const start = display.selectionStart;
+            const end = display.selectionEnd;
+            display.setRangeText(num, start, end, 'end');
+        }
+
+        // Fungsi tombol DELETE penuh
+        function hapusLayar() {
+            display.value = "";
+            display.focus();
+        }
+    </script>
 </body>
 </html>
