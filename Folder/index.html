@@ -12,7 +12,7 @@
     <div class="calculator-container">
         <!-- 1. Layar Putih Besar -->
         <div class="display-section">
-            <div id="result-display">0</div>
+            <div id="result-display"></div>
             <div id="formula-display"></div>
         </div>
 
@@ -26,24 +26,7 @@
             <button class="btn-equal" onclick="calculate()">=</button>
         </div>
 
-        <!-- 3. Bagian Bawah: Tiga Kolom Sesuai Gambar Anda -->
-        <div class="bottom-layout">
             
-            <!-- Kolom Kiri - Panel Hijau -->
-            <div class="green-panel">
-                <div class="radio-scroll">
-                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx </label>
-                    <label><input type="radio" name="calc-option" value="sigma">∑</label>
-                    <label><input type="radio" name="calc-option" value="^">(^)</label>
-                    <label><input type="radio" name="calc-option" value="°">(°)</label>
-                    <label><input type="radio" name="calc-option" value="%">(%)</label>
-                    <label><input type="radio" name="calc-option" value="(">(</label>
-                    <label><input type="radio" name="calc-option" value=")">)</label>
-                    <label><input type="radio" name="calc-option" value=".">(.)</label>
-                </div>
-                <button class="btn-pilih" onclick="insertRadioValue()"> PILIH </button>
-            </div>
-
             <!-- Kolom Tengah - Angka 6 sampai 0 -->
             <div class="num-column">
                 <button class="btn-num" onclick="append('6')">6</button>
