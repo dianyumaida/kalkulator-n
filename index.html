@@ -5,27 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tampilan Rumus Kalkulator</title>
     
-    <!-- 1. KONFIGURASI MATHJAX (Wajib ditaruh SEBELUM memanggil script CDN) -->
-    <script>
-        MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-            }
-        };
-    </script>
+    <!-- 1. LOAD CSS KATEX (Untuk Mengatur Tampilan Visual Rumus) -->
+    <link rel="stylesheet" href="https://jsdelivr.net">
 
-    <!-- 2. SCRIPT CDN MATHJAX YANG AMAN & ASYNC -->
-    <script src="https://jsdelivr.net" defer></script>
+    <!-- 2. LOAD SCRIPT UTAMA KATEX -->
+    <script defer src="https://jsdelivr.net"></script>
+
+    <!-- 3. LOAD SCRIPT OTOMATIS RENDER (Menerjemahkan Teks Matematika Secara Instan) -->
+    <script defer src="https://jsdelivr.net"></script>
+    <script defer src="https://jsdelivr.net" onload="renderMathInElement(document.body);"></script>
 
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
         .kalkulator-container { max-width: 500px; background: white; padding: 25px; margin: 30px auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ccc; }
-        .screen { background: #eef2f3; padding: 20px; border-radius: 6px; min-height: 100px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 18px; overflow-x: auto; line-height: 1.6; }
+        .screen { background: #eef2f3; padding: 20px; border-radius: 6px; min-height: 100px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 20px; overflow-x: auto; text-align: center; }
         h3 { text-align: center; color: #333; margin-top: 0; }
     </style>
 </head>
@@ -35,11 +28,12 @@
     <h3>Layar Kalkulator Matematika</h3>
     
     <div class="screen">
-        <!-- Menggunakan tanda $$ untuk membuat rumus matematika turun ke tengah (Block Mode) -->
+        <!-- Rumus Baris 1 & 2 -->
         $$ \frac{\frac{a}{b} + \frac{a}{2}}{(d : e) - \frac{b}{c} + 5^{\frac{1}{2}}} \times \frac{a}{c} \times c $$
         
         <hr style="border: 0; border-top: 1px dashed #bbb; margin: 15px 0;">
         
+        <!-- Rumus Baris 3 -->
         $$ = \frac{a}{b} \times \frac{a}{c} \times c $$
     </div>
 </div>
