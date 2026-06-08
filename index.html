@@ -5,20 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tampilan Rumus Kalkulator</title>
     
-    <!-- 1. LOAD CSS KATEX (Untuk Mengatur Tampilan Visual Rumus) -->
+    <!-- 1. AMBIL CSS KATEX -->
     <link rel="stylesheet" href="https://jsdelivr.net">
 
-    <!-- 2. LOAD SCRIPT UTAMA KATEX -->
-    <script defer src="https://jsdelivr.net"></script>
-
-    <!-- 3. LOAD SCRIPT OTOMATIS RENDER (Menerjemahkan Teks Matematika Secara Instan) -->
-    <script defer src="https://jsdelivr.net"></script>
-    <script defer src="https://jsdelivr.net" onload="renderMathInElement(document.body);"></script>
+    <!-- 2. AMBIL SCRIPT UTAMA KATEX -->
+    <script src="https://jsdelivr.net"></script>
 
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
         .kalkulator-container { max-width: 500px; background: white; padding: 25px; margin: 30px auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ccc; }
-        .screen { background: #eef2f3; padding: 20px; border-radius: 6px; min-height: 100px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 20px; overflow-x: auto; text-align: center; }
+        .screen { background: #eef2f3; padding: 20px; border-radius: 6px; min-height: 100px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 22px; overflow-x: auto; text-align: center; }
         h3 { text-align: center; color: #333; margin-top: 0; }
     </style>
 </head>
@@ -27,16 +23,32 @@
 <div class="kalkulator-container">
     <h3>Layar Kalkulator Matematika</h3>
     
+    <!-- Elemen penampung rumus -->
     <div class="screen">
-        <!-- Rumus Baris 1 & 2 -->
-        $$ \frac{\frac{a}{b} + \frac{a}{2}}{(d : e) - \frac{b}{c} + 5^{\frac{1}{2}}} \times \frac{a}{c} \times c $$
-        
+        <div id="rumus1"></div>
         <hr style="border: 0; border-top: 1px dashed #bbb; margin: 15px 0;">
-        
-        <!-- Rumus Baris 3 -->
-        $$ = \frac{a}{b} \times \frac{a}{c} \times c $$
+        <div id="rumus2"></div>
     </div>
 </div>
+
+<script>
+    // 3. TRIGGER REKAYASA RENDER MANUAL (PASTI BERHASIL)
+    window.onload = function() {
+        // Render baris pecahan atas
+        katex.render(
+            "\\frac{\\frac{a}{b} + \\frac{a}{2}}{(d : e) - \\frac{b}{c} + 5^{\\frac{1}{2}}} \\times \\frac{a}{c} \\times c", 
+            document.getElementById("rumus1"), 
+            { displayMode: true, throwOnError: false }
+        );
+        
+        // Render baris hasil bawah
+        katex.render(
+            "= \\frac{a}{b} \\times \\frac{a}{c} \\times c", 
+            document.getElementById("rumus2"), 
+            { displayMode: true, throwOnError: false }
+        );
+    };
+</script>
 
 </body>
 </html>
