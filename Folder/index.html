@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Ekonomi IT</title>
+    <title>Kalkulator </title>
     <!-- Pemanggilan file CSS yang sudah diganti nama menjadi standar -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,7 +20,7 @@
         <div class="operator-row">
             <button class="btn-op" onclick="append('+')">+</button>
             <button class="btn-op" onclick="append('-')">-</button>
-            <button class="btn-op" onclick="append('*')">&times;</button>
+            <button class="btn-op" onclick="append('*')">x</button>
             <button class="btn-op" onclick="append('/')">:</button>
             <button class="btn-delete" onclick="clearAll()">AC</button>
             <button class="btn-equal" onclick="calculate()">=</button>
@@ -32,16 +32,16 @@
             <!-- Kolom Kiri - Panel Hijau -->
             <div class="green-panel">
                 <div class="radio-scroll">
-                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx (PV)</label>
-                    <label><input type="radio" name="calc-option" value="sigma"> ∑ (NPV)</label>
-                    <label><input type="radio" name="calc-option" value="^"> Pangkat (^)</label>
-                    <label><input type="radio" name="calc-option" value="°"> Sudut (°)</label>
-                    <label><input type="radio" name="calc-option" value="%"> Persen (%)</label>
-                    <label><input type="radio" name="calc-option" value="("> Kurung (</label>
-                    <label><input type="radio" name="calc-option" value=")"> Kurung )</label>
-                    <label><input type="radio" name="calc-option" value="."> Titik (.)</label>
+                    <label><input type="radio" name="calc-option" value="integral" checked> ∫ dx </label>
+                    <label><input type="radio" name="calc-option" value="sigma">∑</label>
+                    <label><input type="radio" name="calc-option" value="^">(^)</label>
+                    <label><input type="radio" name="calc-option" value="°">(°)</label>
+                    <label><input type="radio" name="calc-option" value="%">(%)</label>
+                    <label><input type="radio" name="calc-option" value="(">(</label>
+                    <label><input type="radio" name="calc-option" value=")">)</label>
+                    <label><input type="radio" name="calc-option" value=".">(.)</label>
                 </div>
-                <button class="btn-pilih" onclick="insertRadioValue()">&lt; PILIH &gt;</button>
+                <button class="btn-pilih" onclick="insertRadioValue()"> PILIH </button>
             </div>
 
             <!-- Kolom Tengah - Angka 6 sampai 0 -->
