@@ -3,252 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <!-- Library untuk hitungan pecahan akurat -->
-    <script src="https://cloudflare.com"></script>
-    <!-- Library MathJax untuk mengubah teks menjadi visual rumus pecahan bertingkat asli -->
-    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+    <title>Tampilan Rumus Kalkulator</title>
     
+    <!-- Script MathJax untuk menerjemahkan kode LaTeX menjadi rumus visual -->
+    <script src="https://polyfill.io"></script>
+    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .calculator {
-            background-color: #1e293b;
-            padding: 35px;
-            border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            width: 700px; /* Ukuran kalkulator ekstra lebar */
-        }
-        h2 {
-            margin-top: 0;
-            color: #f8fafc;
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-        }
-        /* Wadah Layar Utama Ekstra Besar */
-        .screen-container {
-            background-color: #020617;
-            border: 3px solid #475569;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            min-height: 220px; /* Layar sangat tinggi agar pecahan bertingkat terlihat jelas */
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-sizing: border-box;
-        }
-        /* Teks input sistem dibelakang layar */
-        #input-text {
-            color: #64748b;
-            font-size: 1rem;
-            text-align: left;
-            word-wrap: break-word;
-            font-family: monospace;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-        }
-        /* Area khusus perwujudan visual pecahan bertingkat */
-        #math-output {
-            color: #38bdf8;
-            font-size: 2.2rem; /* Ukuran rumus matematika sangat besar */
-            min-height: 120px;
-            display: flex;
-            justify-content: center; /* Posisi rumus di kiri atas layar besar */
-            align-items: center;
-            overflow-x: auto;
-            overflow-y: auto;
-            padding: 10px 0;
-        }
-        /* Grid Tombol Kalkulator */
-        .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        button {
-            padding: 22px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.1s ease;
-        }
-        button:active {
-            transform: scale(0.96);
-        }
-        .num { background-color: #334155; color: #f8fafc; }
-        .num:hover { background-color: #475569; }
-        
-        .op { background-color: #ea580c; color: white; }
-        .op:hover { background-color: #f97316; }
-        
-        .bracket { background-color: #0284c7; color: white; }
-        .bracket:hover { background-color: #0ea5e9; }
-        
-        .clear { background-color: #dc2626; color: white; grid-column: span 2; }
-        .clear:hover { background-color: #ef4444; }
-        
-        .equal { background-color: #16a34a; color: white; grid-column: span 2; }
-        .equal:hover { background-color: #22c55e; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .kalkulator-container { max-width: 500px; background: white; padding: 25px; margin: 30px auto; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ccc; }
+        .screen { background: #eef2f3; padding: 20px; border-radius: 6px; min-height: 100px; margin-bottom: 20px; border: 1px solid #ddd; font-size: 20px; overflow-x: auto; }
+        h3 { text-align: center; color: #333; margin-top: 0; }
     </style>
 </head>
 <body>
 
-<div class="calculator">
-    <h2>Kalkulator Pecahan Bertingkat Visual</h2>
+<div class="kalkulator-container">
+    <h3>Layar Kalkulator Matematika</h3>
     
-    <!-- Tampilan Layar Besar -->
-    <div class="screen-container">
-        <div id="input-text">Log Kode: 0</div>
-        <div id="math-output"></div>
-    </div>
-    
-    <div class="buttons">
-        <!-- Baris Kontrol Utama -->
-        <button class="clear" onclick="clearDisplay()">CLEAR</button>
-        <button class="op" onclick="hapusSatu()">⌫ Hapus</button>
-        <button class="op" onclick="append('/')">÷ (Per)</button>
+    <!-- Tempat rumus matematika ditampilkan -->
+    <div class="screen">
+        <!-- Rumus Baris 1 & 2 (Pecahan Bertingkat) -->
+        $$\frac{\frac{a}{b} + \frac{a}{2}}{(d : e) - \frac{b}{c} + 5^{\frac{1}{2}}} \times \frac{a}{c} \times c$$
         
-        <!-- Baris Kombinasi Kurung Matematika -->
-        <button class="bracket" onclick="append('{')">{</button>
-        <button class="bracket" onclick="append('}')">}</button>
-        <button class="bracket" onclick="append('[')">[</button>
-        <button class="bracket" onclick="append(']')">]</button>
+        <hr style="border: 0; border-top: 1px dashed #bbb; margin: 15px 0;">
         
-        <button class="bracket" onclick="append('(')">(</button>
-        <button class="bracket" onclick="append(')')">)</button>
-        <button class="num" onclick="append('.')">.</button>
-        <button class="op" onclick="append('*')">×</button>
-
-        <!-- Papan Angka Pro -->
-        <button class="num" onclick="append('7')">7</button>
-        <button class="num" onclick="append('8')">8</button>
-        <button class="num" onclick="append('9')">9</button>
-        <button class="op" onclick="append('-')">-</button>
-
-        <button class="num" onclick="append('4')">4</button>
-        <button class="num" onclick="append('5')">5</button>
-        <button class="num" onclick="append('6')">6</button>
-        <button class="op" onclick="append('+')">+</button>
-
-        <button class="num" onclick="append('1')">1</button>
-        <button class="num" onclick="append('2')">2</button>
-        <button class="num" onclick="append('3')">3</button>
-        <button class="equal" onclick="hitung()">= HITUNG RUMUS</button>
-
-        <button class="num" style="grid-column: span 2;" onclick="append('0')">0</button>
+        <!-- Rumus Baris 3 (Hasil Kesamaan) -->
+        $$= \frac{a}{b} \times \frac{a}{c} \times c$$
     </div>
 </div>
-
-<script>
-    let currentInput = "";
-    const inputTextDiv = document.getElementById('input-text');
-    const mathOutputDiv = document.getElementById('math-output');
-
-    // Mengonversi tanda kurung bertingkat teks menjadi susunan fraksi vertikal LaTeX asli
-    function parseToLaTeX(text) {
-        if (!text) return "0";
-        let latex = text;
-        
-        // Ubah visual perkalian
-        latex = latex.replace(/\*/g, ' \\times ');
-
-        // Algoritma Looping untuk mengubah ekspresi bertingkat terdalam hingga terluar
-        let loopControl;
-        do {
-            loopControl = false;
-
-            // 1. Deteksi pecahan dalam kurung kurawal {[ekspresi]/[ekspresi]}
-            let matchKurawal = /\{([^{}]+)\}\/\{([^{}]+)\}/g;
-            if (matchKurawal.test(latex)) { latex = latex.replace(matchKurawal, '\\frac{$1}{$2}'); loopControl = true; }
-
-            // 2. Deteksi pecahan dalam kurung siku [[ekspresi]/[ekspresi]]
-            let matchSiku = /\[([^\[\]]+)\]\/\[([^\[\]]+)\]/g;
-            if (matchSiku.test(latex)) { latex = latex.replace(matchSiku, '\\frac{$1}{$2}'); loopControl = true; }
-
-            // 3. Deteksi pecahan dalam kurung biasa ((ekspresi)/(ekspresi))
-            let matchKurung = /\(([^()]+)\)\/\(([^()]+)\)/g;
-            if (matchKurung.test(latex)) { latex = latex.replace(matchKurung, '\\frac{$1}{$2}'); loopControl = true; }
-
-            // 4. Deteksi pecahan campuran silang (misal: kurung siku dibagi kurung biasa atau sebaliknya)
-            let matchCampuran1 = /\[([^\[\]]+)\]\/\(([^()]+)\)/g;
-            if (matchCampuran1.test(latex)) { latex = latex.replace(matchCampuran1, '\\frac{$1}{$2}'); loopControl = true; }
-            let matchCampuran2 = /\(([^()]+)\)\/\[([^\[\]]+)\]/g;
-            if (matchCampuran2.test(latex)) { latex = latex.replace(matchCampuran2, '\\frac{$1}{$2}'); loopControl = true; }
-            let matchCampuran3 = /\{([^{}]+)\}\/\[([^\[\]]+)\]/g;
-            if (matchCampuran3.test(latex)) { latex = latex.replace(matchCampuran3, '\\frac{$1}{$2}'); loopControl = true; }
-            let matchCampuran4 = /\[([^\[\]]+)\]\/\{([^{}]+)\}/g;
-            if (matchCampuran4.test(latex)) { latex = latex.replace(matchCampuran4, '\\frac{$1}{$2}'); loopControl = true; }
-
-            // 5. Deteksi pecahan angka dasar (contoh: 1/2 atau 23/45)
-            let matchAngka = /(\d+)\/(\d+)/g;
-            if (matchAngka.test(latex)) { latex = latex.replace(matchAngka, '\\frac{$1}{$2}'); loopControl = true; }
-
-        } while (loopControl);
-
-        return latex;
-    }
-
-    function perbaruiLayar() {
-        inputTextDiv.innerText = "Log Kode: " + (currentInput || "0");
-        
-        // Proses teks input menjadi struktur matematika visual bertingkat
-        let formatMatematikaVisual = parseToLaTeX(currentInput);
-        
-        // Render ke layar utama
-        mathOutputDiv.innerHTML = "" + formatMatematikaVisual + "";
-        MathJax.typesetPromise([mathOutputDiv]);
-    }
-
-    function append(val) {
-        currentInput += val;
-        perbaruiLayar();
-    }
-
-    function clearDisplay() {
-        currentInput = "";
-        perbaruiLayar();
-    }
-
-    function hapusSatu() {
-        currentInput = currentInput.slice(0, -1);
-        perbaruiLayar();
-    }
-
-    function hitung() {
-        if (!currentInput) return;
-
-        try {
-            // Standarisasi simbol tanda kurung agar dimengerti mesin hitung
-            let rumusEvaluasi = currentInput
-                .replace(/\{/g, '(').replace(/\}/g, ')')
-                .replace(/\[/g, '(').replace(/\]/g, ')');
-
-            // Hitung rumus matematika menggunakan core pecahan murni dari math.js
-            let hasilEvaluasi = math.evaluate(rumusEvaluasi);
-            
-            // Format kembali hasil agar tetap berupa pecahan murni atau bilangan bulat tegas
-            let hasilFormatPecahan = math.format(hasilEvaluasi, { fraction: 'ratio' });
-            
-            currentInput = hasilFormatPecahan;
-            perbaruiLayar();
-        } catch (error) {
-            mathOutputDiv.innerHTML = "<span style='color:#ef4444; font-size:1.6rem; font-weight:bold;'></span>";
-        }
-    }
-</script>
 
 </body>
 </html>
