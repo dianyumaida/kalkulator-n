@@ -2,19 +2,252 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <object type="text/html" data="Folder/index.html" width="100%" height="800px">
-   
-</object>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Vertikal Kompleks</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 10px; background: #fff; color: #333; margin: 0; }
-        h3 { margin-top: 0; font-size: 16px; border-bottom: 2px solid #ccc; padding-bottom: 5px; color: #111; }
-        .grid-simbol { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 16px; }
-        .radio-item { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
-        .radio-item input { transform: scale(1.3); cursor: pointer; }
-        label { cursor: pointer; font-weight: 500; }
+        /* --- CSS DASAR KALKULATOR --- */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f7ebe1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            width: 340px;
+            background-color: #ffffff;
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 5px 5px 0px #000000;
+        }
+
+        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll, dan gaya pecahan */
+        .display-container {
+            width: 100%;
+            height: 180px;
+            border: 2px solid #000;
+            margin-bottom: 15px;
+            background-color: #fff;
+            padding: 12px;
+            box-sizing: border-box;
+            text-align: left;
+            font-size: 1.2rem;
+            color: #d13438;
+            font-weight: bold;
+            overflow-y: auto;
+        }
+
+        /* CSS untuk membuat format Pecahan Bertingkat/Susun */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            padding: 0 4px;
+        }
+
+        .numerator {
+            border-bottom: 2px solid #d13438; /* Garis pembagi pecahan */
+            padding-bottom: 2px;
+        }
+
+        .denominator {
+            padding-top: 2px;
+        }
+
+        .history-block {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        /* Grid Tombol Operator Atas */
+        .operator-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .operator-row button {
+            background-color: #fce4d6;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Grid Bagian Bawah */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 15px;
+        }
+
+        .left-space {
+            background-color: #e2efda;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 0.8rem;
+            color: #555;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .number-grid button {
+            background-color: #ffffff;
+            border: 2px solid #000;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            grid-column: span 2;
+            background-color: #f8cbad !important;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
+
+    <div class="calculator">
+        <!-- Layar Tampilan Utama -->
+        <div id="display-screen" class="display-container">
+            <div id="history-log"></div>
+            <div id="current-input-line">0</div>
+        </div>
+
+        <!-- Tombol Operator -->
+        <div class="operator-row">
+            <button onclick="appendOperator('+')">+</button>
+            <button onclick="appendOperator('-')">-</button>
+            <button onclick="appendOperator('*')">×</button>
+            <button onclick="appendOperator('/')">÷</button>
+            <button onclick="calculate()">=</button>
+        </div>
+
+        <div class="main-grid">
+            <!-- Sisi Kiri: Tambahan Tombol Pecahan Khusus Modifikasi -->
+            <div class="left-space">
+                <button onclick="makeFraction()" style="padding:5px; font-weight:bold; cursor:pointer;">[ / ] Pecahan</button>
+                <button onclick="appendOperator('%')" style="padding:5px; font-weight:bold; cursor:pointer;">%</button>
+                <button onclick="appendNumber('(')" style="padding:5px; cursor:pointer;">(</button>
+                <button onclick="appendNumber(')')" style="padding:5px; cursor:pointer;">)</button>
+            </div>
+
+            <!-- Sisi Kanan: Angka -->
+            <div class="number-grid">
+                <button onclick="appendNumber('6')">6</button>
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('7')">7</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('8')">8</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button onclick="appendNumber('9')">9</button>
+                <button onclick="appendNumber('4')">4</button>
+                <button onclick="appendNumber('0')">0</button>
+                <button onclick="appendNumber('5')">5</button>
+                <button class="delete-btn" onclick="clearDisplay()">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- JAVASCRIPT LOGIKA PECAHAN BERTINGKAT --- -->
+    <script>
+        let currentRawMath = ""; // Menyimpan string rumus asli untuk dievaluasi oleh eval()
+        
+        const currentInputLine = document.getElementById("current-input-line");
+        const historyLog = document.getElementById("history-log");
+        const displayScreen = document.getElementById("display-screen");
+
+        function appendNumber(num) {
+            if (currentRawMath === "0") currentRawMath = "";
+            currentRawMath += num;
+            renderLiveView();
+        }
+
+        function appendOperator(op) {
+            currentRawMath += " " + op + " ";
+            renderLiveView();
+        }
+
+        // Fitur mengubah simbol garis miring '/' terakhir menjadi visual pecahan bertingkat HTML
+        function makeFraction() {
+            currentRawMath += "/";
+            renderLiveView();
+        }
+
+        // Fungsi menerjemahkan string matematika mentah menjadi kode HTML visual pecahan susun
+        function parseToVisualHTML(mathStr) {
+            if(!mathStr) return "0";
+            
+            // Mengubah perkalian biasa menjadi simbol 'x'
+            let htmlResult = mathStr.replace(/\*/g, " x ");
+            
+            // Cari pola angka/tanda kurung sebelum dan sesudah tanda '/' untuk dijadikan pecahan vertikal
+            // Rumus regex ini mendeteksi struktur pembagian pembilang/penyebut
+            let fractionRegex = /(\([^\)]+\)|[0-9\.]+%?)\s*\/\s*(\([^\)]+\)|[0-9\.]+%?)/g;
+            
+            while (fractionRegex.test(htmlResult)) {
+                htmlResult = htmlResult.replace(fractionRegex, function(match, p1, p2) {
+                    return `<span class="fraction"><span class="numerator">${p1}</span><span class="denominator">${p2}</span></span>`;
+                });
+            }
+            return htmlResult;
+        }
+
+        function renderLiveView() {
+            currentInputLine.innerHTML = parseToVisualHTML(currentRawMath);
+        }
+
+        function calculate() {
+            if (!currentRawMath.trim()) return;
+
+            try {
+                // Sempurnakan logika persen (%) agar dikenali eval script (misal: 5% menjadi 5/100)
+                let executableMath = currentRawMath.replace(/([0-9\.]+)\s*%/g, "($1/100)");
+                
+                let rawResult = eval(executableMath);
+                let finalResult = Number(rawResult.toFixed(4)).toString();
+
+                // Cetak riwayat visual pembagian bertingkat ke log atas
+                let visualFormula = parseToVisualHTML(currentRawMath);
+                historyLog.innerHTML += `<div class="history-block">${visualFormula}<br>= ${finalResult}</div>`;
+                
+                // Masukkan hasil ke penampung input baru jika ingin dihitung kembali
+                currentRawMath = finalResult;
+            } catch (error) {
+                historyLog.innerHTML += `<div class="history-block">${parseToVisualHTML(currentRawMath)}<br>= Error</div>`;
+                currentRawMath = "0";
+            }
+            
+            renderLiveView();
+            displayScreen.scrollTop = displayScreen.scrollHeight; // Auto scroll kebawah
+        }
+
+        function clearDisplay() {
+            currentRawMath = "0";
+            historyLog.innerHTML = "";
+            renderLiveView();
+        }
+    </script>
 </body>
 </html>
