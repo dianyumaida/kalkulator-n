@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 3. Bagian Bawah: Tiga Kolom Sesuai Gambar Anda -->
-        <div class="bottom-layout">
+     
     <div class="calculator-container">
         <!-- 1. Layar Putih Besar -->
         <div class="display-section">
@@ -18,7 +17,38 @@
             <div id="formula-display"></div>
         </div>
 
-             
+             <!-- 3. Bagian Bawah: Tiga Kolom Sesuai Gambar Anda -->
+        <div class="bottom-layout">
+            <!-- Kolom Kiri - Panel Hijau -->
+            <div class="green-panel">
+    <h3>Simbol:</h3>
+    <form id="formSimbol">
+        <div class="grid-simbol">
+            <!-- SISTEM KURUNG TERPISAH SATU-SATU -->
+<div class="radio-item"><label><input type="radio" name="sub_simbol" value="integral" checked> ∫ dx </label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol"value="sigma">∑ </label></div>
+<div class="radio-item"><label><input type="radio" name="sub_simbol" value="^">(^) </label></div>
+<div class="radio-item"><label><input type="radio" name="sub_simbol" value="°">(°)</label></div>
+<div class="radio-item"><label><input type="radio" name="sub_simbol" value="%">(%) </label></div>
+<div class="radio-item"><label><input type="radio" name="sub_simbol" value=".">(.)</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="{">{ </label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="}">}</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="[">[</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="]">]</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="(">(</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value=")">)</label></div>
+            
+            <!-- SIMBOL MATEMATIKA UTAMA -->
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="%">%</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="~">~</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="sqrt(">√</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="^">^</label></div>
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="°">°</label></div>
+            
+            <!-- SISTEM PECAHAN BERLAPIS BERBASIS FUNGSI STRUKTUR -->
+            <div class="radio-item"><label><input type="radio" name="sub_simbol" value="frac(,)">/</label></div>
+        </div>
+    </form>  
         <!-- 2. Baris Operator Horizontal -->
         <div class="operator-row">
             <button class="btn-op" onclick="append('+')">+</button>
