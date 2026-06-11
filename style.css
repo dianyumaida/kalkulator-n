@@ -1,0 +1,75 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    font-family: monospace;
+}
+
+.calculator {
+    width: 450px;
+    border: 3px solid #000;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 5px 5px 0px #000;
+}
+
+/* Layar besar di bagian atas */
+.screen {
+    height: 150px;
+    border: 2px solid #000;
+    margin-bottom: 10px;
+    font-size: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 10px;
+    background: #f9f9f9;
+    word-break: break-all;
+}
+
+/* Baris pembungkus tombol */
+.row {
+    display: grid;
+    border: 2px solid #000;
+    margin-bottom: 5px;
+    padding: 5px;
+    background: #eee;
+}
+
+.numbers {
+    grid-template-columns: repeat(10, 1fr);
+}
+
+.operators {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.select-zone {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-weight: bold;
+}
+
+button {
+    border: 1px solid #000;
+    background: #fff;
+    padding: 10px 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:active {
+    background: #ddd;
+}
+
+.radio-container {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.2rem;
+}
