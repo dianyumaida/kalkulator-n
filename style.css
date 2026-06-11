@@ -3,51 +3,48 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #f3f3f3;
     font-family: monospace;
     margin: 0;
 }
 
-/* Kotak Utama Kalkulator */
 .calculator {
     width: 90%;
-    max-width: 500px;
-    border: 3px solid #000;
+    max-width: 480px;
+    border: 3px solid #000000;
     background: #ffffff;
     padding: 15px;
-    box-shadow: 6px 6px 0px #000;
-    display: block; /* Memastikan komponen muncul */
+    box-shadow: 6px 6px 0px #000000;
 }
 
-/* Layar besar di bagian atas */
+/* Kotak layar atas */
 .screen {
-    height: 150px;
-    border: 3px solid #000;
+    height: 140px;
+    border: 3px solid #000000;
     margin-bottom: 15px;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
     padding: 10px;
-    background: #fdfdfd;
+    background: #ffffff;
     word-break: break-all;
-    outline: none;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-/* Efek visual saat layar dalam mode Edit teks langsung */
-.screen.editing-active {
-    background: #fffdf0;
-    border-color: #ffcc00;
-    box-shadow: inset 0 0 5px #ffcc00;
+/* Gaya visual saat tombol EDIT sedang aktif */
+.screen:focus {
+    background: #fffde6;
+    border: 3px dashed #ff9900;
+    outline: none;
 }
 
-/* Baris pembungkus tombol */
 .row {
     display: grid;
-    border: 2px solid #000;
+    border: 2px solid #000000;
     margin-bottom: 8px;
-    padding: 6px;
+    padding: 5px;
     background: #f0f0f0;
     gap: 4px;
     box-sizing: border-box;
@@ -66,28 +63,27 @@ body {
     align-items: center;
     justify-content: space-between;
     font-weight: bold;
-    padding: 8px;
+    padding: 5px;
 }
 
-/* Desain semua tombol */
 button {
-    border: 2px solid #000;
+    border: 2px solid #000000;
     background: #ffffff;
-    padding: 12px 4px;
-    font-size: 1.1rem;
+    padding: 12px 2px;
+    font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
     font-family: monospace;
 }
 
 button:active {
-    background: #dddddd;
+    background: #e0e0e0;
 }
 
 .radio-container {
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 3px;
-    font-size: 1.2rem;
+    gap: 2px;
+    font-size: 1.1rem;
 }
