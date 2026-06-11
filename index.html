@@ -24,7 +24,7 @@
             box-shadow: 6px 6px 0px #000000;
         }
 
-        /* Kotak layar atas mirip gambar */
+        /* Kotak layar atas */
         .screen {
             height: 140px;
             border: 3px solid #000000;
@@ -40,10 +40,10 @@
             box-sizing: border-box;
         }
 
-        /* Indikator visual saat mode EDIT menyala */
+        /* Tampilan mencolok saat tombol EDIT aktif */
         .screen.editing-active {
-            background: #fffde6;
-            border: 3px dashed #ffcc00;
+            background: #fffdf0 !important;
+            border: 3px dashed #ff9900 !important;
             outline: none;
         }
 
@@ -99,10 +99,10 @@
 <body>
 
     <div class="calculator">
-        <!-- Layar Tampilan -->
+        <!-- Layar Tampilan Utama -->
         <div class="screen" id="screen">0</div>
 
-        <!-- Baris Angka -->
+        <!-- Baris Tombol Angka -->
         <div class="row numbers">
             <button onclick="tekanAngka('1')">1</button>
             <button onclick="tekanAngka('2')">2</button>
@@ -116,7 +116,7 @@
             <button onclick="tekanAngka('0')">0</button>
         </div>
 
-        <!-- Baris Operator Utama -->
+        <!-- Baris Tombol Operator Utama -->
         <div class="row operators">
             <button onclick="tekanOperator('*')">×</button>
             <button onclick="tekanOperator('/')">:</button>
@@ -126,7 +126,7 @@
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
 
-        <!-- Baris Pilihan Radio dan EDIT -->
+        <!-- Baris Pilihan Radio dan Tombol Aksi -->
         <div class="row select-zone">
             <span class="label">▲ PILIH ▼</span>
             <label class="radio-container">
@@ -136,17 +136,17 @@
                 <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
             </label>
             
-            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px;">EDIT</button>
+            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 80px;">EDIT</button>
             <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px;">CLEAR</button>
         </div>
     </div>
 
-    <!-- LOGIKA JAVASCRIPT DILETAKKAN DI BAWAH AGAR TIDAK MACET -->
     <script>
         let layarMemori = "0";
         let angkaPertama = "";
         let jenisOperator = "";
         let statusSiapInputBaru = false;
+        let isEditModeActive = false;
 
         const elemenLayar = document.getElementById("screen");
         const tombolEdit = document.getElementById("btn-edit");
@@ -156,7 +156,7 @@
         }
 
         function tekanAngka(angka) {
-            if (elemenLayar.contentEditable === "true") return;
+            if (isEditModeActive) return; // Larang input tombol fisik saat mengetik manual di layar
             
             if (statusSiapInputBaru) {
                 layarMemori = angka;
@@ -172,14 +172,15 @@
         }
 
         function tekanOperator(op) {
-            simpanHasilEditManual();
+            if (isEditModeActive) return; // Cegah eror jika menekan operator saat mode edit menyala
+            
             angkaPertama = layarMemori;
             jenisOperator = op;
             statusSiapInputBaru = true; 
         }
 
         function hitungHasil() {
-            simpanHasilEditManual();
+            if (isEditModeActive) return;
 
             let hasilAkhir = 0;
             const n1 = parseFloat(angkaPertama);
@@ -223,7 +224,7 @@
         }
 
         function hapusSatuAngka() {
-            if (elemenLayar.contentEditable === "true") return;
+            if (isEditModeActive) return;
             layarMemori = layarMemori.slice(0, -1);
             if (layarMemori === "") layarMemori = "0";
             cetakKeLayar(layarMemori);
@@ -234,6 +235,8 @@
             angkaPertama = "";
             jenisOperator = "";
             statusSiapInputBaru = false;
+            isEditModeActive = false;
+            
             document.getElementById("rad-percent").checked = false;
             document.getElementById("rad-sigma").checked = false;
             
@@ -246,30 +249,35 @@
             cetakKeLayar("0");
         }
 
+        // FUNGSI TOMBOL EDIT TERBARU - DIJAMIN BERFUNGSI
         function aktifkanModeEdit() {
-            if (elemenLayar.contentEditable === "true") {
-                elemenLayar.contentEditable = "false";
-                elemenLayar.classList.remove("editing-active");
-                tombolEdit.innerText = "EDIT";
-                tombolEdit.style.background = "#ffcc00";
-                tombolEdit.style.color = "#000000";
-                simpanHasilEditManual();
-            } else {
+            if (!isEditModeActive) {
+                // MASUK MODE EDIT ANGKA
+                isEditModeActive = true;
                 elemenLayar.contentEditable = "true";
                 elemenLayar.classList.add("editing-active");
                 elemenLayar.focus();
+                
                 tombolEdit.innerText = "OK";
                 tombolEdit.style.background = "#2ecc71"; 
                 tombolEdit.style.color = "#ffffff";
-            }
-        }
-
-        function simpanHasilEditManual() {
-            let teksLayar = elemenLayar.innerText.trim();
-            if (teksLayar === "" || isNaN(parseFloat(teksLayar))) {
-                layarMemori = "0";
             } else {
-                layarMemori = teksLayar;
+                // KELUAR MODE EDIT & SIMPAN DATA KE MEMORI
+                isEditModeActive = false;
+                elemenLayar.contentEditable = "false";
+                elemenLayar.classList.remove("editing-active");
+                
+                tombolEdit.innerText = "EDIT";
+                tombolEdit.style.background = "#ffcc00";
+                tombolEdit.style.color = "#000000";
+                
+                let teksKetikManual = elemenLayar.innerText.trim();
+                if (teksKetikManual === "" || isNaN(parseFloat(teksKetikManual))) {
+                    layarMemori = "0";
+                } else {
+                    layarMemori = teksKetikManual;
+                }
+                cetakKeLayar(layarMemori);
             }
         }
     </script>
