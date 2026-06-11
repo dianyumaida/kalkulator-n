@@ -24,36 +24,22 @@
             box-shadow: 6px 6px 0px #000000;
         }
 
-        .screen-container {
+        .screen {
+            height: 140px;
             border: 3px solid #000000;
             margin-bottom: 15px;
-            background: #ffffff;
-            padding: 10px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .screen {
-            height: 120px;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
+            padding: 10px;
+            background: #ffffff;
             word-break: break-all;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
-        /* Tanda indikator jika operator sedang ditekan */
-        .operator-indicator {
-            position: absolute;
-            top: 5px;
-            left: 10px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ff9900;
-        }
-
-        .screen-container.editing-active {
+        .screen.editing-active {
             background: #fffdf0 !important;
             border: 3px dashed #ff9900 !important;
             outline: none;
@@ -111,11 +97,8 @@
 <body>
 
     <div class="calculator">
-        <!-- Container Layar Tampilan -->
-        <div class="screen-container" id="screen-box">
-            <div class="operator-indicator" id="op-view"></div>
-            <div class="screen" id="screen">0</div>
-        </div>
+        <!-- Layar Tampilan Utama -->
+        <div class="screen" id="screen">0</div>
 
         <!-- Baris Tombol Angka -->
         <div class="row numbers">
@@ -133,10 +116,10 @@
 
         <!-- Baris Tombol Operator -->
         <div class="row operators">
-            <button onclick="tekanOperator('*', '×')">×</button>
-            <button onclick="tekanOperator('/', ':')">:</button>
-            <button onclick="tekanOperator('+', '+')">+</button>
-            <button onclick="tekanOperator('-', '-')">-</button>
+            <button onclick="tekanAngka('*')">×</button>
+            <button onclick="tekanAngka('/')">:</button>
+            <button onclick="tekanAngka('+')">+</button>
+            <button onclick="tekanAngka('-')">-</button>
             <button onclick="hitungHasil()">=</button>
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
@@ -157,122 +140,93 @@
     </div>
 
     <script>
-        let inputSkor = "0"; 
-        let angkaPertama = "0";
-        let jenisOperator = "";
-        let isEditModeActive = false;
-        let harusResetLayar = false;
-
         const elemenLayar = document.getElementById("screen");
-        const elemenIndikator = document.getElementById("op-view");
-        const elemenBoxLayar = document.getElementById("screen-box");
         const tombolEdit = document.getElementById("btn-edit");
+        let isEditModeActive = false;
 
-        function cetakKeLayar(teks) {
-            elemenLayar.innerText = teks;
-        }
-
-        function tekanAngka(angka) {
+        function tekanAngka(nilai) {
             if (isEditModeActive) return;
-
-            if (harusResetLayar) {
-                inputSkor = angka;
-                harusResetLayar = false;
+            
+            if (elemenLayar.innerText === "0" && !"*+/".includes(nilai)) {
+                elemenLayar.innerText = nilai;
             } else {
-                if (inputSkor === "0") {
-                    inputSkor = angka;
-                } else {
-                    inputSkor += angka;
-                }
+                elemenLayar.innerText += nilai;
             }
-            cetakKeLayar(inputSkor);
-        }
-
-        // SEKARANG MUNCUL TANDA DI LAYAR SAAT OPERATOR DITEKAN
-        function tekanOperator(op, simbolTampilan) {
-            if (isEditModeActive) return;
-            
-            angkaPertama = inputSkor;
-            jenisOperator = op;
-            harusResetLayar = true;
-            
-            // Tampilkan simbol aktif di pojok kiri atas layar
-            elemenIndikator.innerText = simbolTampilan;
         }
 
         function hitungHasil() {
-            if (isEditModeActive || jenisOperator === "") return;
-
-            let hasilAkhir = 0;
-            let n1 = parseFloat(angkaPertama);
-            let n2 = parseFloat(inputSkor);
-
-            if (isNaN(n1) || isNaN(n2)) return;
+            if (isEditModeActive) return;
+            
+            let teksLayar = elemenLayar.innerText;
+            if (!teksLayar || teksLayar === "0") return;
 
             const modePersen = document.getElementById("rad-percent").checked;
             const modeSigma = document.getElementById("rad-sigma").checked;
 
-            if (modePersen) {
-                let nilaiPersen = (n2 / 100) * n1;
-                if (jenisOperator === '+') hasilAkhir = n1 + nilaiPersen;
-                else if (jenisOperator === '-') hasilAkhir = n1 - nilaiPersen;
-                else hasilAkhir = nilaiPersen;
-            } else if (modeSigma) {
-                let totalSigma = 0;
-                let awal = Math.min(n1, n2);
-                let akhir = Math.max(n1, n2);
-                for (let i = awal; i <= akhir; i++) {
-                    totalSigma += i;
+            try {
+                if (modePersen) {
+                    // Logika Persen: Mendeteksi operator terakhir
+                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
+                    if (operator) {
+                        let bagian = teksLayar.split(operator);
+                        let n1 = parseFloat(bagian[0]);
+                        let n2 = parseFloat(bagian[1]);
+                        let nilaiPersen = (n2 / 100) * n1;
+                        if (operator === '+') elemenLayar.innerText = n1 + nilaiPersen;
+                        else if (operator === '-') elemenLayar.innerText = n1 - nilaiPersen;
+                        else elemenLayar.innerText = nilaiPersen;
+                    }
+                } else if (modeSigma) {
+                    // Logika Sigma: Menjumlahkan deret bilangan n1 ke n2
+                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
+                    if (operator) {
+                        let bagian = teksLayar.split(operator);
+                        let n1 = parseInt(bagian[0]);
+                        let n2 = parseInt(bagian[1]);
+                        if (!isNaN(n1) && !isNaN(n2)) {
+                            let totalSigma = 0;
+                            let awal = Math.min(n1, n2);
+                            let akhir = Math.max(n1, n2);
+                            for (let i = awal; i <= akhir; i++) {
+                                totalSigma += i;
+                            }
+                            elemenLayar.innerText = totalSigma;
+                        }
+                    }
+                } else {
+                    // Logika Standar Matematika Langsung Berfungsi
+                    let hasil = eval(teksLayar);
+                    elemenLayar.innerText = hasil;
                 }
-                hasilAkhir = totalSigma;
-            } else {
-                if (jenisOperator === '+') hasilAkhir = n1 + n2;
-                else if (jenisOperator === '-') hasilAkhir = n1 - n2;
-                else if (jenisOperator === '*') hasilAkhir = n1 * n2;
-                else if (jenisOperator === '/') hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
+            } catch (e) {
+                elemenLayar.innerText = "Error";
             }
-
-            inputSkor = hasilAkhir.toString();
-            jenisOperator = "";
-            angkaPertama = "0";
-            harusResetLayar = true;
-            
-            elemenIndikator.innerText = ""; // Hapus indikator operator
-            cetakKeLayar(inputSkor);
         }
 
         function hapusSatuAngka() {
             if (isEditModeActive) return;
-            inputSkor = inputSkor.slice(0, -1);
-            if (inputSkor === "") inputSkor = "0";
-            cetakKeLayar(inputSkor);
+            let teks = elemenLayar.innerText;
+            elemenLayar.innerText = teks.slice(0, -1) || "0";
         }
 
         function bersihkanSemua() {
-            inputSkor = "0";
-            angkaPertama = "0";
-            jenisOperator = "";
-            harusResetLayar = false;
+            elemenLayar.innerText = "0";
             isEditModeActive = false;
-            
             document.getElementById("rad-percent").checked = false;
             document.getElementById("rad-sigma").checked = false;
             
             elemenLayar.contentEditable = "false";
-            elemenBoxLayar.classList.remove("editing-active");
+            elemenLayar.classList.remove("editing-active");
             tombolEdit.innerText = "EDIT";
             tombolEdit.style.background = "#ffcc00";
             tombolEdit.style.color = "#000000";
-            
-            elemenIndikator.innerText = "";
-            cetakKeLayar("0");
         }
 
         function aktifkanModeEdit() {
             if (!isEditModeActive) {
                 isEditModeActive = true;
                 elemenLayar.contentEditable = "true";
-                elemenBoxLayar.classList.add("editing-active");
+                elemenLayar.classList.add("editing-active");
                 elemenLayar.focus();
                 
                 tombolEdit.innerText = "OK";
@@ -281,15 +235,17 @@
             } else {
                 isEditModeActive = false;
                 elemenLayar.contentEditable = "false";
-                elemenBoxLayar.classList.remove("editing-active");
+                elemenLayar.classList.remove("editing-active");
                 
                 tombolEdit.innerText = "EDIT";
                 tombolEdit.style.background = "#ffcc00";
                 tombolEdit.style.color = "#000000";
                 
-                let teksKetikManual = elemenLayar.innerText.trim();
-                if (teksKetikManual === "" || isNaN(parseFloat(teksKetikManual))) {
-                    inputSkor = "0";
-                } else {
-                    inputSkor = teksKetikManual;
+                if (elemenLayar.innerText.trim() === "") {
+                    elemenLayar.innerText = "0";
                 }
+            }
+        }
+    </script>
+</body>
+</html>
