@@ -24,7 +24,6 @@
             box-shadow: 6px 6px 0px #000000;
         }
 
-        /* Kotak layar atas */
         .screen {
             height: 140px;
             border: 3px solid #000000;
@@ -40,7 +39,6 @@
             box-sizing: border-box;
         }
 
-        /* Tampilan mencolok saat tombol EDIT aktif */
         .screen.editing-active {
             background: #fffdf0 !important;
             border: 3px dashed #ff9900 !important;
@@ -116,7 +114,7 @@
             <button onclick="tekanAngka('0')">0</button>
         </div>
 
-        <!-- Baris Tombol Operator Utama -->
+        <!-- Baris Tombol Operator -->
         <div class="row operators">
             <button onclick="tekanOperator('*')">×</button>
             <button onclick="tekanOperator('/')">:</button>
@@ -142,10 +140,9 @@
     </div>
 
     <script>
-        let layarMemori = "0";
         let angkaPertama = "";
+        let angkaKedua = "";
         let jenisOperator = "";
-        let statusSiapInputBaru = false;
         let isEditModeActive = false;
 
         const elemenLayar = document.getElementById("screen");
@@ -156,35 +153,49 @@
         }
 
         function tekanAngka(angka) {
-            if (isEditModeActive) return; // Larang input tombol fisik saat mengetik manual di layar
-            
-            if (statusSiapInputBaru) {
-                layarMemori = angka;
-                statusSiapInputBaru = false;
-            } else {
-                if (layarMemori === "0") {
-                    layarMemori = angka;
+            if (isEditModeActive) return;
+
+            // Jika belum milih operator, berarti sedang mengisi angka pertama
+            if (jenisOperator === "") {
+                if (angkaPertama === "0" || angkaPertama === "") {
+                    angkaPertama = angka;
                 } else {
-                    layarMemori += angka;
+                    angkaPertama += angka;
                 }
+                cetakKeLayar(angkaPertama);
+            } else {
+                // Jika sudah ada operator, berarti sedang mengisi angka kedua
+                if (angkaKedua === "0" || angkaKedua === "") {
+                    angkaKedua = angka;
+                } else {
+                    angkaKedua += angka;
+                }
+                cetakKeLayar(angkaKedua);
             }
-            cetakKeLayar(layarMemori);
         }
 
         function tekanOperator(op) {
-            if (isEditModeActive) return; // Cegah eror jika menekan operator saat mode edit menyala
+            if (isEditModeActive) return;
             
-            angkaPertama = layarMemori;
+            // Jika angka pertama kosong, ambil nilai dari layar saat ini
+            if (angkaPertama === "") {
+                angkaPertama = elemenLayar.innerText;
+            }
+            
             jenisOperator = op;
-            statusSiapInputBaru = true; 
+            angkaKedua = ""; // Reset angka kedua agar siap diisi baru
         }
 
         function hitungHasil() {
             if (isEditModeActive) return;
 
+            // Ambil input terakhir dari layar jika variabel kosong
+            if (angkaPertama === "") angkaPertama = "0";
+            if (angkaKedua === "") angkaKedua = elemenLayar.innerText;
+
+            let n1 = parseFloat(angkaPertama);
+            let n2 = parseFloat(angkaKedua);
             let hasilAkhir = 0;
-            const n1 = parseFloat(angkaPertama);
-            const n2 = parseFloat(layarMemori);
 
             if (jenisOperator === "" || isNaN(n1) || isNaN(n2)) return;
 
@@ -205,6 +216,7 @@
                 }
                 hasilAkhir = totalSigma;
             } else {
+                // Logika Standar Utama
                 if (jenisOperator === '+') {
                     hasilAkhir = n1 + n2;
                 } else if (jenisOperator === '-') {
@@ -216,25 +228,31 @@
                 }
             }
 
-            layarMemori = hasilAkhir.toString();
+            // Tampilkan hasil dan pindahkan ke angkaPertama untuk perhitungan selanjutnya
+            cetakKeLayar(hasilAkhir.toString());
+            angkaPertama = hasilAkhir.toString();
+            angkaKedua = "";
             jenisOperator = "";
-            angkaPertama = "";
-            statusSiapInputBaru = true;
-            cetakKeLayar(layarMemori);
         }
 
         function hapusSatuAngka() {
             if (isEditModeActive) return;
-            layarMemori = layarMemori.slice(0, -1);
-            if (layarMemori === "") layarMemori = "0";
-            cetakKeLayar(layarMemori);
+            
+            if (jenisOperator === "") {
+                angkaPertama = angkaPertama.slice(0, -1);
+                if (angkaPertama === "") angkaPertama = "0";
+                cetakKeLayar(angkaPertama);
+            } else {
+                angkaKedua = angkaKedua.slice(0, -1);
+                if (angkaKedua === "") angkaKedua = "0";
+                cetakKeLayar(angkaKedua);
+            }
         }
 
         function bersihkanSemua() {
-            layarMemori = "0";
-            angkaPertama = "";
+            angkaPertama = "0";
+            angkaKedua = "";
             jenisOperator = "";
-            statusSiapInputBaru = false;
             isEditModeActive = false;
             
             document.getElementById("rad-percent").checked = false;
@@ -249,10 +267,8 @@
             cetakKeLayar("0");
         }
 
-        // FUNGSI TOMBOL EDIT TERBARU - DIJAMIN BERFUNGSI
         function aktifkanModeEdit() {
             if (!isEditModeActive) {
-                // MASUK MODE EDIT ANGKA
                 isEditModeActive = true;
                 elemenLayar.contentEditable = "true";
                 elemenLayar.classList.add("editing-active");
@@ -262,7 +278,6 @@
                 tombolEdit.style.background = "#2ecc71"; 
                 tombolEdit.style.color = "#ffffff";
             } else {
-                // KELUAR MODE EDIT & SIMPAN DATA KE MEMORI
                 isEditModeActive = false;
                 elemenLayar.contentEditable = "false";
                 elemenLayar.classList.remove("editing-active");
@@ -273,13 +288,3 @@
                 
                 let teksKetikManual = elemenLayar.innerText.trim();
                 if (teksKetikManual === "" || isNaN(parseFloat(teksKetikManual))) {
-                    layarMemori = "0";
-                } else {
-                    layarMemori = teksKetikManual;
-                }
-                cetakKeLayar(layarMemori);
-            }
-        }
-    </script>
-</body>
-</html>
