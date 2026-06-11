@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom</title>
+    <title>Kalkulator Kustom Fix</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="calculator">
         <!-- Layar Tampilan (Kotak Besar Atas) -->
-        <!-- contenteditable="false" akan berubah jadi "true" saat tombol EDIT ditekan -->
-        <div class="screen" id="screen" contenteditable="false">0</div>
+        <div class="screen" id="screen">0</div>
 
         <!-- Baris Angka (1-9, 0) -->
         <div class="row numbers">
-            <button onclick="appendNumber('1')">1</button>
-            <button onclick="appendNumber('2')">2</button>
-            <button onclick="appendNumber('3')">3</button>
-            <button onclick="appendNumber('4')">4</button>
-            <button onclick="appendNumber('5')">5</button>
-            <button onclick="appendNumber('6')">6</button>
-            <button onclick="appendNumber('7')">7</button>
-            <button onclick="appendNumber('8')">8</button>
-            <button onclick="appendNumber('9')">9</button>
-            <button onclick="appendNumber('0')">0</button>
+            <button onclick="tekanAngka('1')">1</button>
+            <button onclick="tekanAngka('2')">2</button>
+            <button onclick="tekanAngka('3')">3</button>
+            <button onclick="tekanAngka('4')">4</button>
+            <button onclick="tekanAngka('5')">5</button>
+            <button onclick="tekanAngka('6')">6</button>
+            <button onclick="tekanAngka('7')">7</button>
+            <button onclick="tekanAngka('8')">8</button>
+            <button onclick="tekanAngka('9')">9</button>
+            <button onclick="tekanAngka('0')">0</button>
         </div>
 
         <!-- Baris Operator Utama & Fungsi -->
         <div class="row operators">
-            <button onclick="setOperator('*')">×</button>
-            <button onclick="setOperator('/')">:</button>
-            <button onclick="setOperator('+')">+</button>
-            <button onclick="setOperator('-')">-</button>
-            <button onclick="calculate()">=</button>
-            <button onclick="deleteLast()">DELET</button>
+            <button onclick="tekanOperator('*')">×</button>
+            <button onclick="tekanOperator('/')">:</button>
+            <button onclick="tekanOperator('+')">+</button>
+            <button onclick="tekanOperator('-')">-</button>
+            <button onclick="hitungHasil()">=</button>
+            <button onclick="hapusSatuAngka()">DELET</button>
         </div>
 
-        <!-- Baris Tombol Pilih (Radio Mode + Tombol Edit) -->
+        <!-- Baris Tombol Pilih (Radio Mode + Tombol EDIT) -->
         <div class="row select-zone">
             <span class="label">▲ PILIH ▼</span>
             <label class="radio-container">
@@ -46,8 +45,10 @@
             <label class="radio-container">
                 <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
             </label>
-            <button id="btn-edit" onclick="toggleEditMode()" style="background: #ffcc00;">EDIT</button>
-            <button onclick="clearAll()" style="background: #ff4d4d; color: white;">CLEAR</button>
+            
+            <!-- Tombol Edit Baru -->
+            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px;">EDIT</button>
+            <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px;">CLEAR</button>
         </div>
     </div>
 
