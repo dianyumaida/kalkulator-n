@@ -3,256 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pecahan Vertikal</title>
+    <title>Kalkulator Multi - Dropdown Multi Level</title>
     <style>
-        /* --- CSS DASAR KALKULATOR --- */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7ebe1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
         }
-
-        .calculator {
-            width: 340px;
+ 
+        /* 1. KOTAK UTAMA (INDUK) */
+        .dropdown-induk {
+            width: 320px;
             background-color: #ffffff;
-            border: 2px solid #000;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 5px 5px 0px #000000;
-        }
-
-        /* DISPLAY UTAMA: Rata kiri atas, mendukung scroll */
-        .display-container {
-            width: 100%;
-            height: 200px;
-            border: 2px solid #000;
-            margin-bottom: 15px;
-            background-color: #fff;
-            padding: 12px;
-            box-sizing: border-box;
-            text-align: left;
-            overflow-y: auto;
-            color: #d13438;
-            font-weight: bold;
-            font-size: 1.3rem;
-        }
-
-        /* CSS Membuat Efek Pecahan Bertingkat Tanpa Library Luar */
-        .frac {
-            display: inline-flex;
-            flex-direction: column;
-            vertical-align: middle;
-            text-align: center;
-            padding: 0 4px;
-        }
-        .num {
-            border-bottom: 2px solid #d13438;
-            padding-bottom: 2px;
-        }
-        .den {
-            padding-top: 2px;
-        }
-
-        .history-item {
-            margin-bottom: 15px;
-            border-bottom: 1px dashed #ccc;
-            padding-bottom: 8px;
-            line-height: 1.8;
-        }
-
-        .current-line {
-            min-height: 40px;
-            line-height: 1.8;
-        }
-
-        /* Grid Tombol Operator Atas */
-        .operator-row {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .operator-row button {
-            background-color: #fce4d6;
-            border: 2px solid #000;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border: 2px solid #333333;
+            border-radius: 8px;
+            overflow: hidden;
             cursor: pointer;
         }
-
-        /* Grid Bagian Bawah */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 2fr;
-            gap: 15px;
-        }
-
-        /* Menu Sisi Kiri Hijau */
-        .left-menu {
-            background-color: #e2efda;
-            border: 2px solid #000;
-            border-radius: 5px;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .left-menu button {
-            padding: 10px 2px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border: 1px solid #000;
-            background-color: #fff;
-            border-radius: 4px;
-        }
-
-        /* Grid Angka Kanan */
-        .number-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .number-grid button {
-            background-color: #ffffff;
-            border: 2px solid #000;
-            border-radius: 5px;
+ 
+        /* HEADER INDUK */
+        .dropdown-induk > summary {
             padding: 15px;
-            font-size: 1.3rem;
             font-weight: bold;
+            background-color: #eaeaea;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .dropdown-induk > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* 2. MENU ANAK (SUB-DROPDOWN BERULANG) */
+        .dropdown-anak {
+            border-top: 1px solid #cccccc;
+            background-color: #fafafa;
+        }
+
+        /* HEADER ANAK */
+        .dropdown-anak > summary {
+            padding: 12px 15px 12px 25px; /* Menjorok sedikit ke kanan */
+            font-weight: 600;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #444444;
+        }
+
+        .dropdown-anak > summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* 3. MENU CUCU (ITEM LIST DENGAN RADIO BUTTON) */
+        .list-cucu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background-color: #ffffff;
+        }
+
+        .list-cucu li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px 10px 45px; /* Menjorok paling kanan */
+            border-top: 1px solid #eeeeee;
             cursor: pointer;
+            color: #555555;
+            transition: background 0.2s;
         }
 
-        .delete-btn {
-            grid-column: span 2;
-            background-color: #f8cbad !important;
+        .list-cucu li:hover {
+            background-color: #ecf5ff;
+            color: #409eff;
+        }
+ 
+        /* SEMBUNYIKAN RADIO FISIK */
+        .list-cucu input[type="radio"] {
+            display: none;
+        }
+ 
+        /* LINGKARAN RADIO KUSTOM PADA CUCU */
+        .list-cucu li::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border: 2px solid #666666;
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+ 
+        /* JIKA CUCU TERPILIH */
+        .list-cucu li.terpilih {
+            background-color: #ecf5ff;
+            color: #409eff;
+            font-weight: bold;
         }
 
-        button:active {
-            transform: scale(0.95);
+        .list-cucu li.terpilih::after {
+            background-color: #409eff;
+            border-color: #409eff;
+            box-shadow: 0 0 0 3px rgba(64,158,255,0.2);
+        }
+
+        /* Efek rotasi panah mini untuk menu anak */
+        .dropdown-anak[open] > summary span.panah-anak {
+            transform: rotate(90deg);
+        }
+        .panah-anak {
+            font-size: 10px;
+            transition: transform 0.2s;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-
-    <div class="calculator">
-        <!-- Layar Tampilan Utama -->
-        <div id="display-screen" class="display-container">
-            <div id="history-log"></div>
-            <div id="current-input-line" class="current-line">0</div>
-        </div>
-
-        <!-- Baris Tombol Operator -->
-        <div class="operator-row">
-            <button onclick="input('+')">+</button>
-            <button onclick="input('-')">-</button>
-            <button onclick="input('*')">×</button>
-            <button onclick="input('/')">÷</button>
-            <button onclick="hitung()">=</button>
-        </div>
-
-        <div class="main-grid">
-            <!-- Sisi Kiri Menu Hijau -->
-            <div class="left-menu">
-                <button onclick="input('(')">(</button>
-                <button onclick="input(')')">)</button>
-                <button onclick="input('/')">Pecahan</button>
-                <button onclick="input('%')">%</button>
-            </div>
-
-            <!-- Sisi Kanan Angka -->
-            <div class="number-grid">
-                <button onclick="input('6')">6</button>
-                <button onclick="input('1')">1</button>
-                <button onclick="input('7')">7</button>
-                <button onclick="input('2')">2</button>
-                <button onclick="input('8')">8</button>
-                <button onclick="input('3')">3</button>
-                <button onclick="input('9')">9</button>
-                <button onclick="input('4')">4</button>
-                <button onclick="input('0')">0</button>
-                <button onclick="input('5')">5</button>
-                <button class="delete-btn" onclick="hapus()">DELETE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- --- JAVASCRIPT MURNI ANTI-GAGAL --- -->
-    <script>
-        let rumusMentah = "";
-        const currentLine = document.getElementById("current-input-line");
-        const historyLog = document.getElementById("history-log");
-        const displayScreen = document.getElementById("display-screen");
-
-        // 1. Fungsi menerima ketikan tombol apa saja
-        function input(karakter) {
-            rumusMentah += karakter;
-            renderVisual();
-        }
-
-        // 2. Mengubah teks rumus biasa menjadi tampilan pecahan susun HTML
-        function buatTampilanPecahan(teks) {
-            if (!teks) return "0";
+ 
+    <!-- INDUK UTAMA -->
+    <details class="dropdown-induk" id="menuUtama">
+        <summary>
+            <span id="textHeaderUtama">-- Pilih --</span>
+            <span>▼</span>
+        </summary>
+ 
+        <!-- ANAK KELOMPOK 1: SUDUT -->
+        <details class="dropdown-anak">
+            <summary>
+                <span>📁 -- sudut --</span>
+                <span class="panah-anak">▶</span>
+            </summary>
             
-            let hasil = teks.replace(/\*/g, " × "); // Ubah visual bintang ke tanda kali
+            <!-- CUCU KELOMPOK 1 -->
+            <ul class="list-cucu">
+                <li onclick="pilihCucu('Sudut: sin', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="sin">
+                    <span>sin</span>
+                </li>
+                <li onclick="pilihCucu('Sudut: cos', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="cos">
+                    <span>cos</span>
+                </li>
+                <li onclick="pilihCucu('Sudut: tan', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="tan">
+                    <span>tan</span>
+                </li>
+            </ul>
+        </details>
 
-            // Regex mendeteksi format (angka/kurung) / (angka/kurung) untuk diubah ke pecahan bertingkat
-            let regexPecahan = /(\([^\)]+\)|[0-9\.]+%?)\/([0-9\.]+%?|\([^\)]+\))/g;
-            while (regexPecahan.test(hasil)) {
-                hasil = hasil.replace(regexPecahan, function(match, atas, bawah) {
-                    return `<span class="frac"><span class="num">${atas}</span><span class="den">${bawah}</span></span>`;
-                });
+        <!-- ANAK KELOMPOK 2: LOGARITMA -->
+        <details class="dropdown-anak">
+            <summary>
+                <span>📁 -- logaritma --</span>
+                <span class="panah-anak">▶</span>
+            </summary>
+            
+            <!-- CUCU KELOMPOK 2 -->
+            <ul class="list-cucu">
+                <li onclick="pilihCucu('Log: ln', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="ln">
+                    <span>ln (Natural Log)</span>
+                </li>
+                <li onclick="pilihCucu('Log: log10', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="log10">
+                    <span>log10</span>
+                </li>
+            </ul>
+        </details>
+
+        <!-- ANAK KELOMPOK 3: MATRIKS (CONTOH LAIN) -->
+        <details class="dropdown-anak">
+            <summary>
+                <span>📁 -- matriks --</span>
+                <span class="panah-anak">▶</span>
+            </summary>
+            
+            <ul class="list-cucu">
+                <li onclick="pilihCucu('Matriks: Determinan', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="det">
+                    <span>Determinan</span>
+                </li>
+                <li onclick="pilihCucu('Matriks: Invers', this, event)">
+                    <input type="radio" name="pilihan_kalkulator" value="inv">
+                    <span>Invers</span>
+                </li>
+            </ul>
+        </details>
+ 
+    </details>
+ 
+    <script>
+        const indukMenu = document.getElementById('menuUtama');
+        const textHeaderUtama = document.getElementById('textHeaderUtama');
+
+        // Fungsi khusus saat menu CUCU diklik
+        function pilihCucu(namaTerpilih, elemenAktif, event) {
+            // 1. Mencegah menu Anak menutup ketika Cucu diklik
+            event.stopPropagation(); 
+            event.preventDefault();
+
+            // 2. Hapus status 'terpilih' dari semua Cucu di seluruh menu
+            document.querySelectorAll('.list-cucu li').forEach(li => {
+                li.classList.remove('terpilih');
+            });
+ 
+            // 3. Aktifkan visual terpilih pada Cucu yang diklik saja
+            elemenAktif.classList.add('terpilih');
+ 
+            // 4. Centang input radio asli yang tersembunyi di dalamnya
+            const radioAsli = elemenAktif.querySelector('input[type="radio"]');
+            if (radioAsli) {
+                radioAsli.checked = true;
             }
-            return hasil;
-        }
 
-        function renderVisual() {
-            currentLine.innerHTML = buatTampilanPecahan(rumusMentah);
-        }
+            // 5. Ganti teks header INDUK utama menjadi nama Cucu yang dipilih
+            textHeaderUtama.innerText = namaTerpilih;
 
-        // 3. Fungsi menghitung hasil ketika menekan tombol '='
-        function hitung() {
-            let ekspresi = rumusMentah.trim();
-            if (!ekspresi) return;
-
-            try {
-                // Sempurnakan logika persen (%) agar dibaca pembagian /100 oleh system
-                let hitungEkspresi = ekspresi.replace(/([0-9\.]+)\s*%/g, "($1/100)");
-                
-                let hasilAngka = eval(hitungEkspresi);
-                
-                // Mencegah error pembagian dengan nol (Infinity)
-                if (!isFinite(hasilAngka)) throw new Error();
-
-                let hasilAkhir = Number(hasilAngka.toFixed(4)).toString();
-
-                // Cetak riwayat ke baris atasnya
-                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= ${hasilAkhir}</div>`;
-                
-                // Hasil dijadikan awalan baru untuk kelanjutan hitungan
-                rumusMentah = hasilAkhir;
-            } catch (err) {
-                historyLog.innerHTML += `<div class="history-item">${buatTampilanPecahan(rumusMentah)}<br>= Error</div>`;
-                rumusMentah = "";
-            }
-            renderVisual();
-            displayScreen.scrollTop = displayScreen.scrollHeight; // Auto gulung ke bawah
-        }
-
-        // 4. Tombol DELETE
-        function hapus() {
-            rumusMentah = "";
-            historyLog.innerHTML = "";
-            renderVisual();
+            // 6. Tutup dropdown INDUK secara otomatis
+            indukMenu.removeAttribute('open');
         }
     </script>
 </body>
