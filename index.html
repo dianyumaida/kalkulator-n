@@ -85,12 +85,33 @@
             background: #e0e0e0;
         }
 
+        /* Desain Baris Radio Pilihan Kustom dengan Anak Panah */
+        .radio-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fff;
+            padding: 5px 10px;
+            border: 2px solid #000;
+        }
+
         .radio-container {
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 2px;
-            font-size: 1.1rem;
+            gap: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .radio-container input {
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+
+        .arrow-label {
+            font-size: 1rem;
+            color: #333;
         }
     </style>
 </head>
@@ -124,18 +145,20 @@
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
 
-        <!-- Baris Pilihan Radio dan Tombol EDIT -->
+        <!-- Baris Pilihan Radio Ber-Anak Panah dan Tombol EDIT -->
         <div class="row select-zone">
-            <span class="label">▲ PILIH ▼</span>
-            <label class="radio-container">
-                <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
-            </label>
-            <label class="radio-container">
-                <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
-            </label>
+            <div class="radio-wrapper">
+                <span class="arrow-label">◀ PILIH ▼</span>
+                <label class="radio-container">
+                    <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
+                </label>
+                <label class="radio-container">
+                    <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
+                </label>
+            </div>
             
-            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 80px;">EDIT</button>
-            <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px;">CLEAR</button>
+            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 70px;">EDIT</button>
+            <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px; width: 75px;">CLEAR</button>
         </div>
     </div>
 
@@ -165,7 +188,7 @@
 
             try {
                 if (modePersen) {
-                    // Logika Persen: Mendeteksi operator terakhir
+                    // Logika Operasi Persen Kustom
                     let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
                     if (operator) {
                         let bagian = teksLayar.split(operator);
@@ -177,7 +200,7 @@
                         else elemenLayar.innerText = nilaiPersen;
                     }
                 } else if (modeSigma) {
-                    // Logika Sigma: Menjumlahkan deret bilangan n1 ke n2
+                    // Logika Operasi Deret Bilangan Sigma (Σ)
                     let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
                     if (operator) {
                         let bagian = teksLayar.split(operator);
@@ -194,7 +217,7 @@
                         }
                     }
                 } else {
-                    // Logika Standar Matematika Langsung Berfungsi
+                    // Operasi Normal Matematika Standar
                     let hasil = eval(teksLayar);
                     elemenLayar.innerText = hasil;
                 }
