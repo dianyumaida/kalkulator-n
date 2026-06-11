@@ -124,7 +124,7 @@
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
 
-        <!-- Baris Pilihan Radio dan Tombol Aksi -->
+        <!-- Baris Pilihan Radio dan Tombol EDIT -->
         <div class="row select-zone">
             <span class="label">▲ PILIH ▼</span>
             <label class="radio-container">
@@ -140,9 +140,10 @@
     </div>
 
     <script>
+        let layarMemori = "0";
         let angkaPertama = "";
-        let angkaKedua = "";
         let jenisOperator = "";
+        let statusSiapInputBaru = false;
         let isEditModeActive = false;
 
         const elemenLayar = document.getElementById("screen");
@@ -154,50 +155,31 @@
 
         function tekanAngka(angka) {
             if (isEditModeActive) return;
-
-            // Jika belum milih operator, berarti sedang mengisi angka pertama
-            if (jenisOperator === "") {
-                if (angkaPertama === "0" || angkaPertama === "") {
-                    angkaPertama = angka;
-                } else {
-                    angkaPertama += angka;
-                }
-                cetakKeLayar(angkaPertama);
+            
+            if (statusSiapInputBaru || layarMemori === "0") {
+                layarMemori = angka;
+                statusSiapInputBaru = false;
             } else {
-                // Jika sudah ada operator, berarti sedang mengisi angka kedua
-                if (angkaKedua === "0" || angkaKedua === "") {
-                    angkaKedua = angka;
-                } else {
-                    angkaKedua += angka;
-                }
-                cetakKeLayar(angkaKedua);
+                layarMemori += angka;
             }
+            cetakKeLayar(layarMemori);
         }
 
         function tekanOperator(op) {
             if (isEditModeActive) return;
-            
-            // Jika angka pertama kosong, ambil nilai dari layar saat ini
-            if (angkaPertama === "") {
-                angkaPertama = elemenLayar.innerText;
-            }
-            
+            angkaPertama = layarMemori;
             jenisOperator = op;
-            angkaKedua = ""; // Reset angka kedua agar siap diisi baru
+            statusSiapInputBaru = true; 
         }
 
         function hitungHasil() {
-            if (isEditModeActive) return;
+            if (isEditModeActive || jenisOperator === "") return;
 
-            // Ambil input terakhir dari layar jika variabel kosong
-            if (angkaPertama === "") angkaPertama = "0";
-            if (angkaKedua === "") angkaKedua = elemenLayar.innerText;
-
-            let n1 = parseFloat(angkaPertama);
-            let n2 = parseFloat(angkaKedua);
             let hasilAkhir = 0;
+            let n1 = parseFloat(angkaPertama);
+            let n2 = parseFloat(layarMemori);
 
-            if (jenisOperator === "" || isNaN(n1) || isNaN(n2)) return;
+            if (isNaN(n1) || isNaN(n2)) return;
 
             const modePersen = document.getElementById("rad-percent").checked;
             const modeSigma = document.getElementById("rad-sigma").checked;
@@ -216,43 +198,31 @@
                 }
                 hasilAkhir = totalSigma;
             } else {
-                // Logika Standar Utama
-                if (jenisOperator === '+') {
-                    hasilAkhir = n1 + n2;
-                } else if (jenisOperator === '-') {
-                    hasilAkhir = n1 - n2;
-                } else if (jenisOperator === '*') {
-                    hasilAkhir = n1 * n2;
-                } else if (jenisOperator === '/') {
-                    hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
-                }
+                if (jenisOperator === '+') hasilAkhir = n1 + n2;
+                else if (jenisOperator === '-') hasilAkhir = n1 - n2;
+                else if (jenisOperator === '*') hasilAkhir = n1 * n2;
+                else if (jenisOperator === '/') hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
             }
 
-            // Tampilkan hasil dan pindahkan ke angkaPertama untuk perhitungan selanjutnya
-            cetakKeLayar(hasilAkhir.toString());
-            angkaPertama = hasilAkhir.toString();
-            angkaKedua = "";
+            layarMemori = hasilAkhir.toString();
             jenisOperator = "";
+            angkaPertama = "";
+            statusSiapInputBaru = true;
+            cetakKeLayar(layarMemori);
         }
 
         function hapusSatuAngka() {
             if (isEditModeActive) return;
-            
-            if (jenisOperator === "") {
-                angkaPertama = angkaPertama.slice(0, -1);
-                if (angkaPertama === "") angkaPertama = "0";
-                cetakKeLayar(angkaPertama);
-            } else {
-                angkaKedua = angkaKedua.slice(0, -1);
-                if (angkaKedua === "") angkaKedua = "0";
-                cetakKeLayar(angkaKedua);
-            }
+            layarMemori = layarMemori.slice(0, -1);
+            if (layarMemori === "") layarMemori = "0";
+            cetakKeLayar(layarMemori);
         }
 
         function bersihkanSemua() {
-            angkaPertama = "0";
-            angkaKedua = "";
+            layarMemori = "0";
+            angkaPertama = "";
             jenisOperator = "";
+            statusSiapInputBaru = false;
             isEditModeActive = false;
             
             document.getElementById("rad-percent").checked = false;
@@ -288,3 +258,13 @@
                 
                 let teksKetikManual = elemenLayar.innerText.trim();
                 if (teksKetikManual === "" || isNaN(parseFloat(teksKetikManual))) {
+                    layarMemori = "0";
+                } else {
+                    layarMemori = teksKetikManual;
+                }
+                cetakKeLayar(layarMemori);
+            }
+        }
+    </script>
+</body>
+</html>
