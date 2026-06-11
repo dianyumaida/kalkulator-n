@@ -140,11 +140,12 @@
     </div>
 
     <script>
-        let layarMemori = "0";
-        let angkaPertama = "";
+        // Menggunakan string penampung murni untuk menghindari bug sistem
+        let inputSkor = "0"; 
+        let angkaPertama = "0";
         let jenisOperator = "";
-        let statusSiapInputBaru = false;
         let isEditModeActive = false;
+        let harusResetLayar = false;
 
         const elemenLayar = document.getElementById("screen");
         const tombolEdit = document.getElementById("btn-edit");
@@ -155,21 +156,27 @@
 
         function tekanAngka(angka) {
             if (isEditModeActive) return;
-            
-            if (statusSiapInputBaru || layarMemori === "0") {
-                layarMemori = angka;
-                statusSiapInputBaru = false;
+
+            if (harusResetLayar) {
+                inputSkor = angka;
+                harusResetLayar = false;
             } else {
-                layarMemori += angka;
+                if (inputSkor === "0") {
+                    inputSkor = angka;
+                } else {
+                    inputSkor += angka;
+                }
             }
-            cetakKeLayar(layarMemori);
+            cetakKeLayar(inputSkor);
         }
 
+        // PERBAIKAN TOTAL DI SINI: Operator diamankan agar aman dari bug browser
         function tekanOperator(op) {
             if (isEditModeActive) return;
-            angkaPertama = layarMemori;
+            
+            angkaPertama = inputSkor;
             jenisOperator = op;
-            statusSiapInputBaru = true; 
+            harusResetLayar = true;
         }
 
         function hitungHasil() {
@@ -177,7 +184,7 @@
 
             let hasilAkhir = 0;
             let n1 = parseFloat(angkaPertama);
-            let n2 = parseFloat(layarMemori);
+            let n2 = parseFloat(inputSkor);
 
             if (isNaN(n1) || isNaN(n2)) return;
 
@@ -198,31 +205,37 @@
                 }
                 hasilAkhir = totalSigma;
             } else {
-                if (jenisOperator === '+') hasilAkhir = n1 + n2;
-                else if (jenisOperator === '-') hasilAkhir = n1 - n2;
-                else if (jenisOperator === '*') hasilAkhir = n1 * n2;
-                else if (jenisOperator === '/') hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
+                // Eksekusi Simbol Utama Dasar
+                if (jenisOperator === '+') {
+                    hasilAkhir = n1 + n2;
+                } else if (jenisOperator === '-') {
+                    hasilAkhir = n1 - n2;
+                } else if (jenisOperator === '*') {
+                    hasilAkhir = n1 * n2;
+                } else if (jenisOperator === '/') {
+                    hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
+                }
             }
 
-            layarMemori = hasilAkhir.toString();
+            inputSkor = hasilAkhir.toString();
             jenisOperator = "";
-            angkaPertama = "";
-            statusSiapInputBaru = true;
-            cetakKeLayar(layarMemori);
+            angkaPertama = "0";
+            harusResetLayar = true;
+            cetakKeLayar(inputSkor);
         }
 
         function hapusSatuAngka() {
             if (isEditModeActive) return;
-            layarMemori = layarMemori.slice(0, -1);
-            if (layarMemori === "") layarMemori = "0";
-            cetakKeLayar(layarMemori);
+            inputSkor = inputSkor.slice(0, -1);
+            if (inputSkor === "") inputSkor = "0";
+            cetakKeLayar(inputSkor);
         }
 
         function bersihkanSemua() {
-            layarMemori = "0";
-            angkaPertama = "";
+            inputSkor = "0";
+            angkaPertama = "0";
             jenisOperator = "";
-            statusSiapInputBaru = false;
+            harusResetLayar = false;
             isEditModeActive = false;
             
             document.getElementById("rad-percent").checked = false;
@@ -258,11 +271,11 @@
                 
                 let teksKetikManual = elemenLayar.innerText.trim();
                 if (teksKetikManual === "" || isNaN(parseFloat(teksKetikManual))) {
-                    layarMemori = "0";
+                    inputSkor = "0";
                 } else {
-                    layarMemori = teksKetikManual;
+                    inputSkor = teksKetikManual;
                 }
-                cetakKeLayar(layarMemori);
+                cetakKeLayar(inputSkor);
             }
         }
     </script>
