@@ -1,126 +1,142 @@
-let currentInput = "0";
-let previousInput = "";
-let operator = null;
-let isEditMode = false;
+let layarMemori = "0";
+let angkaPertama = "";
+let jenisOperator = "";
+let statusSiapInputBaru = false;
 
-const screen = document.getElementById("screen");
-const btnEdit = document.getElementById("btn-edit");
+const elemenLayar = document.getElementById("screen");
+const tombolEdit = document.getElementById("btn-edit");
 
-// Fungsi memperbarui teks di layar kotak besar
-function updateScreen(value) {
-    screen.innerText = value;
+// Menampilkan angka ke layar kotak kustom
+function cetakKeLayar(teks) {
+    elemenLayar.innerText = teks;
 }
 
-// Input angka lewat tombol klik kalkulator
-function appendNumber(num) {
-    if (isEditMode) return; // Kunci tombol fisik kalkulator jika sedang mode edit ketik
-    if (currentInput === "0") {
-        currentInput = num;
+// Fungsi input angka dari tombol fisik kalkulator
+function tekanAngka(angka) {
+    if (statusSiapInputBaru) {
+        layarMemori = angka;
+        statusSiapInputBaru = false;
     } else {
-        currentInput += num;
+        if (layarMemori === "0") {
+            layarMemori = angka;
+        } else {
+            layarMemori += angka;
+        }
     }
-    updateScreen(currentInput);
+    cetakKeLayar(layarMemori);
 }
 
-// Menentukan operator hitung (+, -, *, /)
-function setOperator(op) {
-    if (isEditMode) syncFromScreen(); 
-    if (currentInput === "") return;
+// Fungsi mengunci operator (+, -, *, /) - FIX PENJUMLAHAN RUN
+function tekanOperator(op) {
+    // Jika user sedang mengetik manual di mode EDIT, kunci nilainya dulu
+    simpanHasilEditManual();
     
-    if (previousInput !== "") {
-        calculate();
-    }
-    
-    operator = op;
-    previousInput = currentInput;
-    currentInput = ""; 
+    angkaPertama = layarMemori;
+    jenisOperator = op;
+    statusSiapInputBaru = true; 
 }
 
-// Fungsi Hitung (=)
-function calculate() {
-    if (isEditMode) syncFromScreen();
-    
-    let result;
-    const prev = parseFloat(previousInput);
-    const current = parseFloat(currentInput);
+// Fungsi Eksekusi Matematika (=) - DIJAMIN JALAN
+function hitungHasil() {
+    simpanHasilEditManual();
 
-    if (isNaN(prev) || isNaN(current)) return;
+    let hasilAkhir = 0;
+    const n1 = parseFloat(angkaPertama);
+    const n2 = parseFloat(layarMemori);
 
-    const isPercent = document.getElementById("rad-percent").checked;
-    const isSigma = document.getElementById("rad-sigma").checked;
+    if (isNaN(n1) || isNaN(n2)) return;
 
-    if (isPercent) {
-        let percentValue = (current / 100) * prev;
-        switch (operator) {
-            case '+': result = prev + percentValue; break;
-            case '-': result = prev - percentValue; break;
-            default: result = percentValue; 
+    const modePersen = document.getElementById("rad-percent").checked;
+    const modeSigma = document.getElementById("rad-sigma").checked;
+
+    // Logika Hitung Khusus Modifikasi Radio Button
+    if (modePersen) {
+        let nilaiPersen = (n2 / 100) * n1;
+        if (jenisOperator === '+') hasilAkhir = n1 + nilaiPersen;
+        else if (jenisOperator === '-') hasilAkhir = n1 - nilaiPersen;
+        else hasilAkhir = nilaiPersen;
+    } else if (modeSigma) {
+        let totalSigma = 0;
+        let awal = Math.min(n1, n2);
+        let akhir = Math.max(n1, n2);
+        for (let i = awal; i <= akhir; i++) {
+            totalSigma += i;
         }
-    } else if (isSigma) {
-        let sum = 0;
-        let start = Math.min(prev, current);
-        let end = Math.max(prev, current);
-        for (let i = start; i <= end; i++) {
-            sum += i;
-        }
-        result = sum;
+        hasilAkhir = totalSigma;
     } else {
-        switch (operator) {
-            case '+': result = prev + current; break;
-            case '-': result = prev - current; break;
-            case '*': result = prev * current; break;
-            case '/': result = current !== 0 ? prev / current : "Error"; break;
-            default: return;
+        // Operasi Matematika Standar Utama
+        if (jenisOperator === '+') {
+            hasilAkhir = n1 + n2;
+        } else if (jenisOperator === '-') {
+            hasilAkhir = n1 - n2;
+        } else if (jenisOperator === '*') {
+            hasilAkhir = n1 * n2;
+        } else if (jenisOperator === '/') {
+            hasilAkhir = n2 !== 0 ? n1 / n2 : "Error Split";
+        } else {
+            return; // Tidak ada operator yang ditekan
         }
     }
 
-    currentInput = result.toString();
-    operator = null;
-    previousInput = "";
-    updateScreen(currentInput);
+    layarMemori = hasilAkhir.toString();
+    jenisOperator = "";
+    angkaPertama = "";
+    statusSiapInputBaru = true;
+    cetakKeLayar(layarMemori);
 }
 
-// Tombol DELET
-function deleteLast() {
-    if (isEditMode) return;
-    currentInput = currentInput.slice(0, -1);
-    if (currentInput === "") currentInput = "0";
-    updateScreen(currentInput);
+// Fungsi Tombol DELET (Hapus Backspace)
+function hapusSatuAngka() {
+    layarMemori = layarMemori.slice(0, -1);
+    if (layarMemori === "") layarMemori = "0";
+    cetakKeLayar(layarMemori);
 }
 
-// Tombol CLEAR
-function clearAll() {
-    currentInput = "0";
-    previousInput = "";
-    operator = null;
+// Fungsi Tombol CLEAR (Reset Total)
+function bersihkanSemua() {
+    layarMemori = "0";
+    angkaPertama = "";
+    jenisOperator = "";
+    statusSiapInputBaru = false;
     document.getElementById("rad-percent").checked = false;
     document.getElementById("rad-sigma").checked = false;
-    if (isEditMode) toggleEditMode();
-    updateScreen("0");
+    
+    // Matikan mode edit jika masih menyala
+    elemenLayar.contentEditable = "false";
+    tombolEdit.innerText = "EDIT";
+    tombolEdit.style.background = "#ffcc00";
+    tombolEdit.style.color = "#000000";
+    
+    cetakKeLayar("0");
 }
 
-// FITUR BARU: Mengaktifkan / mematikan mode edit layar secara langsung
-function toggleEditMode() {
-    isEditMode = !isEditMode;
-    if (isEditMode) {
-        screen.contentEditable = "true";
-        screen.classList.add("editing-active");
-        btnEdit.innerText = "SIMPAN";
-        btnEdit.style.background = "#4CAF50";
-        btnEdit.style.color = "white";
-        screen.focus();
+// ================================================
+// FITUR BARU: TOMBOL EDIT BERFUNGSI PENUH
+// ================================================
+function aktifkanModeEdit() {
+    if (elemenLayar.contentEditable === "true") {
+        // Jika sedang mode edit lalu ditekan lagi -> Berfungsi jadi SIMPAN
+        elemenLayar.contentEditable = "false";
+        tombolEdit.innerText = "EDIT";
+        tombolEdit.style.background = "#ffcc00";
+        tombolEdit.style.color = "#000000";
+        simpanHasilEditManual();
     } else {
-        screen.contentEditable = "false";
-        screen.classList.remove("editing-active");
-        btnEdit.innerText = "EDIT";
-        btnEdit.style.background = "#ffcc00";
-        btnEdit.style.color = "black";
-        syncFromScreen();
+        // Mengaktifkan mode ketik manual di layar kotak besar
+        elemenLayar.contentEditable = "true";
+        elemenLayar.focus();
+        tombolEdit.innerText = "OK";
+        tombolEdit.style.background = "#2ecc71"; // Warna hijau tanda simpan sukses
+        tombolEdit.style.color = "#ffffff";
     }
 }
 
-// Sinkronisasi teks hasil ketikan manual di layar ke sistem matematika internal
-function syncFromScreen() {
-    currentInput = screen.innerText.trim();
-    if (currentInput === "") currentInput = "0";
+// Sinkronisasi teks ketikan tangan ke mesin memori kalkulator
+function simpanHasilEditManual() {
+    let teksLayar = elemenLayar.innerText.trim();
+    if (teksLayar === "" || isNaN(parseFloat(teksLayar))) {
+        layarMemori = "0";
+    } else {
+        layarMemori = teksLayar;
+    }
 }
