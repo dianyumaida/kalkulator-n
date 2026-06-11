@@ -13,6 +13,8 @@ function cetakKeLayar(teks) {
 
 // Fungsi input angka dari tombol fisik kalkulator
 function tekanAngka(angka) {
+    if (elemenLayar.contentEditable === "true") return; // Kunci tombol bawah jika sedang mengetik manual di layar
+    
     if (statusSiapInputBaru) {
         layarMemori = angka;
         statusSiapInputBaru = false;
@@ -26,17 +28,15 @@ function tekanAngka(angka) {
     cetakKeLayar(layarMemori);
 }
 
-// Fungsi mengunci operator (+, -, *, /) - FIX PENJUMLAHAN RUN
+// Fungsi mengunci operator (+, -, *, /)
 function tekanOperator(op) {
-    // Jika user sedang mengetik manual di mode EDIT, kunci nilainya dulu
     simpanHasilEditManual();
-    
     angkaPertama = layarMemori;
     jenisOperator = op;
     statusSiapInputBaru = true; 
 }
 
-// Fungsi Eksekusi Matematika (=) - DIJAMIN JALAN
+// Fungsi Eksekusi Matematika (=)
 function hitungHasil() {
     simpanHasilEditManual();
 
@@ -44,12 +44,12 @@ function hitungHasil() {
     const n1 = parseFloat(angkaPertama);
     const n2 = parseFloat(layarMemori);
 
-    if (isNaN(n1) || isNaN(n2)) return;
+    // Jika belum memasukkan operator atau angka pertama kosong, abaikan hitungan
+    if (jenisOperator === "" || isNaN(n1) || isNaN(n2)) return;
 
     const modePersen = document.getElementById("rad-percent").checked;
     const modeSigma = document.getElementById("rad-sigma").checked;
 
-    // Logika Hitung Khusus Modifikasi Radio Button
     if (modePersen) {
         let nilaiPersen = (n2 / 100) * n1;
         if (jenisOperator === '+') hasilAkhir = n1 + nilaiPersen;
@@ -64,7 +64,7 @@ function hitungHasil() {
         }
         hasilAkhir = totalSigma;
     } else {
-        // Operasi Matematika Standar Utama
+        // Operasi Standar Utama
         if (jenisOperator === '+') {
             hasilAkhir = n1 + n2;
         } else if (jenisOperator === '-') {
@@ -72,9 +72,7 @@ function hitungHasil() {
         } else if (jenisOperator === '*') {
             hasilAkhir = n1 * n2;
         } else if (jenisOperator === '/') {
-            hasilAkhir = n2 !== 0 ? n1 / n2 : "Error Split";
-        } else {
-            return; // Tidak ada operator yang ditekan
+            hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
         }
     }
 
@@ -87,6 +85,7 @@ function hitungHasil() {
 
 // Fungsi Tombol DELET (Hapus Backspace)
 function hapusSatuAngka() {
+    if (elemenLayar.contentEditable === "true") return;
     layarMemori = layarMemori.slice(0, -1);
     if (layarMemori === "") layarMemori = "0";
     cetakKeLayar(layarMemori);
@@ -101,7 +100,7 @@ function bersihkanSemua() {
     document.getElementById("rad-percent").checked = false;
     document.getElementById("rad-sigma").checked = false;
     
-    // Matikan mode edit jika masih menyala
+    // Matikan mode edit jika masih aktif
     elemenLayar.contentEditable = "false";
     tombolEdit.innerText = "EDIT";
     tombolEdit.style.background = "#ffcc00";
@@ -110,28 +109,26 @@ function bersihkanSemua() {
     cetakKeLayar("0");
 }
 
-// ================================================
-// FITUR BARU: TOMBOL EDIT BERFUNGSI PENUH
-// ================================================
+// Fitur Tombol EDIT Layar Langsung
 function aktifkanModeEdit() {
     if (elemenLayar.contentEditable === "true") {
-        // Jika sedang mode edit lalu ditekan lagi -> Berfungsi jadi SIMPAN
+        // Mode Simpan
         elemenLayar.contentEditable = "false";
         tombolEdit.innerText = "EDIT";
         tombolEdit.style.background = "#ffcc00";
         tombolEdit.style.color = "#000000";
         simpanHasilEditManual();
     } else {
-        // Mengaktifkan mode ketik manual di layar kotak besar
+        // Mode Ketik Manual
         elemenLayar.contentEditable = "true";
         elemenLayar.focus();
         tombolEdit.innerText = "OK";
-        tombolEdit.style.background = "#2ecc71"; // Warna hijau tanda simpan sukses
+        tombolEdit.style.background = "#2ecc71"; 
         tombolEdit.style.color = "#ffffff";
     }
 }
 
-// Sinkronisasi teks ketikan tangan ke mesin memori kalkulator
+// Sinkronisasi tulisan manual di layar ke memori internal
 function simpanHasilEditManual() {
     let teksLayar = elemenLayar.innerText.trim();
     if (teksLayar === "" || isNaN(parseFloat(teksLayar))) {
