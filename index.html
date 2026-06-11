@@ -3,16 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Fix</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Kalkulator Kustom Sukses</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+            font-family: monospace;
+            margin: 0;
+        }
+
+        .calculator {
+            width: 90%;
+            max-width: 480px;
+            border: 3px solid #000000;
+            background: #ffffff;
+            padding: 15px;
+            box-shadow: 6px 6px 0px #000000;
+        }
+
+        .screen {
+            height: 140px;
+            border: 3px solid #000000;
+            margin-bottom: 15px;
+            font-size: 2.8rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 10px;
+            background: #ffffff;
+            word-break: break-all;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .screen:focus {
+            background: #fffde6;
+            border: 3px dashed #ffcc00;
+            outline: none;
+        }
+
+        .row {
+            display: grid;
+            border: 2px solid #000000;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: #f0f0f0;
+            gap: 4px;
+            box-sizing: border-box;
+        }
+
+        .numbers {
+            grid-template-columns: repeat(10, 1fr);
+        }
+
+        .operators {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .select-zone {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            padding: 5px;
+        }
+
+        button {
+            border: 2px solid #000000;
+            background: #ffffff;
+            padding: 12px 2px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: monospace;
+        }
+
+        button:active {
+            background: #e0e0e0;
+        }
+
+        .radio-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
 
     <div class="calculator">
-        <!-- Layar Tampilan (Kotak Besar Atas) -->
+        <!-- Layar Tampilan -->
         <div class="screen" id="screen">0</div>
 
-        <!-- Baris Angka (1-9, 0) -->
+        <!-- Baris Angka -->
         <div class="row numbers">
             <button onclick="tekanAngka('1')">1</button>
             <button onclick="tekanAngka('2')">2</button>
@@ -26,7 +114,7 @@
             <button onclick="tekanAngka('0')">0</button>
         </div>
 
-        <!-- Baris Operator Utama & Fungsi -->
+        <!-- Baris Operator Utama -->
         <div class="row operators">
             <button onclick="tekanOperator('*')">×</button>
             <button onclick="tekanOperator('/')">:</button>
@@ -36,7 +124,7 @@
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
 
-        <!-- Baris Tombol Pilih (Radio Mode + Tombol EDIT) -->
+        <!-- Baris Pilihan Radio dan EDIT -->
         <div class="row select-zone">
             <span class="label">▲ PILIH ▼</span>
             <label class="radio-container">
@@ -51,6 +139,133 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let layarMemori = "0";
+        let angkaPertama = "";
+        let jenisOperator = "";
+        let statusSiapInputBaru = false;
+
+        const elemenLayar = document.getElementById("screen");
+        const tombolEdit = document.getElementById("btn-edit");
+
+        function cetakKeLayar(teks) {
+            elemenLayar.innerText = teks;
+        }
+
+        function tekanAngka(angka) {
+            if (elemenLayar.contentEditable === "true") return;
+            
+            if (statusSiapInputBaru) {
+                layarMemori = angka;
+                statusSiapInputBaru = false;
+            } else {
+                if (layarMemori === "0") {
+                    layarMemori = angka;
+                } else {
+                    layarMemori += angka;
+                }
+            }
+            cetakKeLayar(layarMemori);
+        }
+
+        function tekanOperator(op) {
+            simpanHasilEditManual();
+            angkaPertama = layarMemori;
+            jenisOperator = op;
+            statusSiapInputBaru = true; 
+        }
+
+        function hitungHasil() {
+            simpanHasilEditManual();
+
+            let hasilAkhir = 0;
+            const n1 = parseFloat(angkaPertama);
+            const n2 = parseFloat(layarMemori);
+
+            if (jenisOperator === "" || isNaN(n1) || isNaN(n2)) return;
+
+            const modePersen = document.getElementById("rad-percent").checked;
+            const modeSigma = document.getElementById("rad-sigma").checked;
+
+            if (modePersen) {
+                let nilaiPersen = (n2 / 100) * n1;
+                if (jenisOperator === '+') hasilAkhir = n1 + nilaiPersen;
+                else if (jenisOperator === '-') hasilAkhir = n1 - nilaiPersen;
+                else hasilAkhir = nilaiPersen;
+            } else if (modeSigma) {
+                let totalSigma = 0;
+                let awal = Math.min(n1, n2);
+                let akhir = Math.max(n1, n2);
+                for (let i = awal; i <= akhir; i++) {
+                    totalSigma += i;
+                }
+                hasilAkhir = totalSigma;
+            } else {
+                if (jenisOperator === '+') {
+                    hasilAkhir = n1 + n2;
+                } else if (jenisOperator === '-') {
+                    hasilAkhir = n1 - n2;
+                } else if (jenisOperator === '*') {
+                    hasilAkhir = n1 * n2;
+                } else if (jenisOperator === '/') {
+                    hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
+                }
+            }
+
+            layarMemori = hasilAkhir.toString();
+            jenisOperator = "";
+            angkaPertama = "";
+            statusSiapInputBaru = true;
+            cetakKeLayar(layarMemori);
+        }
+
+        function hapusSatuAngka() {
+            if (elemenLayar.contentEditable === "true") return;
+            layarMemori = layarMemori.slice(0, -1);
+            if (layarMemori === "") layarMemori = "0";
+            cetakKeLayar(layarMemori);
+        }
+
+        function bersihkanSemua() {
+            layarMemori = "0";
+            angkaPertama = "";
+            jenisOperator = "";
+            statusSiapInputBaru = false;
+            document.getElementById("rad-percent").checked = false;
+            document.getElementById("rad-sigma").checked = false;
+            
+            elemenLayar.contentEditable = "false";
+            tombolEdit.innerText = "EDIT";
+            tombolEdit.style.background = "#ffcc00";
+            tombolEdit.style.color = "#000000";
+            
+            cetakKeLayar("0");
+        }
+
+        function aktifkanModeEdit() {
+            if (elemenLayar.contentEditable === "true") {
+                elemenLayar.contentEditable = "false";
+                tombolEdit.innerText = "EDIT";
+                tombolEdit.style.background = "#ffcc00";
+                tombolEdit.style.color = "#000000";
+                simpanHasilEditManual();
+            } else {
+                elemenLayar.contentEditable = "true";
+                elemenLayar.focus();
+                tombolEdit.innerText = "OK";
+                tombolEdit.style.background = "#2ecc71"; 
+                tombolEdit.style.color = "#ffffff";
+            }
+        }
+
+        function simpanHasilEditManual() {
+            let teksLayar = elemenLayar.innerText.trim();
+            if (teksLayar === "" || isNaN(parseFloat(teksLayar))) {
+                layarMemori = "0";
+            } else {
+                layarMemori = teksLayar;
+            }
+        }
+    </script>
 </body>
 </html>
