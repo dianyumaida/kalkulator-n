@@ -10,7 +10,8 @@
 
     <div class="calculator">
         <!-- Layar Tampilan (Kotak Besar Atas) -->
-        <div class="screen" id="screen">0</div>
+        <!-- contenteditable="false" akan berubah jadi "true" saat tombol EDIT ditekan -->
+        <div class="screen" id="screen" contenteditable="false">0</div>
 
         <!-- Baris Angka (1-9, 0) -->
         <div class="row numbers">
@@ -36,16 +37,17 @@
             <button onclick="deleteLast()">DELET</button>
         </div>
 
-        <!-- Baris Tombol Pilih (Radio Mode) -->
+        <!-- Baris Tombol Pilih (Radio Mode + Tombol Edit) -->
         <div class="row select-zone">
-            <span class="label">◀ PILIH ▼</span>
+            <span class="label">▲ PILIH ▼</span>
             <label class="radio-container">
                 <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
             </label>
             <label class="radio-container">
                 <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
             </label>
-            <button onclick="clearAll()" style="background:#ff4d4d; color:white;">CLEAR</button>
+            <button id="btn-edit" onclick="toggleEditMode()" style="background: #ffcc00;">EDIT</button>
+            <button onclick="clearAll()" style="background: #ff4d4d; color: white;">CLEAR</button>
         </div>
     </div>
 
