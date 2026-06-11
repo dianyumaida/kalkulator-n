@@ -24,22 +24,36 @@
             box-shadow: 6px 6px 0px #000000;
         }
 
-        .screen {
-            height: 140px;
+        .screen-container {
             border: 3px solid #000000;
             margin-bottom: 15px;
+            background: #ffffff;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .screen {
+            height: 120px;
             font-size: 2.8rem;
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
-            padding: 10px;
-            background: #ffffff;
             word-break: break-all;
             overflow: hidden;
-            box-sizing: border-box;
         }
 
-        .screen.editing-active {
+        /* Tanda indikator jika operator sedang ditekan */
+        .operator-indicator {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff9900;
+        }
+
+        .screen-container.editing-active {
             background: #fffdf0 !important;
             border: 3px dashed #ff9900 !important;
             outline: none;
@@ -97,8 +111,11 @@
 <body>
 
     <div class="calculator">
-        <!-- Layar Tampilan Utama -->
-        <div class="screen" id="screen">0</div>
+        <!-- Container Layar Tampilan -->
+        <div class="screen-container" id="screen-box">
+            <div class="operator-indicator" id="op-view"></div>
+            <div class="screen" id="screen">0</div>
+        </div>
 
         <!-- Baris Tombol Angka -->
         <div class="row numbers">
@@ -116,10 +133,10 @@
 
         <!-- Baris Tombol Operator -->
         <div class="row operators">
-            <button onclick="tekanOperator('*')">×</button>
-            <button onclick="tekanOperator('/')">:</button>
-            <button onclick="tekanOperator('+')">+</button>
-            <button onclick="tekanOperator('-')">-</button>
+            <button onclick="tekanOperator('*', '×')">×</button>
+            <button onclick="tekanOperator('/', ':')">:</button>
+            <button onclick="tekanOperator('+', '+')">+</button>
+            <button onclick="tekanOperator('-', '-')">-</button>
             <button onclick="hitungHasil()">=</button>
             <button onclick="hapusSatuAngka()">DELET</button>
         </div>
@@ -140,7 +157,6 @@
     </div>
 
     <script>
-        // Menggunakan string penampung murni untuk menghindari bug sistem
         let inputSkor = "0"; 
         let angkaPertama = "0";
         let jenisOperator = "";
@@ -148,6 +164,8 @@
         let harusResetLayar = false;
 
         const elemenLayar = document.getElementById("screen");
+        const elemenIndikator = document.getElementById("op-view");
+        const elemenBoxLayar = document.getElementById("screen-box");
         const tombolEdit = document.getElementById("btn-edit");
 
         function cetakKeLayar(teks) {
@@ -170,13 +188,16 @@
             cetakKeLayar(inputSkor);
         }
 
-        // PERBAIKAN TOTAL DI SINI: Operator diamankan agar aman dari bug browser
-        function tekanOperator(op) {
+        // SEKARANG MUNCUL TANDA DI LAYAR SAAT OPERATOR DITEKAN
+        function tekanOperator(op, simbolTampilan) {
             if (isEditModeActive) return;
             
             angkaPertama = inputSkor;
             jenisOperator = op;
             harusResetLayar = true;
+            
+            // Tampilkan simbol aktif di pojok kiri atas layar
+            elemenIndikator.innerText = simbolTampilan;
         }
 
         function hitungHasil() {
@@ -205,22 +226,18 @@
                 }
                 hasilAkhir = totalSigma;
             } else {
-                // Eksekusi Simbol Utama Dasar
-                if (jenisOperator === '+') {
-                    hasilAkhir = n1 + n2;
-                } else if (jenisOperator === '-') {
-                    hasilAkhir = n1 - n2;
-                } else if (jenisOperator === '*') {
-                    hasilAkhir = n1 * n2;
-                } else if (jenisOperator === '/') {
-                    hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
-                }
+                if (jenisOperator === '+') hasilAkhir = n1 + n2;
+                else if (jenisOperator === '-') hasilAkhir = n1 - n2;
+                else if (jenisOperator === '*') hasilAkhir = n1 * n2;
+                else if (jenisOperator === '/') hasilAkhir = n2 !== 0 ? n1 / n2 : "Error";
             }
 
             inputSkor = hasilAkhir.toString();
             jenisOperator = "";
             angkaPertama = "0";
             harusResetLayar = true;
+            
+            elemenIndikator.innerText = ""; // Hapus indikator operator
             cetakKeLayar(inputSkor);
         }
 
@@ -242,11 +259,12 @@
             document.getElementById("rad-sigma").checked = false;
             
             elemenLayar.contentEditable = "false";
-            elemenLayar.classList.remove("editing-active");
+            elemenBoxLayar.classList.remove("editing-active");
             tombolEdit.innerText = "EDIT";
             tombolEdit.style.background = "#ffcc00";
             tombolEdit.style.color = "#000000";
             
+            elemenIndikator.innerText = "";
             cetakKeLayar("0");
         }
 
@@ -254,7 +272,7 @@
             if (!isEditModeActive) {
                 isEditModeActive = true;
                 elemenLayar.contentEditable = "true";
-                elemenLayar.classList.add("editing-active");
+                elemenBoxLayar.classList.add("editing-active");
                 elemenLayar.focus();
                 
                 tombolEdit.innerText = "OK";
@@ -263,7 +281,7 @@
             } else {
                 isEditModeActive = false;
                 elemenLayar.contentEditable = "false";
-                elemenLayar.classList.remove("editing-active");
+                elemenBoxLayar.classList.remove("editing-active");
                 
                 tombolEdit.innerText = "EDIT";
                 tombolEdit.style.background = "#ffcc00";
@@ -275,9 +293,3 @@
                 } else {
                     inputSkor = teksKetikManual;
                 }
-                cetakKeLayar(inputSkor);
-            }
-        }
-    </script>
-</body>
-</html>
