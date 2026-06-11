@@ -24,6 +24,7 @@
             box-shadow: 6px 6px 0px #000000;
         }
 
+        /* Kotak layar atas mirip gambar */
         .screen {
             height: 140px;
             border: 3px solid #000000;
@@ -39,7 +40,8 @@
             box-sizing: border-box;
         }
 
-        .screen:focus {
+        /* Indikator visual saat mode EDIT menyala */
+        .screen.editing-active {
             background: #fffde6;
             border: 3px dashed #ffcc00;
             outline: none;
@@ -139,6 +141,7 @@
         </div>
     </div>
 
+    <!-- LOGIKA JAVASCRIPT DILETAKKAN DI BAWAH AGAR TIDAK MACET -->
     <script>
         let layarMemori = "0";
         let angkaPertama = "";
@@ -235,6 +238,7 @@
             document.getElementById("rad-sigma").checked = false;
             
             elemenLayar.contentEditable = "false";
+            elemenLayar.classList.remove("editing-active");
             tombolEdit.innerText = "EDIT";
             tombolEdit.style.background = "#ffcc00";
             tombolEdit.style.color = "#000000";
@@ -245,12 +249,14 @@
         function aktifkanModeEdit() {
             if (elemenLayar.contentEditable === "true") {
                 elemenLayar.contentEditable = "false";
+                elemenLayar.classList.remove("editing-active");
                 tombolEdit.innerText = "EDIT";
                 tombolEdit.style.background = "#ffcc00";
                 tombolEdit.style.color = "#000000";
                 simpanHasilEditManual();
             } else {
                 elemenLayar.contentEditable = "true";
+                elemenLayar.classList.add("editing-active");
                 elemenLayar.focus();
                 tombolEdit.innerText = "OK";
                 tombolEdit.style.background = "#2ecc71"; 
