@@ -1,49 +1,86 @@
-// Mengambil elemen HTML ke JavaScript
-const display = document.getElementById('display');
-const tombolPilih = document.getElementById('tombolPilih');
-const modalSimbol = document.getElementById('modalSimbol');
-const tombolBatal = document.getElementById('tombolBatal');
-const formSimbol = document.getElementById('formSimbol');
+let currentInput = "";
+let previousInput = "";
+let operator = null;
 
-// ==========================================
-// 1. KODE PERINTAH PANGGIL MODAL SIMBOL
-// ==========================================
-// Ketika tombol "PILIH" diklik, buka jendela modal radio button
-tombolPilih.addEventListener('click', () => {
-    modalSimbol.showModal(); // Perintah panggil bawaan browser
-});
+const screen = document.getElementById("screen");
 
-// Jika tombol "Batal" di dalam modal diklik, tutup jendela
-tombolBatal.addEventListener('click', () => {
-    modalSimbol.close();
-});
-
-// ==========================================
-// 2. CARA MELETAKKAN SIMBOL KE INDEKS DISPLAY
-// ==========================================
-// Ketika user memilih salah satu radio button lalu menekan "Masukkan"
-formSimbol.addEventListener('submit', (event) => {
-    // Cari radio button yang sedang dalam keadaan dicentang (checked)
-    const radioTerpilih = document.querySelector('input[name="simbol_mat"]:checked');
-    
-    // Jika ada radio yang dipilih
-    if (radioTerpilih) {
-        const simbol = radioTerpilih.value;
-        
-        // Letakkan simbol ke indeks teks paling akhir di layar display
-        display.value = display.value + simbol;
-        
-        // Reset radio button agar kembali kosong saat modal dibuka lagi
-        radioTerpilih.checked = false;
-    }
-});
-
-// Fungsi tambahan untuk tombol angka standar
-function tekanAngka(angka) {
-    display.value = display.value + angka;
+function updateScreen(value) {
+    screen.innerText = value || "0";
 }
 
-// Fungsi tambahan untuk tombol DELETE (Clear)
-function hapusSemua() {
-    display.value = "";
+function appendNumber(num) {
+    if (currentInput === "0") currentInput = "";
+    currentInput += num;
+    updateScreen(currentInput);
+}
+
+function setOperator(op) {
+    if (currentInput === "") return;
+    if (previousInput !== "") {
+        calculate();
+    }
+    operator = op;
+    previousInput = currentInput;
+    currentInput = "";
+}
+
+function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+
+    if (isNaN(prev) || isNaN(current)) return;
+
+    // Cek status tombol radio tambahan
+    const isPercent = document.getElementById("rad-percent").checked;
+    const isSigma = document.getElementById("rad-sigma").checked;
+
+    if (isPercent) {
+        // Mode Persen: Contoh menghitung nilai persen dari input sebelumnya
+        // Misal: 200 + 10 (dengan radio % aktif) -> 200 + (10% dari 200) = 220
+        let percentValue = (current / 100) * prev;
+        switch (operator) {
+            case '+': result = prev + percentValue; break;
+            case '-': result = prev - percentValue; break;
+            default: result = percentValue; 
+        }
+    } else if (isSigma) {
+        // Mode Sigma: Contoh melakukan penjumlahan beruntun dari angka X ke Y
+        // Misal: input 1 dan 5 -> menjumlahkan 1+2+3+4+5 = 15
+        let sum = 0;
+        let start = Math.min(prev, current);
+        let end = Math.max(prev, current);
+        for (let i = start; i <= end; i++) {
+            sum += i;
+        }
+        result = sum;
+    } else {
+        // Operasi Normal Standar
+        switch (operator) {
+            case '+': result = prev + current; break;
+            case '-': result = prev - current; break;
+            case '*': result = prev * current; break;
+            case '/': result = current !== 0 ? prev / current : "Error"; break;
+            default: return;
+        }
+    }
+
+    currentInput = result.toString();
+    operator = null;
+    previousInput = "";
+    updateScreen(currentInput);
+}
+
+function deleteLast() {
+    currentInput = currentInput.slice(0, -1);
+    updateScreen(currentInput);
+}
+
+function clearAll() {
+    currentInput = "";
+    previousInput = "";
+    operator = null;
+    document.getElementById("rad-percent").checked = false;
+    document.getElementById("rad-sigma").checked = false;
+    updateScreen("0");
 }
