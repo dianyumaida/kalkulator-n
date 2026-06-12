@@ -1,72 +1,127 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kostum Presisi</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; background: #f4f4f9; padding: 20px; }
-                .calculator {
-            width: 100%;
-            max-width: 350px;
-            background-image: url('Folder/gambar/bodykal.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                }
-   #screen { width: 100%; height: 50px; background: #fff; text-align: right; padding: 10px; font-size: 22px; border-radius: 5px; margin-bottom: 15px; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
-        button { flex: 1; padding: 12px; font-size: 16px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; background: #e0e0e0; }
-        .operators button { background: #f9a825; color: white; }
-        .menu-container { width: 100%; max-width: 350px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; overflow: hidden; }
-        .menu-header { background: #e0e0e0; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; cursor: pointer; }
+        
+        /* 1. Pengaturan Ukuran Bodi Pas dengan Gambar */
+        .calculator { 
+            width: 500px; 
+            height: 560px; 
+            background: url('Folder/gambar/bodykal.jpg') no-repeat center;
+            background-size: 100% 100%;
+            padding: 22px 25px; 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+        
+        /* 2. Pengaturan Layar Pas di Kotak Besar Atas Gambar */
+        #screen { 
+            width: 100%; 
+            height: 205px; 
+            background: transparent; 
+            color: #000; 
+            text-align: right; 
+            padding: 20px; 
+            font-size: 40px; 
+            margin-bottom: 25px; 
+            border: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            overflow-x: auto;
+        }
+        
+        #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
+        
+        /* 3. Pengaturan Baris Tombol */
+        .row { display: flex; justify-content: space-between; margin-bottom: 22px; gap: 8px; }
+        
+        /* Jarak khusus baris ketiga bawah agar pas dengan gambar */
+        .row-bottom { margin-top: 5px; gap: 15px; }
+
+        /* 4. Membuat Tombol Transparan Mengikuti Kotak Gambar */
+        button { 
+            flex: 1; 
+            height: 52px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            background: rgba(0, 0, 0, 0.03); 
+            color: #222;
+            transition: background 0.1s;
+        }
+        
+        button:active { background: rgba(0, 0, 0, 0.15); }
+        
+        /* Tombol Bawah Dipertebal Transparansinya atau Diberi Warna Lembut */
+        .btn-pilih { background: rgba(106, 90, 205, 0.05); }
+        .btn-edit { background: rgba(255, 204, 0, 0.05); }
+        .btn-clear { background: rgba(255, 77, 77, 0.05); }
+
+        /* --- STYLE MENU DROPDOWN --- */
+        .menu-container { width: 100%; max-width: 500px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .menu-header { background: #e0e0e0; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; cursor: pointer; }
         .menu-group { border-bottom: 1px solid #eee; }
-        .group-header { background: #fff; padding: 10px; display: flex; justify-content: space-between; cursor: pointer; }
-        .item-row, .item-row-history { display: flex; justify-content: space-between; padding: 10px 20px; background: #fff; border-top: 1px solid #f5f5f5; }
+        .group-header { background: #fff; padding: 12px; display: flex; justify-content: space-between; cursor: pointer; font-weight: 500; }
+        .item-row, .item-row-history { display: flex; justify-content: space-between; padding: 12px 20px; background: #fff; border-top: 1px solid #f5f5f5; cursor: pointer; }
     </style>
 </head>
 <body>
-    <!-- UTAMA: KALKULATOR -->
+
+    <!-- KALKULATOR DENGAN KOSTUM GAMBAR -->
     <div class="calculator">
         <div id="screen">0</div>
+        
+        <!-- BARIS 1: 9 Kotak Kecil (Angka 1-9) -->
         <div class="row">
-            <button onclick="tekan('7')">7</button><button onclick="tekan('8')">8</button><button onclick="tekan('9')">9</button>
+            <button onclick="tekan('1')">1</button>
+            <button onclick="tekan('2')">2</button>
+            <button onclick="tekan('3')">3</button>
+            <button onclick="tekan('4')">4</button>
+            <button onclick="tekan('5')">5</button>
+            <button onclick="tekan('6')">6</button>
+            <button onclick="tekan('7')">7</button>
+            <button onclick="tekan('8')">8</button>
+            <button onclick="tekan('9')">9</button>
         </div>
+        
+        <!-- BARIS 2: 6 Kotak Sedang (0, Titik, dan Operator) -->
         <div class="row">
-            <button onclick="tekan('4')">4</button><button onclick="tekan('5')">5</button><button onclick="tekan('6')">6</button>
+            <button onclick="tekan('0')">0</button>
+            <button onclick="tekan('.')">.</button>
+            <button onclick="tekan('+')">+</button>
+            <button onclick="tekan('-')">-</button>
+            <button onclick="tekan('*')">x</button>
+            <button onclick="tekan('/')">:</button>
         </div>
-        <div class="row">
-            <button onclick="tekan('1')">1</button><button onclick="tekan('2')">2</button><button onclick="tekan('3')">3</button>
-        </div>
-        <div class="row">
-            <button onclick="tekan('0')">0</button><button onclick="tekan('.')">.</button>
-            <button id="btn-edit" onclick="modeEdit()" style="background:#ffcc00;">EDIT</button>
-        </div>
-        <div class="row operators">
-            <button onclick="tekan('*')">x</button><button onclick="tekan('/')">:</button>
-            <button onclick="tekan('+')">+</button><button onclick="tekan('-')">-</button>
-        </div>
-        <div class="row">
-            <button onclick="hasil()" style="background:#2ecc71; color:white;">=</button>
-            <button onclick="del()" style="background:#e67e22; color:white;">DEL</button>
-            <button onclick="clearAll()" style="background:#ff4d4d; color:white;">CLEAR</button>
+        
+        <!-- BARIS 3: 3 Kotak Besar Bawah (Sesuai Gambar Anda) -->
+        <div class="row row-bottom">
+            <!-- Tombol Pertama Berfungsi sebagai Sama Dengan (=) sekaligus memicu scroll ke Menu Pilih -->
+            <button onclick="hasil()" class="btn-pilih">=</button>
+            <button id="btn-edit" onclick="modeEdit()" class="btn-edit">EDIT</button>
+            <!-- Klik Sekali untuk DEL (hapus satu), Klik Dua Kali/Tahan untuk CLEAR (bersih semua) -->
+            <button onclick="del()" ondblclick="clearAll()" class="btn-clear">CLEAR</button>
         </div>
     </div>
 
-    <!-- UTAMA: MENU DROPDOWN -->
+    <!-- MENU DROPDOWN DI BAWAH KALKULATOR -->
     <div class="menu-container">
         <div class="menu-header" onclick="toggle('main-menu-content')"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div id="main-menu-content">
             <div class="menu-group">
                 <div class="group-header" onclick="toggle('sec-simbol')"><span>📁 -- simbol --</span><span>▼</span></div>
                 <div id="sec-simbol">
-                    <label class="item-row" onclick="tekan('%')"><span>% (Persen)</span><input type="radio" name="m"></label>
-                    <label class="item-row" onclick="tekan('Σ')"><span>Σ (Sigma)</span><input type="radio" name="m"></label>
-                    <label class="item-row" onclick="tekan('^')"><span>^ (Pangkat)</span><input type="radio" name="m"></label>
+                    <label class="item-row" onclick="tekan('%')"><span>% (Persen)</span><input type="radio" name="m" id="rad-percent"></label>
+                    <label class="item-row" onclick="tekan('Σ')"><span>Σ (Sigma)</span><input type="radio" name="m" id="rad-sigma"></label>
+                    <label class="item-row" onclick="tekan('^')"><span>^ (Pangkat)</span><input type="radio" name="m" id="rad-pow"></label>
                 </div>
             </div>
             <div class="menu-group">
@@ -78,14 +133,14 @@
                 <div id="sec-riwayat">
                     <div class="item-row-history">
                         <span id="h-txt">Belum ada riwayat</span>
-                        <button onclick="delH()" style="background:#ff4d4d; color:white; padding:2px 8px; font-size:12px;">Hapus</button>
+                        <button onclick="delH()" style="background:#ff4d4d; color:white; padding:4px 10px; font-size:13px; border:none; border-radius:4px; cursor:pointer;">Hapus</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- UTAMA: LOGIKA JAVASCRIPT -->
+    <!-- LOGIKA JAVASCRIPT -->
     <script>
         const scr = document.getElementById("screen");
         let isEdit = false;
@@ -94,56 +149,47 @@
             if(isEdit) return;
             scr.innerText = (scr.innerText === "0" && !"+-*/^%Σ".includes(v)) ? v : scr.innerText + v;
         }
-                function hasil() {
+
+        function hasil() {
             if(isEdit || scr.innerText === "0") return;
             try {
                 let txt = scr.innerText;
-                let riwayatAwal = txt; // Simpan tampilan asli untuk menu riwayat
+                let riwayatAwal = txt;
 
-                // 1. Perbaiki Sistem Pangkat ( ^ )
                 txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
-
-                // 2. Perbaiki Sistem Persen ( % )
-                // Mengubah angka sebelum % menjadi dibagi 100 (Contoh: 50% menjadi 50/100)
                 txt = txt.replace(/(\d+)%/g, "($1/100)");
-
-                // 3. Perbaiki Sistem Sigma ( Σ )
-                // Jika user mengetik angka lalu Σ (misal: 5Σ), sistem akan menghitung 1+2+3+4+5
                 txt = txt.replace(/(\d+)Σ/g, function(match, angka) {
                     let total = 0;
-                    for (let i = 1; i <= parseInt(angka); i++) {
-                        total += i;
-                    }
+                    for (let i = 1; i <= parseInt(angka); i++) { total += i; }
                     return total;
                 });
 
-                // Jalankan hitungan matematika asli
                 let res = eval(txt);
-                
-                // Tampilkan ke menu riwayat dan layar kalkulator
                 document.getElementById('h-txt').innerText = riwayatAwal + " = " + res;
                 scr.innerText = res;
-            } catch(e) { 
-                scr.innerText = "Error"; 
-            }
+            } catch(e) { scr.innerText = "Error"; }
         }
 
         function del() { if(!isEdit) scr.innerText = scr.innerText.slice(0, -1) || "0"; }
+        
         function clearAll() {
             scr.innerText = "0"; isEdit = false; scr.contentEditable = "false";
             document.getElementById("btn-edit").innerText = "EDIT";
             document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
         }
+
         function modeEdit() {
             isEdit = !isEdit;
             scr.contentEditable = isEdit ? "true" : "false";
             document.getElementById("btn-edit").innerText = isEdit ? "OK" : "EDIT";
             if(isEdit) scr.focus();
         }
+
         function toggle(id) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === "none") ? "block" : "none";
         }
+
         function delH() { document.getElementById('h-txt').innerText = "Belum ada riwayat"; }
     </script>
 </body>
