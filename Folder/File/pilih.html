@@ -3,196 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Matematika</title>
+    <title>Kalkulator Matematika</title>
     <style>
-        :root {
-            --bg-color: #f5f5f5;
-            --border-color: #cccccc;
-            --text-color: #333333;
-            --header-bg: #e0e0e0;
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding-top: 50px;
+            align-items: center;
+            height: 100vh;
             margin: 0;
         }
 
-        /* Kontainer Utama Menu */
-        .menu-container {
-            width: 320px;
+        /* CONTAINER UTAMA APLIKASI */
+        .app-container {
+            width: 340px;
             background-color: #ffffff;
-            border: 2px solid var(--border-color);
+            border: 2px solid #cccccc;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             overflow: hidden;
+            position: relative;
+            height: 520px;
         }
 
-        /* Header Menu Utama */
-        .menu-header {
-            background-color: var(--header-bg);
-            padding: 15px;
+        /* ==================== TAMPILAN KALKULATOR ==================== */
+        .calculator-screen {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 40px);
+        }
+
+        .calc-header {
+            background-color: #e0e0e0;
+            padding: 12px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--border-color);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .display-box {
+            background-color: #222;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            text-align: right;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .input-group input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-hitung {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: auto;
+        }
+
+        /* ==================== TAMPILAN MENU DROPDOWN (OVERLAY) ==================== */
+        .menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 10;
+            display: none; /* Sembunyi secara default */
+            overflow-y: auto;
+        }
+
+        .menu-header-active {
+            background-color: #e0e0e0;
+            padding: 12px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #cccccc;
             cursor: pointer;
         }
 
-        /* Panah Segitiga */
-        .arrow {
-            font-size: 12px;
-            transition: transform 0.2s;
-        }
-
-        /* Konten List Menu */
-        .menu-content {
-            display: block; /* Tetap terbuka secara default seperti di gambar */
-        }
-
-        /* Kategori Folder (sudut, logaritma, matriks) */
         .category-header {
-            background-color: #ffffff;
-            padding: 12px 15px;
+            padding: 12px 20px;
             font-weight: bold;
             color: #555555;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 10px;
             border-bottom: 1px solid #eeeeee;
         }
 
-        .category-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .folder-icon { color: #ffca28; }
 
-        /* Ikon Folder Kuning */
-        .folder-icon {
-            color: #ffca28;
-            font-size: 16px;
-        }
-
-        /* Item Pilihan (sin, cos, dll) */
         .menu-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 25px;
-            background-color: #ffffff;
+            padding: 12px 30px;
             border-bottom: 1px solid #eeeeee;
             cursor: pointer;
-            transition: background 0.2s;
-            color: var(--text-color);
         }
 
-        .menu-item:hover {
-            background-color: #f9f9f9;
-        }
+        .menu-item:hover { background-color: #f9f9f9; }
 
-        /* Desain Kustom Radio Button Bulat */
         .radio-circle {
             width: 16px;
             height: 16px;
             border: 2px solid #888888;
             border-radius: 50%;
-            display: inline-block;
-            position: relative;
-        }
-
-        /* Efek ketika diklik cepat (animasi centang) */
-        .menu-item:active .radio-circle {
-            border-color: #2196F3;
-            background-color: #2196F3;
         }
     </style>
 </head>
 <body>
 
-    <div class="menu-container">
-        <!-- Menu Utama / Judul Atas -->
-        <div class="menu-header" id="mainHeader">
-            <span id="headerText">-- Pilih --</span>
-            <span class="arrow">▼</span>
+    <div class="app-container">
+        
+        <!-- LAYAR UTAMA KALKULATOR -->
+        <div class="calculator-screen">
+            <!-- Tombol Pemicu untuk Membuka Menu -->
+            <div class="calc-header" onclick="bukaMenu()">
+                <span id="tombolPilih">-- Pilih --</span>
+                <span>▼</span>
+            </div>
+
+            <!-- Tampilan Layar Angka -->
+            <div class="display-box" id="LayarHasil">0</div>
+
+            <!-- Form Input Angka -->
+            <div class="input-group">
+                <label id="labelInput">Masukkan Angka:</label>
+                <input type="number" id="inputAngka" placeholder="0">
+            </div>
+
+            <button class="btn-hitung" onclick="prosesHitung()">HITUNG</button>
         </div>
 
-        <!-- Isi List Menu -->
-        <div class="menu-content" id="menuContent">
+        <!-- LAYAR MENU PILIHAN (Sesuai Gambar Anda) -->
+        <div class="menu-overlay" id="layarMenu">
+            <div class="menu-header-active" onclick="tutupMenu()">
+                <span>-- Pilih --</span>
+                <span>▼</span>
+            </div>
             
-            <!-- GRUP SUDUT -->
-            <div class="category-header">
-                <div class="category-title">
-                    <span class="folder-icon">📁</span> -- sudut --
-                </div>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('sin')">
-                <span>sin</span>
-                <span class="radio-circle"></span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('cos')">
-                <span>cos</span>
-                <span class="radio-circle"></span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('tan')">
-                <span>tan</span>
-                <span class="radio-circle"></span>
-            </div>
+            <!-- Grup Sudut -->
+            <div class="category-header"><span class="folder-icon">📁</span> -- sudut --</div>
+            <div class="menu-item" onclick="pilihMenu('sin')"><span>sin</span><span class="radio-circle"></span></div>
+            <div class="menu-item" onclick="pilihMenu('cos')"><span>cos</span><span class="radio-circle"></span></div>
+            <div class="menu-item" onclick="pilihMenu('tan')"><span>tan</span><span class="radio-circle"></span></div>
 
-            <!-- GRUP LOGARITMA -->
-            <div class="category-header">
-                <div class="category-title">
-                    <span class="folder-icon">📁</span> -- logaritma --
-                </div>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('In (Natural Log)')">
-                <span>In (Natural Log)</span>
-                <span class="radio-circle"></span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('log10')">
-                <span>log10</span>
-                <span class="radio-circle"></span>
-            </div>
+            <!-- Grup Logaritma -->
+            <div class="category-header"><span class="folder-icon">📁</span> -- logaritma --</div>
+            <div class="menu-item" onclick="pilihMenu('In (Natural Log)')"><span>In (Natural Log)</span><span class="radio-circle"></span></div>
+            <div class="menu-item" onclick="pilihMenu('log10')"><span>log10</span><span class="radio-circle"></span></div>
 
-            <!-- GRUP MATRIKS -->
-            <div class="category-header">
-                <div class="category-title">
-                    <span class="folder-icon">📁</span> -- matriks --
-                </div>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('Determinan')">
-                <span>Determinan</span>
-                <span class="radio-circle"></span>
-            </div>
-            <div class="menu-item" onclick="pilihAksi('Invers')">
-                <span>Invers</span>
-                <span class="radio-circle"></span>
-            </div>
-
+            <!-- Grup Matriks -->
+            <div class="category-header"><span class="folder-icon">📁</span> -- matriks --</div>
+            <div class="menu-item" onclick="pilihMenu('Determinan')"><span>Determinan</span><span class="radio-circle"></span></div>
+            <div class="menu-item" onclick="pilihMenu('Invers')"><span>Invers</span><span class="radio-circle"></span></div>
         </div>
+
     </div>
 
     <script>
-        // Fungsi utama saat salah satu item menu diklik
-        function pilihAksi(namaFitur) {
-            // 1. Tampilkan teks item yang dipilih pada header atas (opsional)
-            document.getElementById('headerText').innerText = namaFitur;
+        let fungsiTerpilih = "";
 
-            // 2. Jalankan logika rumus Anda di sini
-            console.log("Menjalankan fungsi untuk: " + namaFitur);
-                        // 3. LANGSUNG KEMBALI KE MENU AWAL (Reset Otomatis)
-            // Mengembalikan teks paling atas menjadi "-- Pilih --" setelah jeda singkat
-            setTimeout(function() {
-                document.getElementById('headerText').innerText = "-- Pilih --";
-            }, 300); // 300 milidetik memberikan efek visual kedipan selesai diklik
+        // Fungsi membuka overlay menu
+        function bukaMenu() {
+            document.getElementById('layarMenu').style.display = 'block';
+        }
+
+        // Fungsi menutup overlay menu
+        function tutupMenu() {
+            document.getElementById('layarMenu').style.display = 'none';
+        }
+
+        // LOGIKA KUNCI: Saat item diklik, set fungsi lalu KEMBALI KE KALKULATOR
+        function pilihMenu(namaFungsi) {
+            fungsiTerpilih = namaFungsi;
+            
+            // 1. Ubah teks tombol di kalkulator sesuai fungsi yang dipilih
+            document.getElementById('tombolPilih').innerText = namaFungsi;
+            
+            // 2. Sesuaikan label petunjuk input (opsional agar interaktif)
+            if(namaFungsi === 'sin' || namaFungsi === 'cos' || namaFungsi === 'tan') {
+                document.getElementById('labelInput').innerText = "Masukkan Derajat Sudut:";
+            } else {
+                document.getElementById('labelInput').innerText = "Masukkan Angka:";
+            }
+
+            // 3. KEMBALI KE KALKULATOR (Sembunyikan menu otomatis)
+            tutupMenu();
+        }
+
+        // Fungsi eksekusi tombol HITUNG di kalkulator
+        function prosesHitung() {
+            let nilai = parseFloat(document.getElementById('inputAngka').value);
+            let hasil = 0;
+
+            if (isNaN(nilai)) {
+                alert("Silakan masukkan angka terlebih dahulu!");
+                return;
+            }
+
+            if (fungsiTerpilih === "") {
+                alert("Silakan pilih fungsi matematika terlebih dahulu!");
+                bukaMenu(); // otomatis buka menu jika belum memilih
+                return;
+            }
+
+            // Proses Rumus Matematika
+            switch(fungsiTerpilih) {
+                case 'sin':
+                    hasil = Math.sin(nilai * Math.PI / 180); // Konversi ke Radian
+                    break;
+                case 'cos':
+                    hasil = Math.cos(nilai * Math.PI / 180);
+                    break;
+                case 'tan':
+                    hasil = Math.tan(nilai * Math.PI / 180);
+                    break;
+                case 'In (Natural Log)':
+                    hasil = Math.log(nilai);
+                    break;
+                case 'log10':
+                    hasil = Math.log10(nilai);
+                    break;
+                default:
+                    hasil = "Fitur " + fungsiTerpilih + " siap dijalankan";
+            }
+
+            // Tampilkan hasil di layar kalkulator
+            document.getElementById('LayarHasil').innerText = hasil.toFixed(4);
         }
     </script>
 
