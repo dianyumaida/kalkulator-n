@@ -1,274 +1,274 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Sukses</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f3f3f3;
-            font-family: monospace;
-            margin: 0;
-        }
-
-        .calculator {
-            width: 90%;
-            max-width: 480px;
-            border: 3px solid #000000;
-            background: #ffffff;
-            padding: 15px;
-            box-shadow: 6px 6px 0px #000000;
-        }
-
-        .screen {
-            height: 140px;
-            border: 3px solid #000000;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
-            display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            padding: 10px;
-            background: #ffffff;
-            word-break: break-all;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .screen.editing-active {
-            background: #fffdf0 !important;
-            border: 3px dashed #ff9900 !important;
-            outline: none;
-        }
-
-        .row {
-            display: grid;
-            border: 2px solid #000000;
-            margin-bottom: 8px;
-            padding: 5px;
-            background: #f0f0f0;
-            gap: 4px;
-            box-sizing: border-box;
-        }
-
-        .numbers {
-            grid-template-columns: repeat(10, 1fr);
-        }
-
-        .operators {
-            grid-template-columns: repeat(6, 1fr);
-        }
-
-        .select-zone {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: bold;
-            padding: 5px;
-        }
-
-        button {
-            border: 2px solid #000000;
-            background: #ffffff;
-            padding: 12px 2px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: monospace;
-        }
-
-        button:active {
-            background: #e0e0e0;
-        }
-
-        /* Desain Baris Radio Pilihan Kustom dengan Anak Panah */
-        .radio-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: #fff;
-            padding: 5px 10px;
-            border: 2px solid #000;
-        }
-
-        .radio-container {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .radio-container input {
-            cursor: pointer;
-            transform: scale(1.2);
-        }
-
-        .arrow-label {
-            font-size: 1rem;
-            color: #333;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kustom Sukses</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+            monospace;
+            0;
+        }
+ 
+        .calculator {
+            width: 90%;
+            max-width: 480px;
+            border: 3px solid #000000;
+            background: #ffffff;
+            padding: 15px;
+            box-shadow: 6px 6px 0px #000000;
+        }
+ 
+        .screen {
+            height: 140px;
+            border: 3px solid #000000;
+            15px;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            padding: 10px;
+            background: #ffffff;
+            word-break: break-all;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+ 
+        .screen.editing-active {
+            background: #fffdf0 !important;
+            border: 3px dashed #ff9900 !important;
+            outline: none;
+        }
+ 
+        .row {
+            display: grid;
+            border: 2px solid #000000;
+            8px;
+            padding: 5px;
+            background: #f0f0f0;
+            gap: 4px;
+            box-sizing: border-box;
+        }
+ 
+        .numbers {
+            grid-template-columns: repeat(10, 1fr);
+        }
+ 
+        .operators {
+            grid-template-columns: repeat(6, 1fr);
+        }
+ 
+        .select-zone {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: bold;
+            padding: 5px;
+        }
+ 
+        button {
+            border: 2px solid #000000;
+            background: #ffffff;
+            padding: 12px 2px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            monospace;
+        }
+ 
+        button:active {
+            background: #e0e0e0;
+        }
+ 
+        /* Desain Baris Radio Pilihan Kustom dengan Anak Panah */
+        .radio-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fff;
+            padding: 5px 10px;
+            border: 2px solid #000;
+        }
+ 
+        .radio-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+ 
+        .radio-container input {
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+ 
+        .arrow-label {
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-
-    <div class="calculator">
-        <!-- Layar Tampilan Utama -->
-        <div class="screen" id="screen"></div>
-
-        <!-- Baris Tombol Angka -->
-        <div class="row numbers">
-            <button onclick="tekanAngka('1')">1</button>
-            <button onclick="tekanAngka('2')">2</button>
-            <button onclick="tekanAngka('3')">3</button>
-            <button onclick="tekanAngka('4')">4</button>
-            <button onclick="tekanAngka('5')">5</button>
-            <button onclick="tekanAngka('6')">6</button>
-            <button onclick="tekanAngka('7')">7</button>
-            <button onclick="tekanAngka('8')">8</button>
-            <button onclick="tekanAngka('9')">9</button>
-            <button onclick="tekanAngka('0')">0</button>
-        </div>
-
-        <!-- Baris Tombol Operator -->
-        <div class="row operators">
-            <button onclick="tekanAngka('*')">×</button>
-            <button onclick="tekanAngka('/')">:</button>
-            <button onclick="tekanAngka('+')">+</button>
-            <button onclick="tekanAngka('-')">-</button>
-            <button onclick="hitungHasil()">=</button>
-            <button onclick="hapusSatuAngka()"><==</button>
-        </div>
-
-        <!-- Baris Pilihan Radio Ber-Anak Panah dan Tombol EDIT -->
-        <div class="row select-zone">
-            <div class="radio-wrapper">
-                <span class="arrow-label">◀ PILIH ▼</span>
-              <label class="radio-container">
-                    <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
-                </label>
-                <label class="radio-container">
-                    <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
-                </label>
-            </div>
-            
-            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 70px;">EDIT</button>
-            <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px; width: 75px;">CLEAR</button>
-        </div>
-    </div>
-
-    <script>
-        const elemenLayar = document.getElementById("screen");
-        const tombolEdit = document.getElementById("btn-edit");
-        let isEditModeActive = false;
-
-        function tekanAngka(nilai) {
-            if (isEditModeActive) return;
-            
-            if (elemenLayar.innerText === "0" && !"*+/".includes(nilai)) {
-                elemenLayar.innerText = nilai;
-            } else {
-                elemenLayar.innerText += nilai;
-            }
-        }
-
-        function hitungHasil() {
-            if (isEditModeActive) return;
-            
-            let teksLayar = elemenLayar.innerText;
-            if (!teksLayar || teksLayar === "0") return;
-
-            const modePersen = document.getElementById("rad-percent").checked;
-            const modeSigma = document.getElementById("rad-sigma").checked;
-
-            try {
-                if (modePersen) {
-                    // Logika Operasi Persen Kustom
-                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
-                    if (operator) {
-                        let bagian = teksLayar.split(operator);
-                        let n1 = parseFloat(bagian[0]);
-                        let n2 = parseFloat(bagian[1]);
-                        let nilaiPersen = (n2 / 100) * n1;
-                        if (operator === '+') elemenLayar.innerText = n1 + nilaiPersen;
-                        else if (operator === '-') elemenLayar.innerText = n1 - nilaiPersen;
-                        else elemenLayar.innerText = nilaiPersen;
-                    }
-                } else if (modeSigma) {
-                    // Logika Operasi Deret Bilangan Sigma (Σ)
-                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
-                    if (operator) {
-                        let bagian = teksLayar.split(operator);
-                        let n1 = parseInt(bagian[0]);
-                        let n2 = parseInt(bagian[1]);
-                        if (!isNaN(n1) && !isNaN(n2)) {
-                            let totalSigma = 0;
-                            let awal = Math.min(n1, n2);
-                            let akhir = Math.max(n1, n2);
-                            for (let i = awal; i <= akhir; i++) {
-                                totalSigma += i;
-                            }
-                            elemenLayar.innerText = totalSigma;
-                        }
-                    }
-                } else {
-                    // Operasi Normal Matematika Standar
-                    let hasil = eval(teksLayar);
-                    elemenLayar.innerText = hasil;
-                }
-            } catch (e) {
-                elemenLayar.innerText = "Error";
-            }
-        }
-
-        function hapusSatuAngka() {
-            if (isEditModeActive) return;
-            let teks = elemenLayar.innerText;
-            elemenLayar.innerText = teks.slice(0, -1) || "0";
-        }
-
-        function bersihkanSemua() {
-            elemenLayar.innerText = "0";
-            isEditModeActive = false;
-            document.getElementById("rad-percent").checked = false;
-            document.getElementById("rad-sigma").checked = false;
-            
-            elemenLayar.contentEditable = "false";
-            elemenLayar.classList.remove("editing-active");
-            tombolEdit.innerText = "EDIT";
-            tombolEdit.style.background = "#ffcc00";
-            tombolEdit.style.color = "#000000";
-        }
-
-        function aktifkanModeEdit() {
-            if (!isEditModeActive) {
-                isEditModeActive = true;
-                elemenLayar.contentEditable = "true";
-                elemenLayar.classList.add("editing-active");
-                elemenLayar.focus();
-                
-                tombolEdit.innerText = "OK";
-                tombolEdit.style.background = "#2ecc71"; 
-                tombolEdit.style.color = "#ffffff";
-            } else {
-                isEditModeActive = false;
-                elemenLayar.contentEditable = "false";
-                elemenLayar.classList.remove("editing-active");
-                
-                tombolEdit.innerText = "EDIT";
-                tombolEdit.style.background = "#ffcc00";
-                tombolEdit.style.color = "#000000";
-                
-                if (elemenLayar.innerText.trim() === "") {
-                    elemenLayar.innerText = "0";
-                }
-            }
-        }
-    </script>
+ 
+    <div class="calculator">
+        <!-- Layar Tampilan Utama -->
+        <div class="screen" id="screen">0</div>
+ 
+        <!-- Baris Tombol Angka -->
+        <div class="row numbers">
+            <button onclick="tekanAngka('1')">1</button>
+            <button onclick="tekanAngka('2')">2</button>
+            <button onclick="tekanAngka('3')">3</button>
+            <button onclick="tekanAngka('4')">4</button>
+            <button onclick="tekanAngka('5')">5</button>
+            <button onclick="tekanAngka('6')">6</button>
+            <button onclick="tekanAngka('7')">7</button>
+            <button onclick="tekanAngka('8')">8</button>
+            <button onclick="tekanAngka('9')">9</button>
+            <button onclick="tekanAngka('0')">0</button>
+        </div>
+ 
+        <!-- Baris Tombol Operator -->
+        <div class="row operators">
+            <button onclick="tekanAngka('*')">×</button>
+            <button onclick="tekanAngka('/')">:</button>
+            <button onclick="tekanAngka('+')">+</button>
+            <button onclick="tekanAngka('-')">-</button>
+            <button onclick="hitungHasil()">=</button>
+            <button onclick="hapusSatuAngka()">DELET</button>
+        </div>
+ 
+        <!-- Baris Pilihan Radio Ber-Anak Panah dan Tombol EDIT -->
+        <div class="row select-zone">
+            <div class="radio-wrapper">
+                <span class="arrow-label">◀ PILIH ▼</span>
+                <label class="radio-container">
+                    <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
+                </label>
+                <label class="radio-container">
+                    <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
+                </label>
+            </div>
+            
+            <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 70px;">EDIT</button>
+            <button onclick="bersihkanSemua()" style="background: #ff4d4d; color: white; padding: 5px 10px; width: 75px;">CLEAR</button>
+        </div>
+    </div>
+ 
+    <script>
+        const elemenLayar = document.getElementById("screen");
+        const tombolEdit = document.getElementById("btn-edit");
+        let isEditModeActive = false;
+ 
+        function tekanAngka(nilai) {
+            if (isEditModeActive) return;
+            
+            if (elemenLayar.innerText === "0" && !"*+/".includes(nilai)) {
+                elemenLayar.innerText = nilai;
+            } else {
+                elemenLayar.innerText += nilai;
+            }
+        }
+ 
+        function hitungHasil() {
+            if (isEditModeActive) return;
+            
+            let teksLayar = elemenLayar.innerText;
+            if (!teksLayar || teksLayar === "0") return;
+ 
+            const modePersen = document.getElementById("rad-percent").checked;
+            const modeSigma = document.getElementById("rad-sigma").checked;
+ 
+            try {
+                if (modePersen) {
+                    // Logika Operasi Persen Kustom
+                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
+                    if (operator) {
+                        let bagian = teksLayar.split(operator);
+                        let n1 = parseFloat(bagian[0]);
+                        let n2 = parseFloat(bagian[1]);
+                        let nilaiPersen = (n2 / 100) * n1;
+                        if (operator === '+') elemenLayar.innerText = n1 + nilaiPersen;
+                        else if (operator === '-') elemenLayar.innerText = n1 - nilaiPersen;
+                        else elemenLayar.innerText = nilaiPersen;
+                    }
+                } else if (modeSigma) {
+                    // Logika Operasi Deret Bilangan Sigma (Σ)
+                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
+                    if (operator) {
+                        let bagian = teksLayar.split(operator);
+                        let n1 = parseInt(bagian[0]);
+                        let n2 = parseInt(bagian[1]);
+                        if (!isNaN(n1) && !isNaN(n2)) {
+                            let totalSigma = 0;
+                            let awal = Math.min(n1, n2);
+                            let akhir = Math.max(n1, n2);
+                            for (let i = awal; i <= akhir; i++) {
+                                totalSigma += i;
+                            }
+                            elemenLayar.innerText = totalSigma;
+                        }
+                    }
+                } else {
+                    // Operasi Normal Matematika Standar
+                    let hasil = eval(teksLayar);
+                    elemenLayar.innerText = hasil;
+                }
+            } catch (e) {
+                elemenLayar.innerText = "Error";
+            }
+        }
+ 
+        function hapusSatuAngka() {
+            if (isEditModeActive) return;
+            let teks = elemenLayar.innerText;
+            elemenLayar.innerText = teks.slice(0, -1) || "0";
+        }
+ 
+        function bersihkanSemua() {
+            elemenLayar.innerText = "0";
+            isEditModeActive = false;
+            document.getElementById("rad-percent").checked = false;
+            document.getElementById("rad-sigma").checked = false;
+            
+            elemenLayar.contentEditable = "false";
+            elemenLayar.classList.remove("editing-active");
+            tombolEdit.innerText = "EDIT";
+            tombolEdit.style.background = "#ffcc00";
+            tombolEdit.style.color = "#000000";
+        }
+ 
+        function aktifkanModeEdit() {
+            if (!isEditModeActive) {
+                isEditModeActive = true;
+                elemenLayar.contentEditable = "true";
+                elemenLayar.classList.add("editing-active");
+                elemenLayar.focus();
+                
+                tombolEdit.innerText = "OK";
+                tombolEdit.style.background = "#2ecc71"; 
+                tombolEdit.style.color = "#ffffff";
+            } else {
+                isEditModeActive = false;
+                elemenLayar.contentEditable = "false";
+                elemenLayar.classList.remove("editing-active");
+                
+                tombolEdit.innerText = "EDIT";
+                tombolEdit.style.background = "#ffcc00";
+                tombolEdit.style.color = "#000000";
+                
+                if (elemenLayar.innerText.trim() === "") {
+                    elemenLayar.innerText = "0";
+                }
+            }
+        }
+    </script>
 </body>
 </html>
