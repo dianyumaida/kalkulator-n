@@ -149,12 +149,7 @@
         <div class="row select-zone">
             <div class="radio-wrapper">
                 <span class="arrow-label">◀ PILIH ▼</span>
-                <label class="radio-container">
-                    <input type="radio" name="calc-mode" value="percent" id="rad-percent"> %
-                </label>
-                <label class="radio-container">
-                    <input type="radio" name="calc-mode" value="sigma" id="rad-sigma"> Σ
-                </label>
+                
             </div>
             
             <button id="btn-edit" onclick="aktifkanModeEdit()" style="background: #ffcc00; padding: 5px 10px; width: 70px;">EDIT</button>
@@ -183,40 +178,9 @@
             let teksLayar = elemenLayar.innerText;
             if (!teksLayar || teksLayar === "0") return;
  
-            const modePersen = document.getElementById("rad-percent").checked;
-            const modeSigma = document.getElementById("rad-sigma").checked;
- 
+            
             try {
-                if (modePersen) {
-                    // Logika Operasi Persen Kustom
-                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
-                    if (operator) {
-                        let bagian = teksLayar.split(operator);
-                        let n1 = parseFloat(bagian[0]);
-                        let n2 = parseFloat(bagian[1]);
-                        let nilaiPersen = (n2 / 100) * n1;
-                        if (operator === '+') elemenLayar.innerText = n1 + nilaiPersen;
-                        else if (operator === '-') elemenLayar.innerText = n1 - nilaiPersen;
-                        else elemenLayar.innerText = nilaiPersen;
-                    }
-                } else if (modeSigma) {
-                    // Logika Operasi Deret Bilangan Sigma (Σ)
-                    let operator = teksLayar.match(/[\+\-\*\/]/g)?.pop();
-                    if (operator) {
-                        let bagian = teksLayar.split(operator);
-                        let n1 = parseInt(bagian[0]);
-                        let n2 = parseInt(bagian[1]);
-                        if (!isNaN(n1) && !isNaN(n2)) {
-                            let totalSigma = 0;
-                            let awal = Math.min(n1, n2);
-                            let akhir = Math.max(n1, n2);
-                            for (let i = awal; i <= akhir; i++) {
-                                totalSigma += i;
-                            }
-                            elemenLayar.innerText = totalSigma;
-                        }
-                    }
-                } else {
+             
                     // Operasi Normal Matematika Standar
                     let hasil = eval(teksLayar);
                     elemenLayar.innerText = hasil;
@@ -235,9 +199,7 @@
         function bersihkanSemua() {
             elemenLayar.innerText = "0";
             isEditModeActive = false;
-            document.getElementById("rad-percent").checked = false;
-            document.getElementById("rad-sigma").checked = false;
-            
+            
             elemenLayar.contentEditable = "false";
             elemenLayar.classList.remove("editing-active");
             tombolEdit.innerText = "EDIT";
