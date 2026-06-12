@@ -83,15 +83,40 @@
             if(isEdit) return;
             scr.innerText = (scr.innerText === "0" && !"+-*/^%Σ".includes(v)) ? v : scr.innerText + v;
         }
-        function hasil() {
+                function hasil() {
             if(isEdit || scr.innerText === "0") return;
             try {
-                let exp = scr.innerText.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
-                let res = eval(exp);
-                document.getElementById('h-txt').innerText = scr.innerText + " = " + res;
+                let txt = scr.innerText;
+                let riwayatAwal = txt; // Simpan tampilan asli untuk menu riwayat
+
+                // 1. Perbaiki Sistem Pangkat ( ^ )
+                txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
+
+                // 2. Perbaiki Sistem Persen ( % )
+                // Mengubah angka sebelum % menjadi dibagi 100 (Contoh: 50% menjadi 50/100)
+                txt = txt.replace(/(\d+)%/g, "($1/100)");
+
+                // 3. Perbaiki Sistem Sigma ( Σ )
+                // Jika user mengetik angka lalu Σ (misal: 5Σ), sistem akan menghitung 1+2+3+4+5
+                txt = txt.replace(/(\d+)Σ/g, function(match, angka) {
+                    let total = 0;
+                    for (let i = 1; i <= parseInt(angka); i++) {
+                        total += i;
+                    }
+                    return total;
+                });
+
+                // Jalankan hitungan matematika asli
+                let res = eval(txt);
+                
+                // Tampilkan ke menu riwayat dan layar kalkulator
+                document.getElementById('h-txt').innerText = riwayatAwal + " = " + res;
                 scr.innerText = res;
-            } catch(e) { scr.innerText = "Error"; }
+            } catch(e) { 
+                scr.innerText = "Error"; 
+            }
         }
+
         function del() { if(!isEdit) scr.innerText = scr.innerText.slice(0, -1) || "0"; }
         function clearAll() {
             scr.innerText = "0"; isEdit = false; scr.contentEditable = "false";
