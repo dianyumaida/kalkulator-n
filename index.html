@@ -181,16 +181,18 @@
                     <label class="item-row" onclick="tekan('^')"><span>^ (Pangkat)</span><input type="radio" name="m" id="rad-pow"></label>
                 </div>
             </div>
+                        <!-- Group Algoritma -->
             <div class="menu-group">
-                <div class="group-header" onclick="toggle('sec-algo')"><span>📁 -- algoritma --</span><span>▶</span></div>
+                <div class="group-header" onclick="toggleSub('sec-algo')"><span>📁 -- algoritma --</span><span>▶</span></div>
                 <div id="sec-algo" style="display:none;"><div class="item-row"><span>Segera Datang</span></div></div>
             </div>
+            <!-- Group Riwayat Berderet Turun ke Bawah -->
             <div class="menu-group">
-                <div class="group-header" onclick="toggle('sec-riwayat')"><span>📁 -- riwayat --</span><span>▼</span></div>
+                <div class="group-header" onclick="toggleSub('sec-riwayat')"><span>📁 -- riwayat --</span><span>▼</span></div>
                 <div id="sec-riwayat">
-                    <div class="item-row-history">
-                        <span id="h-txt">Belum ada riwayat</span>
-                        <button onclick="delH()" style="background:#ff4d4d; color:white; padding:4px 10px; font-size:13px; border:none; border-radius:4px; cursor:pointer;">Hapus</button>
+                    <div class="item-row-history" style="flex-direction: column !important; align-items: flex-start !important;">
+                        <div id="h-txt" style="width: 100%;">Belum ada riwayat</div>
+                        <button onclick="delH()" style="background:#ff4d4d; color:white; padding:3px 8px; font-size:11px; border:none; border-radius:4px; cursor:pointer; margin-top:8px; line-height:initial; height:auto; max-height:initial; display:inline-block !important; width:auto !important;">Hapus</button>
                     </div>
                 </div>
             </div>
@@ -206,7 +208,8 @@
             scr.innerText = (scr.innerText === "0" && !"+-*/^%Σ".includes(v)) ? v : scr.innerText + v;
         }
 
-        function hasil() {
+        // FUNGSI HITUNG HASIL (=) BERDERET TURUN KE BAWAH
+        function hitungHasil() {
             if(isEdit || scr.innerText === "0") return;
             try {
                 let txt = scr.innerText;
@@ -219,8 +222,18 @@
                     return total;
                 });
                 let res = eval(txt);
-                document.getElementById('h-txt').innerText = riwayatAwal + " = " + res;
+                
+                // Menambahkan data list riwayat ke bawah
+                const containerRiwayat = document.getElementById('h-txt');
+                if (containerRiwayat.innerText === "Belum ada riwayat") containerRiwayat.innerHTML = "";
+                
+                let barisBaru = document.createElement("div");
+                barisBaru.className = "history-list-item";
+                barisBaru.innerText = riwayatAwal + " = " + res;
+                
+                containerRiwayat.appendChild(barisBaru);
                 scr.innerText = res;
+                barisBaru.scrollIntoView({ behavior: 'smooth', block: 'end' });
             } catch(e) { scr.innerText = "Error"; }
         }
 
@@ -239,18 +252,30 @@
             if(isEdit) scr.focus();
         }
 
-        function toggle(id) {
+        // FUNGSI UTAMA TOMBOL PILIH (MEMBUKA/MENUTUP MENU GABUNGAN & MENARIK DATA FILI)
+        function klikTombolPilih() {
+            const menu = document.getElementById('dropdown-menu');
+            // Buka atau tutup menu dropdown melayang
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+            
+            console.log("Fungsi tarik data fili folder aktif via tombol PILIH.");
+            tarikDataFili(); // Memanggil fungsi penarik data folder Anda
+        }
+
+        // Fungsi buka tutup folder internal di dalam dropdown
+        function toggleSub(id) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === "none") ? "block" : "none";
         }
         
-        function delH() { document.getElementById('h-txt').innerText = "Belum ada riwayat"; }
+        function delH() { document.getElementById('h-txt').innerHTML = "Belum ada riwayat"; }
 
         /* FUNGSI TOMBOL PILIH: Untuk menarik data fili dari folder nanti */
         function tarikDataFili() {
             console.log("Fungsi tarik data fili aktif.");
-            // Anda tinggal memasukkan kode penghubung folder Anda di sini
+            // Anda tinggal memasukkan kode penarik data folder Anda di bawah baris ini
         }
     </script>
 </body>
 </html>
+
