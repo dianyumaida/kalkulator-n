@@ -27,10 +27,14 @@
         /* BARIS PERTAMA (Berisi 10 tombol agar angka 0 sejajar bersama 1-9) */
         .row-top { gap: 1.8% !important; padding: 0 1.5% 0 1.2% !important; }
         
-        /* BARIS KETIGA BAWAH (PILIH, EDIT, CLEAR) */
-        .row-bottom { margin-bottom: 0 !important; margin-top: 1% !important; gap: 5.5% !important; padding: 0 1.5% !important; }
+                /* Jarak Khusus Baris Ketiga (PILIH, EDIT, CLEAR) agar turun pas ke kotak */
+        .row-bottom { 
+            margin-bottom: 0 !important; 
+            margin-top: 5.5% !important; 
+            gap: 5.5% !important; 
+            padding: 0 1.5% !important; 
+        }
 
-        /* PENGATURAN TEKS TOMBOL AGAR SEJAJAR DI TENGAH KOTAK */
         button { 
             flex: 1 !important; height: 9.8vw !important; max-height: 50px !important; 
             font-size: 1.2rem !important; font-weight: bold !important; border: none !important; 
@@ -39,11 +43,15 @@
         }
         button:active { background: rgba(0, 0, 0, 0.15) !important; }
 
-        /* Ukuran huruf khusus baris atas agar angka 0-9 terlihat pas dan proporsional */
         .row-top button { font-size: 1.05rem !important; }
 
-        /* TOMBOL BAWAH TRANSPARAN TOTAL AGAR GAMBAR ASLI TERLIHAT */
-        .btn-pilih, .btn-edit, .btn-clear { background: rgba(0, 0, 0, 0.001) !important; color: transparent !important; height: 9.8vw !important; max-height: 50px !important; cursor: pointer !important; }
+        .btn-pilih, .btn-edit, .btn-clear { 
+            background: rgba(0, 0, 0, 0.001) !important; 
+            color: transparent !important; 
+            height: 11vw !important; 
+            max-height: 55px !important; 
+            cursor: pointer !important; 
+        }
 
         /* MENU DROPDOWN */
         .menu-container { width: 100%; max-width: 460px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; overflow: hidden; }
