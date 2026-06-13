@@ -49,11 +49,11 @@
         }
         
         /* Jarak baris ketiga paling bawah */
-        .row-bottom { 
-            margin-top: -5px; 
-            gap: 25px; 
-            padding: 0 7px;
+                .row-top {
+            gap: 16px !important;
+            padding: 0 12px !important;
         }
+
 
         /* 4. Menyesuaikan Ukuran Kotak Tombol Transparan */
         button { 
@@ -92,7 +92,8 @@
         <div id="screen">0</div>
         
         <!-- BARIS 1: 9 Kotak Kecil (Angka 1-9) -->
-        <div class="row">
+                <!-- BARIS 1: Ditambahkan class row-top agar jaraknya bisa diatur tersendiri -->
+        <div class="row row-top">
             <button onclick="tekan('1')">1</button>
             <button onclick="tekan('2')">2</button>
             <button onclick="tekan('3')">3</button>
@@ -103,6 +104,7 @@
             <button onclick="tekan('8')">8</button>
             <button onclick="tekan('9')">9</button>
         </div>
+
         
         <!-- BARIS 2: 6 Kotak Sedang (0, Titik, dan Operator) -->
         <div class="row">
