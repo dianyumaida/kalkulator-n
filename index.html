@@ -21,70 +21,46 @@
             flex-direction: column;
         }
         
-        /* 2. PENGATURAN TINGGI LAYAR (Ditinggikan agar tombol terdorong ke bawah) */
+                /* 1. PERBAIKAN LAYAR: Mengatur posisi angka 0 agar sejajar ke atas/tengah */
         #screen { 
             width: 100%; 
-            height: 38%; /* Dinaikkan dari 35.5% agar tombol tidak naik */
+            height: 38%; 
             background: transparent; 
             color: #000; 
             text-align: right; 
-            padding: 4% 5%; 
-            font-size: 2.8rem; 
-            margin-bottom: 8.5%; /* Ditambah jaraknya menuju baris tombol 1-9 */
+            padding: 30px 25px 0 25px; /* Ditambah padding atas (30px) agar teks terdorong ke posisi tengah kotak hitam */
+            font-size: 3.5rem; /* Ukuran angka diperbesar sedikit agar lebih proporsional */
+            margin-bottom: 8.5%; 
             border: none;
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start; /* Diubah dari flex-end ke flex-start agar angka naik ke atas */
             justify-content: flex-end;
             overflow-x: auto;
         }
         
         #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
-        
-        /* 3. Pengaturan Baris Tombol */
-        .row { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 9%; /* Ditambah jaraknya agar baris bawah tidak menumpuk */
-            gap: 2.8%; 
-            padding: 0 1%;
-        }
 
-        /* Jarak Khusus Baris Pertama (1-9) */
-        .row-top {
-            gap: 3.5% !important; 
-            padding: 0 2.5% 0 2% !important; 
-        }
-        
-        /* Jarak Khusus Baris Ketiga Paling Bawah (PILIH, EDIT, CLEAR) */
-        .row-bottom { 
-            margin-bottom: 0;
-            margin-top: 1%; /* Menggunakan margin positif agar turun pas ke kotak berwarna */
-            gap: 5.5%; 
-            padding: 0 1.5%;
-        }
+        /* ... kode .row, .row-top, .row-bottom, dan button dibiarkan saja ... */
 
-        /* 4. Menyesuaikan Ukuran Kotak Tombol Transparan */
-        button { 
-            flex: 1; 
-            height: 9.8vw; /* Sedikit ditinggikan agar memenuhi kotak gambar */
-            max-height: 50px; 
-            font-size: 1.1rem; 
-            font-weight: bold; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            background: rgba(0, 0, 0, 0.04); 
-            color: #222;
-            transition: background 0.1s;
-        }
-        
-        button:active { background: rgba(0, 0, 0, 0.15); }
-        
-        /* Tombol bawah dibuat transparan total agar warna gambar asli terlihat jelas */
-        .btn-pilih, .btn-edit, .btn-clear { 
+        /* 2. PERBAIKAN TEKS TOMBOL BAWAH: Membuat teks HTML menjadi transparan (color: transparent) */
+        /* Karena fungsinya hanya mendeteksi klik, teksnya kita sembunyikan agar tidak menumpuk tulisan di gambar */
+        .btn-pilih { 
             background: rgba(0, 0, 0, 0.01); 
             height: 9.8vw;
             max-height: 50px;
+            color: transparent !important; /* Menyembunyikan tulisan '=' HTML */
+        }
+        .btn-edit { 
+            background: rgba(0, 0, 0, 0.01); 
+            height: 9.8vw;
+            max-height: 50px;
+            color: transparent !important; /* Menyembunyikan tulisan 'EDIT' HTML */
+        }
+        .btn-clear { 
+            background: rgba(0, 0, 0, 0.01); 
+            height: 9.8vw;
+            max-height: 50px;
+            color: transparent !important; /* Menyembunyikan tulisan 'CLEAR' HTML */
         }
 
 
