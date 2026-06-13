@@ -20,66 +20,46 @@
             display: flex;
             flex-direction: column;
         }
-                /* 1. Mengatur Posisi Angka Layar Naik ke Tengah Atas */
+                     /* 1. PERBAIKAN TOTAL LAYAR: Memaksa angka 0 naik ke posisi tengah atas kotak hitam */
         #screen { 
             width: 100%; 
-            height: 38%; 
+            height: 185px; /* Mengunci tinggi area layar hitam */
             background: transparent; 
             color: #000; 
             text-align: right; 
-            padding: 35px 25px 0 25px !important; 
-            font-size: 3.5rem; 
-            margin-bottom: 8.5%; 
+            padding-right: 25px !important; /* Jarak angka dari tepi kanan */
+            font-size: 4.5rem; /* Ukuran angka disesuaikan agar besar dan jelas */
             border: none;
-            display: flex !important;
-            align-items: flex-start !important; 
-            justify-content: flex-end;
-            overflow-x: auto;
+            display: block !important; /* Diubah menjadi block agar text-align berfungsi sempurna */
+            line-height: 140px !important; /* Mengatur tinggi baris teks agar angka 0 naik ke area tengah atas */
+            overflow: hidden;
         }
         
         #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
-        
-        /* 2. Mengembalikan Baris Tombol ke Ukuran Kotak yang Benar */
-        .row { 
-            display: flex !important; 
-            justify-content: space-between !important; 
-            margin-bottom: 9% !important; 
-            gap: 2.8% !important; 
-            padding: 0 1% !important;
-        }
 
-        /* Jarak Khusus Baris Pertama (1-9) */
-        .row-top {
-            gap: 3.5% !important; 
-            padding: 0 2.5% 0 2% !important; 
-        }
-        
-        /* Jarak Khusus Baris Ketiga (PILIH, EDIT, CLEAR) */
-        .row-bottom { 
-            margin-bottom: 0 !important;
-            margin-top: 1% !important; 
-            gap: 5.5% !important; 
-            padding: 0 1.5% !important;
-        }
-
-        /* 3. Mengatur Ukuran Kotak Tombol Transparan */
-        button { 
-            flex: 1 !important; 
-            height: 9.8vw !important; 
-            max-height: 50px !important; 
-            font-size: 1.1rem !important; 
-            font-weight: bold !important; 
-            border: none !important; 
-            border-radius: 4px !important; 
-            cursor: pointer !important; 
-            background: rgba(0, 0, 0, 0.04) !important; 
-            color: #222 !important;
-        }
-        
-        button:active { background: rgba(0, 0, 0, 0.15) !important; }
-        
-        /* 4. Membuat Teks Tombol Bawah Transparan Total */
+        /* 2. MEMASTIKAN TOMBOL BAWAH TETAP AKTIF DAN BISA DIKLIK */
         .btn-pilih { 
+            background: rgba(0, 0, 0, 0.01) !important; 
+            height: 9.8vw !important;
+            max-height: 50px !important;
+            color: transparent !important; 
+            cursor: pointer !important;
+        }
+        .btn-edit { 
+            background: rgba(0, 0, 0, 0.01) !important; 
+            height: 9.8vw !important;
+            max-height: 50px !important;
+            color: transparent !important; 
+            cursor: pointer !important;
+        }
+        .btn-clear { 
+            background: rgba(0, 0, 0, 0.01) !important; 
+            height: 9.8vw !important;
+            max-height: 50px !important;
+            color: transparent !important; 
+            cursor: pointer !important;
+        }
+
             background: rgba(0, 0, 0, 0.01) !important; 
             height: 9.8vw !important;
             max-height: 50px !important;
