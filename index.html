@@ -7,30 +7,30 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; background: #f4f4f9; padding: 20px; }
-                /* 1. Membuat Bodi Utama Responsif Mengikuti Layar HP */
+                        /* 1. Pengaturan Bodi Utama Kalkulator */
         .calculator { 
             width: 100%; 
-            max-width: 460px; /* Ukuran maksimal di laptop */
-            aspect-ratio: 460 / 520; /* Mengunci rasio bodi gambar kostum */
+            max-width: 460px; 
+            aspect-ratio: 460 / 520; 
             background: url('Folder/gambar/bodykal.jpg') no-repeat center;
             background-size: 100% 100%;
-            padding: 5.5% 4.8%; /* Padding menggunakan % agar ikut mengecil di HP */
+            padding: 5.5% 4.8%; 
             margin-bottom: 20px; 
             position: relative;
             display: flex;
             flex-direction: column;
         }
         
-        /* 2. Mengatur Posisi Layar secara Fleksibel */
+        /* 2. PENGATURAN TINGGI LAYAR (Ditinggikan agar tombol terdorong ke bawah) */
         #screen { 
             width: 100%; 
-            height: 35.5%; /* Menggunakan % dari tinggi bodi kalkulator */
+            height: 38%; /* Dinaikkan dari 35.5% agar tombol tidak naik */
             background: transparent; 
             color: #000; 
             text-align: right; 
             padding: 4% 5%; 
-            font-size: 2.8rem; /* Ukuran font fleksibel */
-            margin-bottom: 5.8%; 
+            font-size: 2.8rem; 
+            margin-bottom: 8.5%; /* Ditambah jaraknya menuju baris tombol 1-9 */
             border: none;
             display: flex;
             align-items: flex-end;
@@ -40,25 +40,25 @@
         
         #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
         
-        /* 3. Merapikan Semua Baris Tombol */
+        /* 3. Pengaturan Baris Tombol */
         .row { 
             display: flex; 
             justify-content: space-between; 
-            margin-bottom: 6.2%; 
-            gap: 2.8%; /* Jarak fleksibel agar pas di kotak HP */
+            margin-bottom: 9%; /* Ditambah jaraknya agar baris bawah tidak menumpuk */
+            gap: 2.8%; 
             padding: 0 1%;
         }
 
-        /* Khusus Baris Pertama (1-9) */
+        /* Jarak Khusus Baris Pertama (1-9) */
         .row-top {
             gap: 3.5% !important; 
             padding: 0 2.5% 0 2% !important; 
         }
         
-        /* Jarak baris ketiga paling bawah (PILIH, EDIT, CLEAR) */
+        /* Jarak Khusus Baris Ketiga Paling Bawah (PILIH, EDIT, CLEAR) */
         .row-bottom { 
             margin-bottom: 0;
-            margin-top: -1%;
+            margin-top: 1%; /* Menggunakan margin positif agar turun pas ke kotak berwarna */
             gap: 5.5%; 
             padding: 0 1.5%;
         }
@@ -66,8 +66,8 @@
         /* 4. Menyesuaikan Ukuran Kotak Tombol Transparan */
         button { 
             flex: 1; 
-            height: 9.2vw; /* Menggunakan ukuran view-width agar tingginya pas dengan gambar di HP */
-            max-height: 48px; /* Batas tinggi maksimal di layar laptop */
+            height: 9.8vw; /* Sedikit ditinggikan agar memenuhi kotak gambar */
+            max-height: 50px; 
             font-size: 1.1rem; 
             font-weight: bold; 
             border: none; 
@@ -80,12 +80,13 @@
         
         button:active { background: rgba(0, 0, 0, 0.15); }
         
-        /* Membuat tombol bawah transparan total agar warna gambar asli memancar */
+        /* Tombol bawah dibuat transparan total agar warna gambar asli terlihat jelas */
         .btn-pilih, .btn-edit, .btn-clear { 
             background: rgba(0, 0, 0, 0.01); 
-            height: 9.2vw;
-            max-height: 48px;
+            height: 9.8vw;
+            max-height: 50px;
         }
+
 
         /* --- STYLE MENU DROPDOWN --- */
         .menu-container { width: 100%; max-width: 500px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
