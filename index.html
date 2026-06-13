@@ -2,44 +2,48 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kostum Fix</title>
+    <title>Kalkulator Kostum Fix Total</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; background: #f4f4f9; padding: 20px; }
         
-                .calculator { 
+        .calculator { 
             width: 100%; max-width: 460px; aspect-ratio: 460 / 520; 
             background: url('Folder/gambar/bodykal.jpg') no-repeat center; background-size: 100% 100%;
-            padding: 3% 4.8% 5.5% 4.8% !important; /* Padding atas dikurangi dari 5.5% menjadi 3% agar tombol naik */
-            margin-bottom: 20px; position: relative; display: flex; flex-direction: column;
+            padding: 3% 4.8% 5.5% 4.8% !important; margin-bottom: 20px; position: relative; display: flex; flex-direction: column;
         }
         
-        /* PERBAIKAN AKHIR LAYAR: Memaksa angka 0 naik pas ke tengah atas kotak hitam */
+        /* POSISI ANGKA DI LAYAR UTAMA */
         #screen { 
-            width: 100%; 
-            height: 160px !important; 
-            background: transparent; color: #000; text-align: right; 
-            padding: 15px 25px 0 25px !important; /* Diberi padding atas 15px agar ada jarak dari garis atas */
-            font-size: 4.5rem; border: none; display: block !important; 
-            line-height: 90px !important; /* DIKURANGI dari 150px menjadi 90px agar angka 0 terangkat ke atas */
-            overflow: hidden;
+            width: 100%; height: 160px !important; background: transparent; color: #000; text-align: right; 
+            padding: 15px 25px 0 25px !important; font-size: 4.5rem; border: none; display: block !important; 
+            line-height: 90px !important; overflow: hidden;
         }
-
-
         #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
         
+        /* PENGATURAN BARIS TOMBOL */
         .row { display: flex !important; justify-content: space-between !important; margin-bottom: 9% !important; gap: 2.8% !important; padding: 0 1% !important; }
-        .row-top { gap: 3.5% !important; padding: 0 2.5% 0 2% !important; }
+        
+        /* Baris Pertama (Sekarang berisi 11 tombol agar 0 dan titik masuk di sini) */
+        .row-top { gap: 1.5% !important; padding: 0 1.5% 0 1% !important; }
+        
+        /* Baris Ketiga Bawah (PILIH, EDIT, CLEAR) */
         .row-bottom { margin-bottom: 0 !important; margin-top: 1% !important; gap: 5.5% !important; padding: 0 1.5% !important; }
 
+        /* PENGATURAN TEKS TOMBOL AGAR SEJAJAR DI TENGAH KOTAK */
         button { 
             flex: 1 !important; height: 9.8vw !important; max-height: 50px !important; 
-            font-size: 1.1rem !important; font-weight: bold !important; border: none !important; 
+            font-size: 1.2rem !important; font-weight: bold !important; border: none !important; 
             border-radius: 4px !important; cursor: pointer !important; background: rgba(0, 0, 0, 0.04) !important; color: #222 !important;
+            /* Memaksa semua teks angka/simbol tegak lurus di tengah-tengah kotak */
+            display: flex !important; align-items: center !important; justify-content: center !important;
         }
         button:active { background: rgba(0, 0, 0, 0.15) !important; }
         
-        /* TOMBOL BAWAH TRANSPARAN AGAR GAMBAR TIDAK TERTUTUP DAN TETAP BISA DIKLIK */
+        /* Ukuran font khusus untuk baris atas yang agak padat */
+        .row-top button { font-size: 1rem !important; }
+
+        /* TOMBOL BAWAH TRANSPARAN TOTAL */
         .btn-pilih, .btn-edit, .btn-clear { background: rgba(0, 0, 0, 0.001) !important; color: transparent !important; height: 9.8vw !important; max-height: 50px !important; cursor: pointer !important; }
 
         /* MENU DROPDOWN */
@@ -55,28 +59,34 @@
     <div class="calculator">
         <div id="screen">0</div>
         
-        <!-- BARIS 1 (1-9) -->
+        <!-- BARIS 1: Kotak Atas berisi semua angka (0-9) dan titik agar baris kedua murni operator -->
         <div class="row row-top">
             <button onclick="tekan('1')">1</button><button onclick="tekan('2')">2</button><button onclick="tekan('3')">3</button>
             <button onclick="tekan('4')">4</button><button onclick="tekan('5')">5</button><button onclick="tekan('6')">6</button>
             <button onclick="tekan('7')">7</button><button onclick="tekan('8')">8</button><button onclick="tekan('9')">9</button>
-        </div>
-        
-        <!-- BARIS 2 (0 sampai :) -->
-        <div class="row">
             <button onclick="tekan('0')">0</button><button onclick="tekan('.')">.</button>
-            <button onclick="tekan('+')">+</button><button onclick="tekan('-')">-</button>
-            <button onclick="tekan('*')">x</button><button onclick="tekan('/')">:</button>
         </div>
         
-        <!-- BARIS 3 (TOMBOL ASLI GAMBAR BAWAH) -->
+        <!-- BARIS 2: 6 Kotak Putih berisi murni Operator sesuai permintaan Anda -->
+        <div class="row">
+            <button onclick="tekan('+')">+</button>
+            <button onclick="tekan('-')">-</button>
+            <button onclick="tekan('*')">x</button>
+            <button onclick="tekan('/')">:</button>
+            <button onclick="hasil()">=</button>
+            <button onclick="del()">DEL</button>
+        </div>
+        
+        <!-- BARIS 3: Kotak Ketiga Bawah Melapisi Desain Asli Gambar Anda -->
         <div class="row row-bottom">
-            <button onclick="hasil()" class="btn-pilih">=</button>
+            <!-- Tombol Pilih nanti bisa Anda sambungkan ke fungsi pembaca folder/file Anda -->
+            <button onclick="tarikDataFili()" class="btn-pilih">PILIH</button>
             <button id="btn-edit" onclick="modeEdit()" class="btn-edit">EDIT</button>
-            <button onclick="del()" ondblclick="clearAll()" class="btn-clear">CLEAR</button>
+            <button onclick="clearAll()" class="btn-clear">CLEAR</button>
         </div>
     </div>
 
+    <!-- MENU DROPDOWN -->
     <div class="menu-container">
         <div class="menu-header" onclick="toggle('main-menu-content')"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div id="main-menu-content">
@@ -132,6 +142,7 @@
         }
 
         function del() { if(!isEdit) scr.innerText = scr.innerText.slice(0, -1) || "0"; }
+        
         function clearAll() {
             scr.innerText = "0"; isEdit = false; scr.contentEditable = "false";
             document.getElementById("btn-edit").innerText = "EDIT";
@@ -149,7 +160,14 @@
             const el = document.getElementById(id);
             el.style.display = (el.style.display === "none") ? "block" : "none";
         }
+        
         function delH() { document.getElementById('h-txt').innerText = "Belum ada riwayat"; }
+
+        /* FUNGSI YANG DIPICU SAAT TOMBOL PILIH DIKLIK */
+        function tarikDataFili() {
+            alert("Tombol PILIH aktif! Siap dipasang kode penarik data dari folder nanti.");
+            // Tempatkan logika JavaScript pembaca file/folder Anda di bawah baris ini
+        }
     </script>
 </body>
 </html>
