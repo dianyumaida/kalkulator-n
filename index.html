@@ -34,12 +34,12 @@
             padding: 0 1.5% !important; 
         }
 
-                /* PENGATURAN TEKS TOMBOL AGAR PAS DI TENGAH KOTAK */
+                        /* PENGATURAN TEKS TOMBOL AGAR PAS DI TENGAH KOTAK */
         button { 
             flex: 1 !important; 
             height: 9.8vw !important; 
             max-height: 50px !important; 
-            font-size: 1.2rem !important; 
+            font-size: 1.3rem !important; /* Ukuran font sedikit diperbesar agar lebih jelas */
             font-weight: bold !important; 
             border: none !important; 
             border-radius: 4px !important; 
@@ -47,13 +47,12 @@
             background: rgba(0, 0, 0, 0.04) !important; 
             color: #222 !important;
             
-            /* MEMAKSA TEKS ANGKA/SIMBOL PAS DI TENGAH KOTAK */
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            /* MEMAKSA SIMBOL YANG NAIK UNTUK TURUN KE TENGAH KOTAK */
+            display: block !important; /* Diubah dari inline-flex ke block agar line-height bekerja sempurna */
             text-align: center !important;
-            line-height: 1 !important; /* Mengunci tinggi baris teks agar tidak terdorong ke atas/bawah */
-            padding: 0 !important; /* Menghapus padding bawaan yang sering mendorong teks ke atas */
+            padding: 0 !important; 
+            margin: 0 !important;
+            line-height: 9.8vw !important; /* Menyamakan tinggi baris teks dengan tinggi tombol agar teks pas di tengah */
             
             /* MEMATIKAN KOTAK BIRU DI HP */
             -webkit-tap-highlight-color: transparent !important;
@@ -62,7 +61,11 @@
         }
         button:active { background: rgba(0, 0, 0, 0.15) !important; }
 
-        .row-top button { font-size: 1.05rem !important; }
+        /* Khusus baris atas (0-9) tinggi barisnya disesuaikan juga */
+        .row-top button { 
+            font-size: 1.05rem !important; 
+            line-height: 9.8vw !important;
+        }
 
         /* AREA KLIK TOMBOL BAWAH TRANSPARAN TOTAL & ANTI KOTAK BIRU */
         .btn-pilih, .btn-edit, .btn-clear { 
