@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kostum Fix Total</title>
+    <title>Kalkulator Kostum Angka Nol Sejajar</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; background: #f4f4f9; padding: 20px; }
@@ -24,10 +24,10 @@
         /* PENGATURAN BARIS TOMBOL */
         .row { display: flex !important; justify-content: space-between !important; margin-bottom: 9% !important; gap: 2.8% !important; padding: 0 1% !important; }
         
-        /* Baris Pertama (Sekarang berisi 11 tombol agar 0 dan titik masuk di sini) */
-        .row-top { gap: 1.5% !important; padding: 0 1.5% 0 1% !important; }
+        /* BARIS PERTAMA (Berisi 10 tombol agar angka 0 sejajar bersama 1-9) */
+        .row-top { gap: 1.8% !important; padding: 0 1.5% 0 1.2% !important; }
         
-        /* Baris Ketiga Bawah (PILIH, EDIT, CLEAR) */
+        /* BARIS KETIGA BAWAH (PILIH, EDIT, CLEAR) */
         .row-bottom { margin-bottom: 0 !important; margin-top: 1% !important; gap: 5.5% !important; padding: 0 1.5% !important; }
 
         /* PENGATURAN TEKS TOMBOL AGAR SEJAJAR DI TENGAH KOTAK */
@@ -35,15 +35,14 @@
             flex: 1 !important; height: 9.8vw !important; max-height: 50px !important; 
             font-size: 1.2rem !important; font-weight: bold !important; border: none !important; 
             border-radius: 4px !important; cursor: pointer !important; background: rgba(0, 0, 0, 0.04) !important; color: #222 !important;
-            /* Memaksa semua teks angka/simbol tegak lurus di tengah-tengah kotak */
             display: flex !important; align-items: center !important; justify-content: center !important;
         }
         button:active { background: rgba(0, 0, 0, 0.15) !important; }
-        
-        /* Ukuran font khusus untuk baris atas yang agak padat */
-        .row-top button { font-size: 1rem !important; }
 
-        /* TOMBOL BAWAH TRANSPARAN TOTAL */
+        /* Ukuran huruf khusus baris atas agar angka 0-9 terlihat pas dan proporsional */
+        .row-top button { font-size: 1.05rem !important; }
+
+        /* TOMBOL BAWAH TRANSPARAN TOTAL AGAR GAMBAR ASLI TERLIHAT */
         .btn-pilih, .btn-edit, .btn-clear { background: rgba(0, 0, 0, 0.001) !important; color: transparent !important; height: 9.8vw !important; max-height: 50px !important; cursor: pointer !important; }
 
         /* MENU DROPDOWN */
@@ -59,30 +58,37 @@
     <div class="calculator">
         <div id="screen">0</div>
         
-        <!-- BARIS 1: Kotak Atas berisi semua angka (0-9) dan titik agar baris kedua murni operator -->
+        <!-- BARIS 1: Angka 0 diletakkan di sini agar sejajar lengkap (0, 1 sampai 9) -->
         <div class="row row-top">
-            <button onclick="tekan('1')">1</button><button onclick="tekan('2')">2</button><button onclick="tekan('3')">3</button>
-            <button onclick="tekan('4')">4</button><button onclick="tekan('5')">5</button><button onclick="tekan('6')">6</button>
-            <button onclick="tekan('7')">7</button><button onclick="tekan('8')">8</button><button onclick="tekan('9')">9</button>
-            <button onclick="tekan('0')">0</button><button onclick="tekan('.')">.</button>
+            <button onclick="tekan('0')">0</button>
+            <button onclick="tekan('1')">1</button>
+            <button onclick="tekan('2')">2</button>
+            <button onclick="tekan('3')">3</button>
+            <button onclick="tekan('4')">4</button>
+            <button onclick="tekan('5')">5</button>
+            <button onclick="tekan('6')">6</button>
+            <button onclick="tekan('7')">7</button>
+            <button onclick="tekan('8')">8</button>
+            <button onclick="tekan('9')">9</button>
         </div>
         
-        <!-- BARIS 2: 6 Kotak Putih berisi murni Operator sesuai permintaan Anda -->
+        <!-- BARIS 2: Pas 6 kotak (Murni diisi Simbol Operator dan Titik) -->
         <div class="row">
+            <button onclick="tekan('.')">.</button>
             <button onclick="tekan('+')">+</button>
             <button onclick="tekan('-')">-</button>
             <button onclick="tekan('*')">x</button>
             <button onclick="tekan('/')">:</button>
             <button onclick="hasil()">=</button>
-            <button onclick="del()">DEL</button>
         </div>
         
         <!-- BARIS 3: Kotak Ketiga Bawah Melapisi Desain Asli Gambar Anda -->
         <div class="row row-bottom">
-            <!-- Tombol Pilih nanti bisa Anda sambungkan ke fungsi pembaca folder/file Anda -->
+            <!-- Menjalankan penarikan data folder saat tombol PILIH ditekan -->
             <button onclick="tarikDataFili()" class="btn-pilih">PILIH</button>
             <button id="btn-edit" onclick="modeEdit()" class="btn-edit">EDIT</button>
-            <button onclick="clearAll()" class="btn-clear">CLEAR</button>
+            <!-- Klik sekali untuk hapus 1 angka (DEL), klik cepat 2 kali untuk hapus total (CLEAR) -->
+            <button onclick="del()" ondblclick="clearAll()" class="btn-clear">CLEAR</button>
         </div>
     </div>
 
@@ -163,10 +169,10 @@
         
         function delH() { document.getElementById('h-txt').innerText = "Belum ada riwayat"; }
 
-        /* FUNGSI YANG DIPICU SAAT TOMBOL PILIH DIKLIK */
+        /* FUNGSI TOMBOL PILIH: Untuk menarik data fili dari folder nanti */
         function tarikDataFili() {
-            alert("Tombol PILIH aktif! Siap dipasang kode penarik data dari folder nanti.");
-            // Tempatkan logika JavaScript pembaca file/folder Anda di bawah baris ini
+            console.log("Fungsi tarik data fili aktif.");
+            // Anda tinggal memasukkan kode penghubung folder Anda di sini
         }
     </script>
 </body>
