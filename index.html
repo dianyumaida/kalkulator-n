@@ -7,29 +7,30 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; flex-direction: column; align-items: center; background: #f4f4f9; padding: 20px; }
-        
-        /* 1. Pengaturan Ukuran Bodi Pas dengan Gambar */
-                /* 1. Meluaskan Bodi Utama agar Gambar Kostum Sempurna */
+                /* 1. Membuat Bodi Utama Responsif Mengikuti Layar HP */
         .calculator { 
-            width: 460px; 
-            height: 520px; 
+            width: 100%; 
+            max-width: 460px; /* Ukuran maksimal di laptop */
+            aspect-ratio: 460 / 520; /* Mengunci rasio bodi gambar kostum */
             background: url('Folder/gambar/bodykal.jpg') no-repeat center;
             background-size: 100% 100%;
-            padding: 25px 22px; /* Mengatur jarak aman dari kiri, kanan, dan atas */
+            padding: 5.5% 4.8%; /* Padding menggunakan % agar ikut mengecil di HP */
             margin-bottom: 20px; 
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
-        /* 2. Mengatur Posisi Layar Pas di Dalam Kotak Hitam Atas */
+        /* 2. Mengatur Posisi Layar secara Fleksibel */
         #screen { 
             width: 100%; 
-            height: 185px; 
+            height: 35.5%; /* Menggunakan % dari tinggi bodi kalkulator */
             background: transparent; 
             color: #000; 
             text-align: right; 
-            padding: 20px 25px; 
-            font-size: 45px; 
-            margin-bottom: 30px; /* Jarak aman menuju ke baris tombol 1-9 */
+            padding: 4% 5%; 
+            font-size: 2.8rem; /* Ukuran font fleksibel */
+            margin-bottom: 5.8%; 
             border: none;
             display: flex;
             align-items: flex-end;
@@ -39,43 +40,52 @@
         
         #screen.editing-active { background: rgba(255, 254, 187, 0.4); }
         
-        /* 3. Merapatkan Baris Tombol agar Pas Masuk ke Kotak Kostum */
+        /* 3. Merapikan Semua Baris Tombol */
         .row { 
             display: flex; 
             justify-content: space-between; 
-            margin-bottom: 32px; /* Ditambah agar baris kedua turun pas ke kotaknya */
-            gap: 13px; /* Jarak antar tombol diperlebar agar pas dengan sekat kotak */
-            padding: 0 5px;
-        }
-        
-        /* Jarak baris ketiga paling bawah */
-                .row-top {
-            gap: 16px !important;
-            padding: 0 12px !important;
+            margin-bottom: 6.2%; 
+            gap: 2.8%; /* Jarak fleksibel agar pas di kotak HP */
+            padding: 0 1%;
         }
 
+        /* Khusus Baris Pertama (1-9) */
+        .row-top {
+            gap: 3.5% !important; 
+            padding: 0 2.5% 0 2% !important; 
+        }
+        
+        /* Jarak baris ketiga paling bawah (PILIH, EDIT, CLEAR) */
+        .row-bottom { 
+            margin-bottom: 0;
+            margin-top: -1%;
+            gap: 5.5%; 
+            padding: 0 1.5%;
+        }
 
         /* 4. Menyesuaikan Ukuran Kotak Tombol Transparan */
         button { 
             flex: 1; 
-            height: 48px; /* Tinggi disesuaikan dengan kotak kostum Anda */
-            font-size: 18px; 
+            height: 9.2vw; /* Menggunakan ukuran view-width agar tingginya pas dengan gambar di HP */
+            max-height: 48px; /* Batas tinggi maksimal di layar laptop */
+            font-size: 1.1rem; 
             font-weight: bold; 
             border: none; 
             border-radius: 4px; 
             cursor: pointer; 
-            background: rgba(0, 0, 0, 0.04); /* Transparansi teks angka tetap terlihat */
+            background: rgba(0, 0, 0, 0.04); 
             color: #222;
             transition: background 0.1s;
         }
         
         button:active { background: rgba(0, 0, 0, 0.15); }
         
-        /* Menghapus warna agar tulisan EDIT dan CLEAR bawaan gambar tidak tertutup */
-        .btn-pilih { background: rgba(0, 0, 0, 0.01); height: 48px; }
-        .btn-edit { background: rgba(0, 0, 0, 0.01); height: 48px; }
-        .btn-clear { background: rgba(0, 0, 0, 0.01); height: 48px; }
-
+        /* Membuat tombol bawah transparan total agar warna gambar asli memancar */
+        .btn-pilih, .btn-edit, .btn-clear { 
+            background: rgba(0, 0, 0, 0.01); 
+            height: 9.2vw;
+            max-height: 48px;
+        }
 
         /* --- STYLE MENU DROPDOWN --- */
         .menu-container { width: 100%; max-width: 500px; border: 1px solid #ccc; border-radius: 8px; background: #f0f0f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
