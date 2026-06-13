@@ -34,26 +34,59 @@
             padding: 0 1.5% !important; 
         }
 
+                /* PENGATURAN TEKS TOMBOL AGAR PAS DI TENGAH KOTAK */
         button { 
-            flex: 1 !important; height: 9.8vw !important; max-height: 50px !important; 
-            font-size: 1.2rem !important; font-weight: bold !important; border: none !important; 
-            border-radius: 4px !important; cursor: pointer !important; background: rgba(0, 0, 0, 0.04) !important; color: #222 !important;
-            display: flex !important; align-items: center !important; justify-content: center !important;
+            flex: 1 !important; 
+            height: 9.8vw !important; 
+            max-height: 50px !important; 
+            font-size: 1.2rem !important; 
+            font-weight: bold !important; 
+            border: none !important; 
+            border-radius: 4px !important; 
+            cursor: pointer !important; 
+            background: rgba(0, 0, 0, 0.04) !important; 
+            color: #222 !important;
             
-            /* Kode Tambahan di bawah ini untuk menghilangkan kedipan/efek kotak biru di HP */
+            /* MEMAKSA TEKS ANGKA/SIMBOL PAS DI TENGAH KOTAK */
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            line-height: 1 !important; /* Mengunci tinggi baris teks agar tidak terdorong ke atas/bawah */
+            padding: 0 !important; /* Menghapus padding bawaan yang sering mendorong teks ke atas */
+            
+            /* MEMATIKAN KOTAK BIRU DI HP */
             -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -moz-tap-highlight-color: transparent !important;
         }
         button:active { background: rgba(0, 0, 0, 0.15) !important; }
 
         .row-top button { font-size: 1.05rem !important; }
 
-        /* AREA KLIK TOMBOL BAWAH DILEBARKAN DAN DIHILANGKAN EFEK BIRUNYA */
+        /* AREA KLIK TOMBOL BAWAH TRANSPARAN TOTAL & ANTI KOTAK BIRU */
         .btn-pilih, .btn-edit, .btn-clear { 
-            background: rgba(0, 0, 0, 0.001) !important; 
+            background: rgba(0, 0, 0, 0) !important; /* Menggunakan transparansi murni */
             color: transparent !important; 
-            height: 12.5vw !important; /* Ditinggikan sedikit lagi agar pas membungkus penuh kotak berwarna */
+            height: 12.5vw !important; 
             max-height: 58px !important; 
             cursor: pointer !important; 
+            border: none !important;
+            outline: none !important;
+            
+            /* MEMATIKAN TOTAL HIGHLIGHT BIRU PADA TOMBOL BAWAH */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
+        }
+        
+        /* Menghapus efek fokus outline saat tombol disentuh */
+        button:focus, .btn-pilih:focus, .btn-edit:focus, .btn-clear:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
             
             /* Memaksa HP tidak memunculkan kotak biru saat tombol transparan ini ditekan */
             -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
