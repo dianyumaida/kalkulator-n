@@ -135,7 +135,7 @@
             cursor: pointer;
         }
 
-        /* GAYA MENU DROPDOWN BARU DENGAN TINGKATAN (ANAK & CUCU) */
+        /* MENU DROPDOWN UTAMA */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -148,34 +148,61 @@
             z-index: 999;
             padding: 10px;
             box-sizing: border-box;
-            max-height: 250px;
+            max-height: 280px;
             overflow-y: auto;
         }
         .dropdown-item {
-            padding: 8px;
+            padding: 10px;
             font-size: 15px;
             border-bottom: 1px dashed #ccc;
             cursor: pointer;
             text-align: left;
             color: #000;
         }
+        .dropdown-item:hover {
+            background: #f5f5f5;
+        }
         
-        /* Gaya Khusus Area Anak & Cucu Bersistem Radio */
-        .menu-anak {
-            padding-left: 10px;
+        /* SUB-DROPDOWN UNTUK PANEL SIGMA */
+        .sigma-header-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f0f0;
             font-weight: bold;
-            color: #333;
+            border: 1px solid #000;
             margin-top: 5px;
+            padding: 10px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .sub-dropdown-content {
+            display: none; /* Tersembunyi di awal, terbuka saat Sigma diklik */
+            background: #fafafa;
+            border-left: 3px solid #000;
+            border-right: 3px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 5px 0;
+        }
+        .menu-anak {
+            padding: 5px 10px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+            background: #eef2f3;
         }
         .menu-cucu-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 10px 6px 25px;
+            padding: 8px 15px 8px 25px;
             font-weight: normal;
             font-size: 14px;
             cursor: pointer;
             border-bottom: 1px dotted #eee;
+        }
+        .menu-cucu-row:hover {
+            background: #f0f0f0;
         }
         .menu-cucu-row input[type="radio"] {
             cursor: pointer;
@@ -221,36 +248,42 @@
                 
                 <!-- DROPDOWN MENU UTAMA -->
                 <div id="dropdown-menu" class="dropdown-menu">
-                    <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi:</div>
+                    <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi Utama:</div>
                     <div class="dropdown-item" onclick="pilihItem('.')">. (Titik)</div>
                     <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
                     <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
                     
-                    <!-- INDUK: SIGMA -->
-                    <div class="dropdown-item" style="background: #f5f5f5; font-weight: bold;">Σ (Sigma Utama)</div>
+                    <!-- INDUK SIGMA: Bertindak sebagai Dropdown Toggle -->
+                    <div class="sigma-header-btn" onclick="toggleSubDropdown(event)">
+                        <span>Σ (Sigma Menu)</span>
+                        <span id="sigma-arrow">▼</span>
+                    </div>
                     
-                    <!-- ANAK 1: Sigma Standar -->
-                    <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
-                    <!-- CUCU-CUCU DENGAN SISTEM RADIO -->
-                    <label class="menu-cucu-row" onclick="pilihCucu('Σ')">
-                        <span>Ketik Manual (Σ)</span>
-                        <input type="radio" name="sigma-opt" id="rad-sig-manual">
-                    </label>
-                    <label class="menu-cucu-row" onclick="pilihCucu('Σ3')">
-                        <span>Hingga 3 (Σ3)</span>
-                        <input type="radio" name="sigma-opt" id="rad-sig-3">
-                    </label>
-                    <label class="menu-cucu-row" onclick="pilihCucu('Σ5')">
-                        <span>Hingga 5 (Σ5)</span>
-                        <input type="radio" name="sigma-opt" id="rad-sig-5">
-                    </label>
+                    <!-- ISI SUB-DROPDOWN PANEL SIGMA -->
+                    <div id="sigma-sub-panel" class="sub-dropdown-content">
+                        <!-- ANAK 1 -->
+                        <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
+                        <!-- CUCU-CUCU RADIO -->
+                        <label class="menu-cucu-row" onclick="pilihCucu('Σ')">
+                            <span>Ketik Manual (Σ)</span>
+                            <input type="radio" name="sigma-opt">
+                        </label>
+                        <label class="menu-cucu-row" onclick="pilihCucu('Σ3')">
+                            <span>Hingga 3 (Σ3)</span>
+                            <input type="radio" name="sigma-opt">
+                        </label>
+                        <label class="menu-cucu-row" onclick="pilihCucu('Σ5')">
+                            <span>Hingga 5 (Σ5)</span>
+                            <input type="radio" name="sigma-opt">
+                        </label>
 
-                    <!-- ANAK 2: Sigma Kuadrat (Variasi Masa Depan) -->
-                    <div class="menu-anak">└─ Σ Kuadrat (1²+2²+3²...)</div>
-                    <label class="menu-cucu-row" onclick="pilihCucu('Σ^2')">
-                        <span>Ketik Kuadrat (Σ^)</span>
-                        <input type="radio" name="sigma-opt" id="rad-sig-sq">
-                    </label>
+                        <!-- ANAK 2 -->
+                        <div class="menu-anak">└─ Σ Kuadrat (1²+2²+3²...)</div>
+                        <label class="menu-cucu-row" onclick="pilihCucu('Σ^2')">
+                            <span>Ketik Kuadrat (Σ^)</span>
+                            <input type="radio" name="sigma-opt">
+                        </label>
+                    </div>
                 </div>
             </div>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
