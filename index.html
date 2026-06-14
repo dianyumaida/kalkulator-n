@@ -293,8 +293,7 @@
     </div>
 
 </div> <!-- Penutup .calculator -->
-
-<!-- 🌟 TAMBAHKAN MULAI DARI BARIS 296 KE BAWAH 🌟 -->
+<!-- 🌟 SILAKAN TAMBAHKAN MULAI DARI BARIS 296 KE BAWAH SECARA UTUH 🌟 -->
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
@@ -372,7 +371,7 @@ function hitungHasil() {
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // Pemrosesan Sigma Aman Beruntun
+        // Pemrosesan Sigma Kebal Error Browser
         ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
