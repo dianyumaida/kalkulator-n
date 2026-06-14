@@ -135,6 +135,7 @@
             cursor: pointer;
         }
 
+        /* GAYA MENU DROPDOWN BARU DENGAN TINGKATAN (ANAK & CUCU) */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -147,14 +148,40 @@
             z-index: 999;
             padding: 10px;
             box-sizing: border-box;
+            max-height: 250px;
+            overflow-y: auto;
         }
         .dropdown-item {
-            padding: 10px;
+            padding: 8px;
             font-size: 15px;
             border-bottom: 1px dashed #ccc;
             cursor: pointer;
             text-align: left;
             color: #000;
+        }
+        
+        /* Gaya Khusus Area Anak & Cucu Bersistem Radio */
+        .menu-anak {
+            padding-left: 10px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        .menu-cucu-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px 6px 25px;
+            font-weight: normal;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 1px dotted #eee;
+        }
+        .menu-cucu-row input[type="radio"] {
+            cursor: pointer;
+            margin: 0;
+            width: 16px;
+            height: 16px;
         }
     </style>
 </head>
@@ -191,12 +218,39 @@
         <div class="row-bottom" style="position: relative;">
             <div style="flex: 1.2; position: relative; display: flex;">
                 <button onclick="klikTombolPilih()" class="btn-pilih" type="button">&#9664; PILIH &#9660;</button>
+                
+                <!-- DROPDOWN MENU UTAMA -->
                 <div id="dropdown-menu" class="dropdown-menu">
                     <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi:</div>
                     <div class="dropdown-item" onclick="pilihItem('.')">. (Titik)</div>
                     <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
-                    <div class="dropdown-item" onclick="pilihItem('Σ')">Σ (Sigma)</div>
                     <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
+                    
+                    <!-- INDUK: SIGMA -->
+                    <div class="dropdown-item" style="background: #f5f5f5; font-weight: bold;">Σ (Sigma Utama)</div>
+                    
+                    <!-- ANAK 1: Sigma Standar -->
+                    <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
+                    <!-- CUCU-CUCU DENGAN SISTEM RADIO -->
+                    <label class="menu-cucu-row" onclick="pilihCucu('Σ')">
+                        <span>Ketik Manual (Σ)</span>
+                        <input type="radio" name="sigma-opt" id="rad-sig-manual">
+                    </label>
+                    <label class="menu-cucu-row" onclick="pilihCucu('Σ3')">
+                        <span>Hingga 3 (Σ3)</span>
+                        <input type="radio" name="sigma-opt" id="rad-sig-3">
+                    </label>
+                    <label class="menu-cucu-row" onclick="pilihCucu('Σ5')">
+                        <span>Hingga 5 (Σ5)</span>
+                        <input type="radio" name="sigma-opt" id="rad-sig-5">
+                    </label>
+
+                    <!-- ANAK 2: Sigma Kuadrat (Variasi Masa Depan) -->
+                    <div class="menu-anak">└─ Σ Kuadrat (1²+2²+3²...)</div>
+                    <label class="menu-cucu-row" onclick="pilihCucu('Σ^2')">
+                        <span>Ketik Kuadrat (Σ^)</span>
+                        <input type="radio" name="sigma-opt" id="rad-sig-sq">
+                    </label>
                 </div>
             </div>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
@@ -221,8 +275,19 @@ function tekan(karakter) {
 
 function pilihItem(karakter) {
     tekan(karakter);
-    const menu = document.getElementById('dropdown-menu');
-    menu.style.display = "none"; // Dropdown otomatis menutup kembali ke kalkulator
+    document.getElementById('dropdown-menu').style.display = "none";
+}
+
+// FUNGSI KHUSUS UNTUK MEMILIH OPSI CUCU RADIO BUTTON
+function pilihCucu(teksRumus) {
+    tekan(teksRumus);
+    
+    // Beri jeda 150ms agar animasi klik radio terlihat sebelum menu menutup otomatis
+    setTimeout(function() {
+        document.getElementById('dropdown-menu').style.display = "none";
+        // Reset pilihan radio agar bisa diklik kembali di transaksi berikutnya
+        document.querySelectorAll('input[name="sigma-opt"]').forEach(r => r.checked = false);
+    }, 150);
 }
 
 function renderLayar() {
