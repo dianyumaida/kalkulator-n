@@ -195,8 +195,7 @@
                     <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi:</div>
                     <div class="dropdown-item" onclick="tekan('.')">. (Titik)</div>
                     <div class="dropdown-item" onclick="tekan('%')">% (Persen)</div>
-                    <!-- Tombol menggunakan kode pemicu unicode aman -->
-                    <div class="dropdown-item" onclick="tekan('\u03A3')">Σ (Sigma)</div>
+                    <div class="dropdown-item" onclick="tekan('Σ')">Σ (Sigma)</div>
                     <div class="dropdown-item" onclick="tekan('^')">^ (Pangkat)</div>
                 </div>
             </div>
@@ -231,21 +230,22 @@ function hitungHasil() {
     try {
         let ekspresi = rumusBarisIni;
         
-        // 1. Normalisasi operator standar
+        // 1. Normalisasi operator dasar agar aman dibaca JavaScript
         ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // 2. Perbaikan Deteksi Sigma menggunakan Unicode Aman (\u03A3)
-        ekspresi = ekspresi.replace(/\u03A3(\d+)/g, function(match, angka) {
+        // 2. Perbaikan Logika Sigma Super Aman (Mendukung tombol fisik Σ maupun salinan teks)
+        ekspresi = ekspresi.replace(/[Σ\u03A3](\d+)/g, function(match, angka) {
             let total = 0; 
-            let batas = parseInt(angka);
+            let batas = parseInt(angka) || 0;
             for (let i = 1; i <= batas; i++) { 
                 total += i; 
             } 
-            return total;
+            return "(" + total + ")"; // Dibungkus kurung agar tidak merusak urutan tambah/kali matematika
         });
 
+        // 3. Menghitung hasil akhir string rumus
         let hasil = eval(ekspresi);
         
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
@@ -255,7 +255,7 @@ function hitungHasil() {
         renderLayar();
     } catch(e) {
         rumusBarisIni = "";
-        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:20px;">Format Error</div>`;
+        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:22px;">Format Error</div>`;
         renderLayar();
     }
 }
