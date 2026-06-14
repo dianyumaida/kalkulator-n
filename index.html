@@ -75,110 +75,160 @@
             <button onclick="hitungHasil()">=</button>
         </div>
         
-        <!-- BARIS 3: Area Kotak Transparan Terbawah -->
-        <div class="row row-bottom">
-            <button onclick="klikTombolPilih()" class="btn-pilih">PILIH</button>
-            <button id="btn-edit" onclick="modeEdit()" class="btn-edit">EDIT</button>
-            <button onclick="del()" ondblclick="clearAll()" class="btn-clear">CLEAR</button>
-
-            <!-- PANEL DROPDOWN MENU YANG GABUNG MELAYANG DI ATAS TOMBOL PILIH -->
-            <div id="dropdown-menu" class="dropdown-pilih">
-                <div class="menu-group">
-                    <div class="group-header" onclick="toggleSub('sec-simbol')"><span>📁 -- simbol --</span><span>▼</span></div>
-                    <div id="sec-simbol">
-                        <label class="item-row" onclick="tekan('%')"><span>% (Persen)</span><input type="radio" name="m" id="rad-percent"></label>
-                        <label class="item-row" onclick="tekan('Σ')"><span>Σ (Sigma)</span><input type="radio" name="m" id="rad-sigma"></label>
-                        <label class="item-row" onclick="tekan('^')"><span>^ (Pangkat)</span><input type="radio" name="m" id="rad-pow"></label>
+            <!-- BARIS 3: Area Kotak Transparan Terbawah -->
+    <div class="rom row-bottom" style="position: relative;">
+        
+        <!-- Pembungkus khusus agar tombol PILIH dan Dropdown Menu bersatu -->
+        <div class="pilih-wrapper" style="position: relative; flex: 1; display: flex;">
+            <button onclick="klikTombolPilih()" class="btn-pilih" type="button">PILIH</button>
+            
+            <!-- MENU DROPDOWN MELAYANG DI ATAS TOMBOL PILIH -->
+            <div id="dropdown-menu" class="dropdown-menu" style="display: none; position: absolute; bottom: 125%; left: 0; width: 250px; background: #ffffff; border: 2px solid #ccc; border-radius: 8px; box-shadow: 0px -4px 15px rgba(0,0,0,0.2); z-index: 999; padding: 10px; box-sizing: border-box;">
+                
+                <!-- KOTAK 1: SIMBOL -->
+                <div class="menu-group" style="border-bottom: 1px solid #eee; padding: 8px 0; text-align: left;">
+                    <div class="group-header" onclick="toggleSub('sec-simbol')" style="background: #f8f9fa; padding: 8px 12px; display: flex; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 14px;">
+                        <span>💻 Simbol</span><span>▼</span>
+                    </div>
+                    <div id="sec-simbol" class="sub-menu">
+                        <label class="item-row" onclick="tekan('%')" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; font-size: 14px; color: #333; cursor: pointer;">
+                            <span>% (Persen)</span><input type="radio" name="m" id="rad-percent">
+                        </label>
+                        <label class="item-row" onclick="tekan('Σ')" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; font-size: 14px; color: #333; cursor: pointer;">
+                            <span>Σ (Sigma)</span><input type="radio" name="m" id="rad-sigma">
+                        </label>
+                        <label class="item-row" onclick="tekan('^')" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; font-size: 14px; color: #333; cursor: pointer;">
+                            <span>^ (Pangkat)</span><input type="radio" name="m" id="rad-pow">
+                        </label>
                     </div>
                 </div>
-                <div class="menu-group">
-                    <div class="group-header" onclick="toggleSub('sec-algo')"><span>📁 -- algoritma --</span><span>▶</span></div>
-                    <div id="sec-algo" style="display:none;"><div class="item-row"><span>Segera Datang</span></div></div>
+
+                <!-- KOTAK 2: ALGORITMA -->
+                <div class="menu-group" style="border-bottom: 1px solid #eee; padding: 8px 0; text-align: left;">
+                    <div class="group-header" onclick="toggleSub('sec-algo')" style="background: #f8f9fa; padding: 8px 12px; display: flex; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 14px;">
+                        <span>💻 Algoritma</span><span>▶</span>
+                    </div>
+                    <div id="sec-algo" class="sub-menu" style="display: none; padding: 8px 12px; font-size: 14px; color: #777;">
+                        <span>Segera Datang</span>
+                    </div>
                 </div>
-                <div class="menu-group">
-                    <div class="group-header" onclick="toggleSub('sec-riwayat')"><span>📁 -- riwayat --</span><span>▼</span></div>
-                            <!-- KOTAK 3: AREA RIWAYAT -->
-        <div id="sec-riwayat" style="display: flex; flex-direction: column !important; align-items: flex-start !important;">
-            <div id="h-txt" style="width: 100%;">Belum ada riwayat</div>
-            
-            <!-- Tombol Hapus dengan Inline Style yang sudah dirapikan -->
-            <button onclick="delH()" type="button" style="line-height: initial; height: auto; max-height: initial; display: inline-block !important; width: auto !important; background: #ff4d4d; color: white; padding: 3px 8px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer;">
-                Hapus
-            </button>
-        </div> <!-- Penutup #sec-riwayat -->
 
-    </div> <!-- Penutup .menu-group Kotak 3 -->
-</div> <!-- Penutup #dropdown-menu UTAMA -->
+                <!-- KOTAK 3: RIWAYAT -->
+                <div class="menu-group" style="padding: 8px 0; text-align: left;">
+                    <div class="group-header" onclick="toggleSub('sec-riwayat')" style="background: #f8f9fa; padding: 8px 12px; display: flex; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 14px;">
+                        <span>💻 Riwayat</span><span>▼</span>
+                    </div>
+                    <div id="sec-riwayat" class="sub-menu" style="display: flex; flex-direction: column; align-items: flex-start; padding: 8px 12px;">
+                        <div id="h-txt" style="width: 100%; max-height: 80px; overflow-y: auto; font-size: 13px; color: #333;">Belum ada riwayat</div>
+                        <button onclick="delH()" type="button" style="margin-top: 8px; background: #ff4d4d; color: white; padding: 4px 10px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; display: inline-block !important; width: auto !important; height: auto !important; max-height: initial !important; line-height: initial !important;">Hapus</button>
+                    </div>
+                </div>
 
+            </div> <!-- Penutup #dropdown-menu -->
+        </div> <!-- Penutup .pilih-wrapper -->
 
-    <script>
-        const scr = document.getElementById("screen");
-        let isEdit = false;
+        <button id="btn-edit" onclick="nodeEdit()" class="btn-edit" type="button">EDIT</button>
+        <button onclick="del()" ondblclick="clearAll()" class="btn-clear" type="button">CLEAR</button>
+    </div> <!-- Penutup .rom.row-bottom -->
 
-        function tekan(v) {
-            if(isEdit) return;
-            scr.innerText = (scr.innerText === "0" && !"+-*/^%Σ".includes(v)) ? v : scr.innerText + v;
-        }
+</div> <!-- Penutup .calculator utama Anda -->
 
-        function hitungHasil() {
-            if(isEdit || scr.innerText === "0") return;
-            try {
-                let txt = scr.innerText;
-                let riwayatAwal = txt;
-                txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
-                txt = txt.replace(/(\d+)%/g, "($1/100)");
-                txt = txt.replace(/(\d+)Σ/g, function(match, angka) {
-                    let total = 0;
-                    for (let i = 1; i <= parseInt(angka); i++) { total += i; }
-                    return total;
-                });
-                let res = eval(txt);
-                
-                const containerRiwayat = document.getElementById('h-txt');
-                if (containerRiwayat.innerText === "Belum ada riwayat") containerRiwayat.innerHTML = "";
-                
-                let barisBaru = document.createElement("div");
-                barisBaru.className = "history-list-item";
-                barisBaru.innerText = riwayatAwal + " = " + res;
-                
-                containerRiwayat.appendChild(barisBaru);
-                scr.innerText = res;
-                barisBaru.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            } catch(e) { scr.innerText = "Error"; }
-        }
+<script>
+const scr = document.getElementById("screen");
+let isEdit = false;
 
-        function del() { if(!isEdit) scr.innerText = scr.innerText.slice(0, -1) || "0"; }
+// Memastikan fungsi menangkap karakter tombol dengan benar
+function tekan(karakter) {
+    if (isEdit) return;
+    
+    // Konversi nilai string jika tidak sengaja bertipe object event
+    let v = String(karakter);
+    
+    if (scr.innerText === "0" && !"+-*/%x:^Σ".includes(v)) {
+        scr.innerText = v;
+    } else {
+        scr.innerText += v;
+    }
+}
+
+function hitungHasil() {
+    if (isEdit || scr.innerText === "0") return;
+    try {
+        let txt = scr.innerText;
+        let riwayatAwal = txt;
+
+        // Normalisasi operator visual ke operator komputasi JavaScript
+        txt = txt.replace(/x/g, "*").replace(/:/g, "/");
+        txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
+        txt = txt.replace(/(\d+)%/g, "($1/100)");
+
+        // Logika Eksekusi Sigma
+        txt = txt.replace(/Σ(\d+)/g, function(match, angka) {
+            let total = 0;
+            for (let i = 1; i <= parseInt(angka); i++) { total += i; }
+            return total;
+        });
+
+        let res = eval(txt);
         
-        function clearAll() {
-            scr.innerText = "0"; isEdit = false; scr.contentEditable = "false";
-            document.getElementById("btn-edit").innerText = "EDIT";
-            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        // Simpan ke Riwayat
+        const containerRiwayat = document.getElementById('h-txt');
+        if (containerRiwayat) {
+            if (containerRiwayat.innerText.includes("Belum ada riwayat")) {
+                containerRiwayat.innerHTML = "";
+            }
+            let barisBaru = document.createElement("div");
+            barisBaru.className = "history-list-item";
+            barisBaru.style.borderBottom = "1px dashed #eee";
+            barisBaru.style.padding = "4px 0";
+            barisBaru.innerText = riwayatAwal + " = " + res;
+            containerRiwayat.appendChild(barisBaru);
+            barisBaru.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
 
-        function modeEdit() {
-            isEdit = !isEdit;
-            scr.contentEditable = isEdit ? "true" : "false";
-            document.getElementById("btn-edit").innerText = isEdit ? "OK" : "EDIT";
-            if(isEdit) scr.focus();
-        }
+        scr.innerText = res;
+    } catch(e) {
+        scr.innerText = "Error";
+    }
+}
 
-        // FUNGSI UTAMA TOMBOL PILIH (MEMBUKA/MENUTUP MENU)
-        function klikTombolPilih() {
-            const menu = document.getElementById('dropdown-menu');
-            menu.style.display = (menu.style.display === "block") ? "none" : "block";
-            tarikDataFili(); 
-        }
+function del() {
+    if (!isEdit) {
+        scr.innerText = scr.innerText.length > 1 ? scr.innerText.slice(0, -1) : "0";
+    }
+}
 
-        function toggleSub(id) {
-            const el = document.getElementById(id);
-            el.style.display = (el.style.display === "none") ? "block" : "none";
-        }
-        
-        function delH() { document.getElementById('h-txt').innerHTML = "Belum ada riwayat"; }
+function clearAll() {
+    scr.innerText = "0";
+    isEdit = false;
+    scr.contentEditable = "false";
+    
+    let btnEdit = document.getElementById("btn-edit");
+    if (btnEdit) btnEdit.innerText = "EDIT";
+    
+    document.querySelectorAll('input[name="m"]').forEach(r => r.checked = false);
+}
 
-        function tarikDataFili() {
+function nodeEdit() {
+    isEdit = !isEdit;
+    scr.contentEditable = isEdit ? "true" : "false";
+    document.getElementById("btn-edit").innerText = isEdit ? "OK" : "EDIT";
+    if (isEdit) scr.focus();
+}
 
-    </script>
+function klikTombolPilih() {
+    const menu = document.getElementById('dropdown-menu');
+    menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+}
+
+function toggleSub(id) {
+    const el = document.getElementById(id);
+    el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+
+function delH() {
+    document.getElementById('h-txt').innerHTML = "Belum ada riwayat";
+}
+</script>
 </body>
 </html>
-
