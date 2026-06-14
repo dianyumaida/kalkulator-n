@@ -216,10 +216,10 @@
 
 <div class="calculator">
     
-    <!-- Screen Area -->
+        <!-- 🌟 BARIS 220: AREA LAYAR MONITOR -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Buttons Area -->
+    <!-- BARIS 223: AREA TOMBOL KALKULATOR -->
     <div class="buttons-container">
         <div class="rom-grid-first">
             <button onclick="tekan('0')">0</button>
@@ -243,60 +243,62 @@
         </div>
 
         <div class="row-bottom" style="position: relative;">
-            <div style="flex: 1.2; position: relative; display: flex;">
+            <div style="flex: 1.2; display: flex;">
                 <button onclick="klikTombolPilih()" class="btn-pilih" type="button">&#9664; PILIH &#9660;</button>
-                
-                <!-- DROPDOWN MENU UTAMA -->
-                <div id="dropdown-menu" class="dropdown-menu">
-                    <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi Utama:</div>
-                    <div class="dropdown-item" onclick="pilihItem('.')">. (Titik)</div>
-                    <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
-                    <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
-                    
-                    <!-- INDUK SIGMA: Bertindak sebagai Dropdown Toggle -->
-                    <div class="sigma-header-btn" onclick="toggleSubDropdown(event)">
-                        <span>Σ (Sigma Menu)</span>
-                        <span id="sigma-arrow">▼</span>
-                    </div>
-                    
-                    <!-- ISI SUB-DROPDOWN PANEL SIGMA -->
-                    <div id="sigma-sub-panel" class="sub-dropdown-content">
-                        <!-- ANAK 1 -->
-                        <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
-                        <!-- CUCU-CUCU RADIO -->
-                        <label class="menu-cucu-row" onclick="pilihCucu('Σ')">
-                            <span>Ketik Manual (Σ)</span>
-                            <input type="radio" name="sigma-opt">
-                        </label>
-                        <label class="menu-cucu-row" onclick="pilihCucu('Σ3')">
-                            <span>Hingga 3 (Σ3)</span>
-                            <input type="radio" name="sigma-opt">
-                        </label>
-                        <label class="menu-cucu-row" onclick="pilihCucu('Σ5')">
-                            <span>Hingga 5 (Σ5)</span>
-                            <input type="radio" name="sigma-opt">
-                        </label>
-
-                        <!-- ANAK 2 -->
-                        <div class="menu-anak">└─ Σ Kuadrat (1²+2²+3²...)</div>
-                        <label class="menu-cucu-row" onclick="pilihCucu('Σ^2')">
-                            <span>Ketik Kuadrat (Σ^)</span>
-                            <input type="radio" name="sigma-opt">
-                        </label>
-                    </div>
-                </div>
             </div>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
-</div>
 
+    <!-- 🌟 PANEL MENU PILIH UKURAN BESAR / FULL SCREEN -->
+    <div id="dropdown-menu" class="dropdown-menu">
+        <div class="menu-title-bar">
+            <span style="font-weight: bold; font-size: 20px;">Daftar Fungsi Pilihan</span>
+            <button class="btn-close-menu" onclick="tutupSemuaMenu()">BATAL ✕</button>
+        </div>
+        
+        <div class="dropdown-item" onclick="pilihItem('.')">. (Titik Desimal)</div>
+        <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
+        <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
+        
+        <!-- INDUK SIGMA -->
+        <div class="sigma-header-btn" onclick="toggleSubDropdown(event)">
+            <span>Σ (Sigma Menu)</span>
+            <span id="sigma-arrow">▼</span>
+        </div>
+        
+        <!-- SUB-MENU (ANAK & CUCU SIGMA) -->
+        <div id="sigma-sub-panel" class="sub-dropdown-content">
+            <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ')">
+                <span>Ketik Manual (Σ)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ3')">
+                <span>Hingga 3 (Σ3)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ5')">
+                <span>Hingga 5 (Σ5)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+
+            <div class="menu-anak">└─ Σ Kuadrat (1²+2²+3²...)</div>
+            <div class="menu-cucu-row" onclick="pucuKuadrat('Σ^2')">
+                <span>Ketik Kuadrat (Σ^)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+        </div>
+    </div>
+
+</div> <!-- Penutup .calculator -->
+
+<!-- 🌟 LOGIKA JAVASCRIPT MULAI DARI SINI -->
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
 let isManualEdit = false;
-
 let rumusBarisIni = ""; 
 let riwayatHitunganHTML = ""; 
 
@@ -308,19 +310,44 @@ function tekan(karakter) {
 
 function pilihItem(karakter) {
     tekan(karakter);
-    document.getElementById('dropdown-menu').style.display = "none";
+    tutupSemuaMenu();
 }
 
-// FUNGSI KHUSUS UNTUK MEMILIH OPSI CUCU RADIO BUTTON
-function pilihCucu(teksRumus) {
-    tekan(teksRumus);
+function toggleSubDropdown(event) {
+    if (event) event.stopPropagation();
+    const subPanel = document.getElementById('sigma-sub-panel');
+    const arrow = document.getElementById('sigma-arrow');
     
-    // Beri jeda 150ms agar animasi klik radio terlihat sebelum menu menutup otomatis
+    if (subPanel.style.display === "block") {
+        subPanel.style.display = "none";
+        arrow.innerText = "▼";
+    } else {
+        subPanel.style.display = "block";
+        arrow.innerText = "▲";
+    }
+}
+
+function pilihCucu(teksRumus) {
+    const eventTarget = window.event ? window.event.currentTarget : null;
+    if (eventTarget) {
+        const radio = eventTarget.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+    }
+    tekan(teksRumus);
     setTimeout(function() {
-        document.getElementById('dropdown-menu').style.display = "none";
-        // Reset pilihan radio agar bisa diklik kembali di transaksi berikutnya
+        tutupSemuaMenu();
         document.querySelectorAll('input[name="sigma-opt"]').forEach(r => r.checked = false);
-    }, 150);
+    }, 180);
+}
+
+function pucuKuadrat(teksRumus) {
+    pilihCucu(teksRumus);
+}
+
+function tutupSemuaMenu() {
+    document.getElementById('dropdown-menu').style.display = "none";
+    document.getElementById('sigma-sub-panel').style.display = "none";
+    document.getElementById('sigma-arrow').innerText = "▼";
 }
 
 function renderLayar() {
@@ -333,19 +360,15 @@ function hitungHasil() {
     if (isManualEdit || rumusBarisIni === "") return;
     try {
         let ekspresi = rumusBarisIni;
-        
         ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // JALUR PENYELAMAT MULTI-UNICODE SIGMA
-        // Membaca karakter \u03A3 (Σ) dan \u2211 (∑) secara bersamaan agar kebal error browser
+        // Pemrosesan Sigma Aman
         ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
-            for (let i = 1; i <= batas; i++) { 
-                total += i; 
-            } 
+            for (let i = 1; i <= batas; i++) { total += i; } 
             return String(total);
         });
 
@@ -353,10 +376,8 @@ function hitungHasil() {
         ekspresi = ekspresi.replace(/\-\-/g, "+");
 
         let hasil = eval(ekspresi);
-        
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
         riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
-        
         rumusBarisIni = ""; 
         renderLayar();
     } catch(e) {
@@ -392,8 +413,7 @@ function handleClearClick() {
 }
 
 function klikTombolPilih() {
-    const menu = document.getElementById('dropdown-menu');
-    menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    document.getElementById('dropdown-menu').style.display = "block";
 }
 </script>
 </body>
