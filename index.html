@@ -219,13 +219,10 @@ function tekan(karakter) {
     renderLayar();
 }
 
-// Fungsi baru untuk menangani klik item di dalam menu PILIH
 function pilihItem(karakter) {
     tekan(karakter);
-    
-    // Otomatis menutup kembali menu dropdown setelah item diklik
     const menu = document.getElementById('dropdown-menu');
-    menu.style.display = "none";
+    menu.style.display = "none"; // Dropdown otomatis menutup kembali ke kalkulator
 }
 
 function renderLayar() {
@@ -239,13 +236,13 @@ function hitungHasil() {
     try {
         let ekspresi = rumusBarisIni;
         
-        // 1. Normalisasi operator dasar agar dibaca aman oleh JavaScript
         ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // 2. Perbaikan Logika Global Deteksi Sigma Berbasis Angka
-        ekspresi = ekspresi.replace(/[Σ\u03A3](\d+)/g, function(match, angka) {
+        // JALUR PENYELAMAT MULTI-UNICODE SIGMA
+        // Membaca karakter \u03A3 (Σ) dan \u2211 (∑) secara bersamaan agar kebal error browser
+        ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
             for (let i = 1; i <= batas; i++) { 
@@ -254,7 +251,9 @@ function hitungHasil() {
             return String(total);
         });
 
-        // 3. Menghitung hasil akhir rumus string
+        ekspresi = ekspresi.replace(/\+\+/g, "+");
+        ekspresi = ekspresi.replace(/\-\-/g, "+");
+
         let hasil = eval(ekspresi);
         
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
