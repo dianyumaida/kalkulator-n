@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Setengah Layar</title>
+    <title>Kalkulator Layar Besar Retro</title>
     <style>
-        /* Kontainer Utama dengan Tinggi Tetap untuk Membagi 50/50 */
+        /* Kontainer Utama Kalkulator */
         .calculator {
             width: 380px;
-            height: 720px; /* Tinggi total diatur agar pembagian setengah terlihat jelas */
+            height: 750px; /* Tinggi total ditambah agar layar bisa maksimal */
             background: #ffffff;
             border: 6px solid #000000;
             border-radius: 4px;
@@ -18,43 +18,45 @@
             margin: 10px auto;
             box-sizing: border-box;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            flex-direction: column; /* Menyusun vertikal */
         }
 
-        /* AREA LAYAR (SETENGAH ATAS - 50%) */
+        /* AREA LAYAR UTAMA (DIBESARKAN MAKSIMAL) */
         .screen-container {
-            height: 48%; /* Mengambil hampir setengah tinggi kalkulator */
+            flex: 1; /* Mengambil seluruh sisa ruang atas (Sangat Besar) */
             border: 5px solid #000000;
-            padding: 15px;
+            padding: 20px;
             background: #ffffff;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            margin-bottom: 15px;
+            min-height: 350px;
         }
         
         #screen {
-            font-size: 85px;
+            font-size: 95px; /* Ukuran angka layar diperbesar ekstrim */
             text-align: right;
             font-weight: bold;
             word-wrap: break-word;
             line-height: 1;
-            margin-top: auto; /* Memastikan angka menempel di bawah sebelum garis pembatas */
-            padding-bottom: 10px;
+            margin-top: auto; /* Mendorong angka ke posisi bawah layar */
+            padding-bottom: 15px;
+            overflow: hidden;
         }
 
         .screen-divider {
-            border-top: 4px solid #000000;
+            border-top: 5px solid #000000;
             margin-top: 5px;
         }
 
-        /* AREA TOMBOL (SETENGAH BAWAH - 50%) */
+        /* AREA KOTAK TOMBOL (DIRAPATKAN KE BAWAH) */
         .buttons-container {
-            height: 48%; /* Mengambil setengah bagian bawah */
+            margin-top: auto; /* Memaksa seluruh tombol merapat ke bawah */
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 12px; /* Jarak rapat antar baris kotak */
         }
 
         /* BARIS KOTAK 1: ANGKA 0-9 */
@@ -67,13 +69,13 @@
         }
         .rom-grid-first button {
             flex: 1;
-            height: 40px;
+            height: 42px;
             margin: 0 2px;
             background: #f2f2f2;
             border: 3px solid #000000;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
         }
 
@@ -87,16 +89,16 @@
         }
         .rom-grid-second button {
             flex: 1;
-            height: 45px;
+            height: 48px;
             margin: 0 3px;
             background: #ffffff;
             border: 3px solid #000000;
             font-weight: bold;
-            font-size: 22px;
+            font-size: 24px;
             cursor: pointer;
         }
 
-        /* BARIS KOTAK 3: FUNGSI TERBAWAH */
+        /* BARIS KOTAK 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) */
         .row-bottom {
             display: flex;
             justify-content: space-between;
@@ -110,28 +112,28 @@
             background: #ffffff;
             border: 4px solid #000000;
             font-weight: bold;
-            padding: 10px 0;
-            font-size: 15px;
+            padding: 12px 0;
+            font-size: 16px;
             cursor: pointer;
         }
         .btn-edit {
             flex: 1;
-            background: #ffcc00;
+            background: #ffcc00; /* Kuning */
             border: 4px solid #000000;
             font-weight: bold;
-            padding: 10px 0;
-            font-size: 15px;
+            padding: 12px 0;
+            font-size: 16px;
             cursor: pointer;
-            margin: 0 10px;
+            margin: 0 12px;
             text-align: center;
         }
         .btn-clear {
             flex: 1;
-            background: #ff2a2a;
+            background: #ff2a2a; /* Merah */
             color: #ffffff;
             font-weight: bold;
-            padding: 10px 0;
-            font-size: 15px;
+            padding: 12px 0;
+            font-size: 16px;
             cursor: pointer;
         }
 
@@ -139,7 +141,7 @@
         .dropdown-menu {
             display: none;
             position: absolute;
-            bottom: 125%;
+            bottom: 130%;
             left: 0;
             width: 100%;
             background: #ffffff;
@@ -155,16 +157,18 @@
             border-bottom: 1px dashed #ccc;
             cursor: pointer;
             text-align: left;
+            color: #000;
         }
         .dropdown-item:hover {
             background: #f5f5f5;
         }
 
         .calc-log {
-            font-size: 15px;
-            color: #555;
+            font-size: 16px;
+            color: #444;
             text-align: left;
             font-family: monospace;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -172,14 +176,14 @@
 
 <div class="calculator">
     
-    <!-- 50% BAGIAN ATAS: LAYAR MONITOR -->
+    <!-- 1. AREA LAYAR MONITOR (BESAR & DOMINAN) -->
     <div class="screen-container">
         <div id="calc-flow" class="calc-log">Mulai perhitungan...</div>
         <div id="screen">0</div>
         <div class="screen-divider"></div>
     </div>
 
-    <!-- 50% BAGIAN BAWAH: AREA TOMBOL -->
+    <!-- 2. AREA KOTAK TOMBOL (MERAPAT DI BAWAH) -->
     <div class="buttons-container">
         
         <!-- BARIS KOTAK PERTAMA: Angka 0-9 -->
@@ -196,13 +200,13 @@
             <button onclick="tekan('9')">9</button>
         </div>
 
-        <!-- BARIS KOTAK KEDUA: Operator Utama & Sama Dengan (* : + - =) -->
+        <!-- BARIS KOTAK KEDUA: Operator Utama (* : + - =) -->
         <div class="rom-grid-second">
-            <button onclick="pilihOperator('*')">*</button>
-            <button onclick="pilihOperator(':')">:</button>
-            <button onclick="pilihOperator('+')">+</button>
-            <button onclick="pilihOperator('-')">-</button>
-            <button onclick="prosesHasilAkhir()">=</button>
+            <button onclick="tekan('*')">*</button>
+            <button onclick="tekan(':')">:</button>
+            <button onclick="tekan('+')">+</button>
+            <button onclick="tekan('-')">-</button>
+            <button onclick="hitungHasil()">=</button>
         </div>
 
         <!-- BARIS KOTAK KETIGA: PILIH, EDIT, CLEAR -->
@@ -214,11 +218,10 @@
                 
                 <div id="dropdown-menu" class="dropdown-menu">
                     <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi & Simbol:</div>
-                    <!-- Titik Desimal dimasukkan ke sini sesuai permintaan -->
                     <div class="dropdown-item" onclick="tekan('.')">. (Titik Desimal)</div>
-                    <div class="dropdown-item" onclick="pilihOperator('%')">% (Persen)</div>
-                    <div class="dropdown-item" onclick="pilihOperator('Σ')">Σ (Sigma)</div>
-                    <div class="dropdown-item" onclick="pilihOperator('^')">^ (Pangkat)</div>
+                    <div class="dropdown-item" onclick="tekan('%')">% (Persen)</div>
+                    <div class="dropdown-item" onclick="tekan('Σ')">Σ (Sigma)</div>
+                    <div class="dropdown-item" onclick="tekan('^')">^ (Pangkat)</div>
                 </div>
             </div>
 
@@ -238,70 +241,61 @@ const flow = document.getElementById("calc-flow");
 let clickTimer = null;
 let isManualEdit = false;
 
-let totalAkumulasi = 0; 
-let operatorAktif = "+"; 
-let inputBaru = true;
-
+// Memasukkan input ke layar
 function tekan(karakter) {
     if (isManualEdit) return;
     let v = String(karakter);
     
-    if (inputBaru || scr.innerText === "0") {
-        scr.innerText = v === "." ? "0." : v;
-        inputBaru = false;
+    // Jika layar masih default '0', ganti langsung dengan angka baru
+    if (scr.innerText === "0" && !"+-*/%x:^Σ.".includes(v)) {
+        scr.innerText = v;
     } else {
-        if (v === "." && scr.innerText.includes(".")) return; // Cegah titik ganda
+        // Mencegah pengetikan titik desimal ganda dalam satu bilangan
+        if (v === "." && scr.innerText.endsWith(".")) return;
         scr.innerText += v;
     }
 }
 
-// Logika hitung beruntun turun ke bawah saat operator ditekan
-function pilihOperator(op) {
-    if (isManualEdit) return;
-    eksekusiKalkulasiLokal();
-    operatorAktif = op === ":" ? "/" : op;
-    inputBaru = true;
-    flow.innerText = `Subtotal: ${totalAkumulasi} (${op})`;
-}
+// Menghitung hasil rumus matematika di layar
+function hitungHasil() {
+    if (isManualEdit || scr.innerText === "0" || scr.innerText === "") return;
+    try {
+        let rumusAwal = scr.innerText;
+        let ekspresi = rumusAwal;
 
-function eksekusiKalkulasiLokal() {
-    let nilaiSaatIni = parseFloat(scr.innerText) || 0;
-    
-    if (operatorAktif === "+") totalAkumulasi += nilaiSaatIni;
-    else if (operatorAktif === "-") totalAkumulasi -= nilaiSaatIni;
-    else if (operatorAktif === "*") totalAkumulasi *= nilaiSaatIni;
-    else if (operatorAktif === "/") {
-        if (nilaiSaatIni !== 0) totalAkumulasi /= nilaiSaatIni;
+        // Normalisasi teks visual ke operator JavaScript asli
+        ekspresi = ekspresi.replace(/x/g, "*").replace(/:/g, "/");
+        ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
+        ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
+
+        // Formula khusus Sigma Σ
+        ekspresi = ekspresi.replace(/Σ(\d+)/g, function(match, angka) {
+            let total = 0;
+            for (let i = 1; i <= parseInt(angka); i++) { total += i; }
+            return total;
+        });
+
+        // Eksekusi perhitungan aman
+        let hasil = eval(ekspresi);
+        
+        // Perbarui log alur di bagian atas layar
+        flow.innerText = `${rumusAwal} =`;
+        scr.innerText = hasil;
+    } catch(e) {
+        scr.innerText = "Error";
     }
-    scr.innerText = totalAkumulasi;
 }
 
-// Fungsi tombol Sama Dengan (=) untuk menutup urutan hitungan
-function prosesHasilAkhir() {
-    if (isManualEdit) return;
-    eksekusiKalkulasiLokal();
-    flow.innerText = "Hasil Akhir Perhitungan:";
-    inputBaru = true;
-    operatorAktif = "+"; 
-}
-
+// Mengaktifkan pengetikan manual lewat keyboard di dalam layar kalkulator
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
     scr.contentEditable = isManualEdit ? "true" : "false";
     document.getElementById("btn-edit").innerText = isManualEdit ? "OK" : "EDIT";
-    if (isManualEdit) scr.focus();
+    if (isManualEdit) {
+        scr.focus();
+    } else {
+        hitungHasil(); // Jalankan hitungan otomatis saat mode EDIT selesai (OK)
+    }
 }
 
-function handleClearClick() {
-    if (clickTimer == null) {
-        clickTimer = setTimeout(function () {
-            clickTimer = null;
-            if (scr.innerText.length > 1) {
-                scr.innerText = scr.innerText.slice(0, -1);
-            } else {
-                scr.innerText = "0";
-            }
-        }, 250);
-    } else {
-        clearTimeout(clickTimer);
-        clickTimer = null;
+// Kontrol Satu Tombol: Klik 1x hapus satu digit (DEL), Klik 2x hapus semua (CLEAR)
