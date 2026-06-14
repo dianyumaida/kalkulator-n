@@ -293,7 +293,7 @@
     </div>
 
 </div> <!-- Penutup .calculator -->
-    <!-- 🌟 SILAKAN TAMBAHKAN MULAI DARI BARIS 296 KE BAWAH SECARA UTUH 🌟 -->
+ <!-- 🌟 SILAKAN TAMBAHKAN MULAI DARI BARIS 296 HINGGA SELESAI 🌟 -->
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
@@ -313,12 +313,12 @@ function pilihItem(karakter) {
     tutupSemuaMenu();
 }
 
-// FUNGSI UTAMA UNTUK MEMBUKA MENU PILIH (FULL SCREEN)
+// FUNGSI AKTIF UNTUK MEMBUKA MENU BESAR SAAT PILIH DIKLIK
 function klikTombolPilih() {
     document.getElementById('dropdown-menu').style.display = "block";
 }
 
-// FUNGSI BUKA TUTUP SUB-DROPDOWN SIGMA
+// FUNGSI BUKA TUTUP SUB-DROPDOWN INTERNAL SIGMA
 function toggleSubDropdown(event) {
     if (event) event.stopPropagation();
     const subPanel = document.getElementById('sigma-sub-panel');
@@ -333,7 +333,7 @@ function toggleSubDropdown(event) {
     }
 }
 
-// LOGIKA PILIHAN CUCU RADIO BUTTON
+// LOGIKA DETEKSI RADIO BUTTON CUCU SIGMA
 function pilihCucu(teksRumus) {
     const eventTarget = window.event ? window.event.currentTarget : null;
     if (eventTarget) {
@@ -371,7 +371,7 @@ function hitungHasil() {
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // Pemrosesan Sigma Kebal Error Browser
+        // Pemrosesan Rumus Sigma Runtut
         ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
