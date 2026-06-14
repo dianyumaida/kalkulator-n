@@ -230,22 +230,27 @@ function hitungHasil() {
     try {
         let ekspresi = rumusBarisIni;
         
-        // 1. Normalisasi operator dasar agar aman dibaca JavaScript
+        // 1. Ubah tanda bagi visual (:) menjadi pembagian kode (/)
         ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // 2. Perbaikan Logika Sigma Super Aman (Mendukung tombol fisik Σ maupun salinan teks)
+        // 2. Logika Sigma yang sudah diperkuat
+        // Mendeteksi simbol Σ biasa atau kode unicode internal (\u03A3)
         ekspresi = ekspresi.replace(/[Σ\u03A3](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
             for (let i = 1; i <= batas; i++) { 
                 total += i; 
             } 
-            return "(" + total + ")"; // Dibungkus kurung agar tidak merusak urutan tambah/kali matematika
+            return total; // Mengembalikan angka hasil penjumlahan langsung (misal Σ3 menjadi 6)
         });
 
-        // 3. Menghitung hasil akhir string rumus
+        // 3. Pembersihan otomatis tanda operator menumpuk (Cegah tumpukan ++ atau +*)
+        ekspresi = ekspresi.replace(/\+\+/g, "+");
+        ekspresi = ekspresi.replace(/\-\-/g, "+");
+
+        // 4. Hitung string akhir
         let hasil = eval(ekspresi);
         
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
