@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Retro</title>
+    <title>Kalkulator Beruntun Kustom</title>
     <style>
         /* Desain Utama Kalkulator Retro */
         .calculator {
-            width: 360px;
+            width: 380px;
             background: #ffffff;
             border: 6px solid #000000;
             border-radius: 4px;
@@ -18,90 +18,74 @@
             box-sizing: border-box;
         }
 
-        /* Area Layar Utama & Tombol Angka */
+        /* AREA LAYAR UTAMA (DIBESARKAN) */
         .screen-container {
             border: 5px solid #000000;
-            padding: 20px 12px 12px 12px;
+            padding: 25px 15px 15px 15px;
             margin-bottom: 20px;
             background: #ffffff;
         }
         
         #screen {
-            font-size: 70px;
+            font-size: 85px; /* Layar diperbesar sesuai permintaan */
             text-align: right;
-            font-weight: normal;
-            min-height: 80px;
-            line-height: 80px;
+            font-weight: bold;
+            min-height: 95px;
+            line-height: 95px;
             word-wrap: break-word;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             padding-right: 5px;
         }
 
-        /* Pembatas Garis Tipis di Bawah Angka Layar */
-        .screen-divider {
-            border-top: 3px solid #000000;
-            margin-bottom: 15px;
-        }
-
-        /* Baris Tombol Angka (0-9) */
-        .numbers-row {
+        /* BARIS KOTAK PERTAMA: TOMBOL ANGKA 0-9 */
+        .rom-grid-first {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 15px;
+            border: 5px solid #000000;
+            padding: 8px;
+            background: #ffffff;
         }
-        
-        .numbers-row button {
+        .rom-grid-first button {
             flex: 1;
+            height: 45px;
             margin: 0 2px;
             background: #f2f2f2;
-            border: 2px solid #b5b5b5;
+            border: 3px solid #000000;
             border-radius: 4px;
             font-weight: bold;
-            padding: 8px 0;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 14px;
             box-shadow: inset 0 -2px 0 #ccc;
         }
-        
-        .numbers-row button:active {
+        .rom-grid-first button:active {
             background: #e0e0e0;
         }
 
-        /* Kontainer Baris Kotak-Kotak Tengah */
-        .rom-grid {
+        /* BARIS KOTAK KEDUA: OPERATOR (* : + - .) */
+        .rom-grid-second {
             display: flex;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            margin-bottom: 15px;
             border: 5px solid #000000;
-            padding: 12px 10px 12px 28px; /* Memberikan ruang longgar di dalam bingkai sesuai sketsa */
-            position: relative;
+            padding: 8px;
             background: #ffffff;
         }
-        
-        /* Indikator Simbol (* : +) di Kiri Bingkai */
-        .op-indicator {
-            position: absolute;
-            left: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 14px;
-            display: flex;
-            flex-direction: column;
-            letter-spacing: 1px;
-        }
-
-        /* Komponen Slot Kotak Vertikal */
-        .grid-item {
+        .rom-grid-second button {
             flex: 1;
-            height: 55px;
-            border: 4px solid #000000;
+            height: 50px;
             margin: 0 4px;
-            background: transparent;
+            background: #ffffff;
+            border: 3px solid #000000;
+            font-weight: bold;
+            font-size: 20px;
             cursor: pointer;
-            border-radius: 2px;
+        }
+        .rom-grid-second button:active {
+            background: #f0f0f0;
         }
 
-        /* Baris Fungsi Terbawah */
+        /* BARIS KOTAK KETIGA: TOMBOL FUNGSI (PILIH, EDIT, CLEAR/DEL) */
         .row-bottom {
             display: flex;
             justify-content: space-between;
@@ -110,10 +94,8 @@
             padding: 12px;
             background: #e5e5e5;
         }
-
-        /* Pengaturan Tombol Fungsi Utama */
         .btn-pilih {
-            width: 100%;
+            flex: 1.2;
             background: #ffffff;
             border: 4px solid #000000;
             font-weight: bold;
@@ -121,21 +103,20 @@
             font-size: 16px;
             cursor: pointer;
         }
-        
-        .btn-ok {
+        .btn-edit {
             flex: 1;
-            background: #ffcc00; /* Warna Kuning Sesuai Gambar */
+            background: #ffcc00; /* Warna Kuning / OK / EDIT */
             border: 4px solid #000000;
             font-weight: bold;
             padding: 12px 0;
             font-size: 16px;
             cursor: pointer;
             margin: 0 12px;
+            text-align: center;
         }
-        
         .btn-clear {
             flex: 1;
-            background: #ff2a2a; /* Warna Merah Sesuai Gambar */
+            background: #ff2a2a; /* Warna Merah */
             border: 4px solid #000000;
             color: #ffffff;
             font-weight: bold;
@@ -158,20 +139,25 @@
             padding: 12px;
             box-sizing: border-box;
         }
-        
         .dropdown-item {
             padding: 10px;
             font-size: 15px;
             border-bottom: 1px dashed #ccc;
             cursor: pointer;
+            text-align: left;
         }
-        
-        .dropdown-item:last-child {
-            border-bottom: none;
-        }
-        
         .dropdown-item:hover {
             background: #f5f5f5;
+        }
+
+        /* Log Tampilan Kecil untuk Memantau Perhitungan Turun Ke Bawah */
+        .calc-log {
+            font-size: 14px;
+            color: #666;
+            text-align: left;
+            min-height: 20px;
+            margin-bottom: 5px;
+            font-family: monospace;
         }
     </style>
 </head>
@@ -179,71 +165,54 @@
 
 <div class="calculator">
     
-    <!-- Bagian Atas: Monitor & Tombol Input Angka -->
+    <!-- Monitor Utama -->
     <div class="screen-container">
+        <div id="calc-flow" class="calc-log">Mulai perhitungan...</div>
         <div id="screen">0</div>
-        <div class="screen-divider"></div>
-        <div class="numbers-row">
-            <button onclick="tekan('0')">0</button>
-            <button onclick="tekan('1')">1</button>
-            <button onclick="tekan('2')">2</button>
-            <button onclick="tekan('3')">3</button>
-            <button onclick="tekan('4')">4</button>
-            <button onclick="tekan('5')">5</button>
-            <button onclick="tekan('6')">6</button>
-            <button onclick="tekan('7')">7</button>
-            <button onclick="tekan('8')">8</button>
-            <button onclick="tekan('9')">9</button>
-        </div>
     </div>
 
-    <!-- KOTAK TENGAH ATAS: 9 Slot Kotak dengan Tanda Operator -->
-    <div class="rom-grid">
-        <div class="op-indicator">
-            <span>*</span>
-            <span>:</span>
-            <span>+</span>
-        </div>
-        <div class="grid-item" onclick="tekan('*')"></div>
-        <div class="grid-item" onclick="tekan(':')"></div>
-        <div class="grid-item" onclick="tekan('+')"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
+    <!-- BARIS KOTAK PERTAMA: Angka 0-9 -->
+    <div class="rom-grid-first">
+        <button onclick="tekan('0')">0</button>
+        <button onclick="tekan('1')">1</button>
+        <button onclick="tekan('2')">2</button>
+        <button onclick="tekan('3')">3</button>
+        <button onclick="tekan('4')">4</button>
+        <button onclick="tekan('5')">5</button>
+        <button onclick="tekan('6')">6</button>
+        <button onclick="tekan('7')">7</button>
+        <button onclick="tekan('8')">8</button>
+        <button onclick="tekan('9')">9</button>
     </div>
 
-    <!-- KOTAK TENGAH BAWAH: 7 Slot Kotak Kosong -->
-    <div class="rom-grid" style="padding-left: 10px;">
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item"></div>
+    <!-- BARIS KOTAK KEDUA: Operator * : + - . -->
+    <div class="rom-grid-second">
+        <button onclick="pilihOperator('*')">*</button>
+        <button onclick="pilihOperator(':')">:</button>
+        <button onclick="pilihOperator('+')">+</button>
+        <button onclick="pilihOperator('-')">-</button>
+        <button onclick="tekan('.')">.</button>
     </div>
 
-    <!-- BARIS TERBAWAH: Navigasi Menu & Perintah -->
+    <!-- BARIS KOTAK KETIGA: Navigasi & Fungsi Perintah -->
     <div class="row-bottom" style="position: relative;">
         
-        <!-- Dropdown Pembungkus Komponen PILIH -->
-        <div style="flex: 1.2; position: relative;">
+        <!-- Dropdown PILIH -->
+        <div style="flex: 1.2; position: relative; display: flex;">
             <button onclick="klikTombolPilih()" class="btn-pilih" type="button">&#9664; PILIH &#9660;</button>
             
-            <!-- Isi Konten Menu Dropdown -->
             <div id="dropdown-menu" class="dropdown-menu">
-                <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px;">Pilih Operasi:</div>
-                <div class="dropdown-item" onclick="tekan('%')">% (Persen)</div>
-                <div class="dropdown-item" onclick="tekan('Σ')">Σ (Sigma)</div>
-                <div class="dropdown-item" onclick="tekan('^')">^ (Pangkat)</div>
+                <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi Tambahan:</div>
+                <div class="dropdown-item" onclick="pilihOperator('%')">% (Persen)</div>
+                <div class="dropdown-item" onclick="pilihOperator('Σ')">Σ (Sigma)</div>
+                <div class="dropdown-item" onclick="pilihOperator('^')">^ (Pangkat)</div>
             </div>
         </div>
 
-        <!-- Tombol OK (Kuning) & Tombol CLEAR (Merah) -->
-        <button id="btn-ok" onclick="hitungHasil()" class="btn-ok" type="button">OK</button>
+        <!-- Tombol EDIT / OK (Kuning) -->
+        <button id="btn-edit" onclick="prosesHitungTurun()" class="btn-edit" type="button">EDIT</button>
+        
+        <!-- Tombol Gabungan CLEAR/DEL (Merah) -->
         <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
     </div>
 
@@ -251,60 +220,80 @@
 
 <script>
 const scr = document.getElementById("screen");
+const flow = document.getElementById("calc-flow");
 let clickTimer = null;
 
-// Menginput karakter ke dalam layar
+let totalAkumulasi = 0; 
+let operatorAktif = "+"; 
+let inputBaru = true;
+
+// Memasukkan angka ke layar
 function tekan(karakter) {
     let v = String(karakter);
-    if (scr.innerText === "0" && !"+-*/%x:^Σ".includes(v)) {
+    
+    if (inputBaru || scr.innerText === "0") {
         scr.innerText = v;
+        inputBaru = false;
     } else {
         scr.innerText += v;
     }
 }
 
-// Mengeksekusi kalkulasi matematika saat tombol "OK" ditekan
-function hitungHasil() {
-    if (scr.innerText === "0" || scr.innerText === "") return;
-    try {
-        let txt = scr.innerText;
-
-        // Pemetaan string operator visual menjadi format fungsi JavaScript asli
-        txt = txt.replace(/x/g, "*").replace(/:/g, "/");
-        txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
-        txt = txt.replace(/(\d+)%/g, "($1/100)");
-
-        // Formula khusus fungsi Sigma
-        txt = txt.replace(/Σ(\d+)/g, function(match, angka) {
-            let total = 0;
-            for (let i = 1; i <= parseInt(angka); i++) { total += i; }
-            return total;
-        });
-
-        let res = eval(txt);
-        scr.innerText = res;
-    } catch(e) {
-        scr.innerText = "Error";
-    }
+// Logika ketika operator beruntun ditekan (memicu hitung turun ke bawah)
+function pilihOperator(op) {
+    eksekusiKalkulasiLokal();
+    operatorAktif = op === ":" ? "/" : (op === "x" ? "*" : op);
+    inputBaru = true;
+    flow.innerText = `Subtotal: ${totalAkumulasi} (${op})`;
 }
 
-// Logika cerdas tombol CLEAR (Klik 1x hapus satu digit terakhir, klik 2x hapus total)
+// Fungsi internal untuk menghitung baris saat ini sebelum turun ke bawah
+function eksekusiKalkulasiLokal() {
+    let nilaiSaatIni = parseFloat(scr.innerText) || 0;
+    
+    if (operatorAktif === "+") totalAkumulasi += nilaiSaatIni;
+    else if (operatorAktif === "-") totalAkumulasi -= nilaiSaatIni;
+    else if (operatorAktif === "*") totalAkumulasi *= nilaiSaatIni;
+    else if (operatorAktif === "/") {
+        if (nilaiSaatIni !== 0) totalAkumulasi /= nilaiSaatIni;
+    }
+    else if (operatorAktif === "%") totalAkumulasi = totalAkumulasi * (nilaiSaatIni / 100);
+    
+    scr.innerText = totalAkumulasi;
+}
+
+// Memicu hasil akhir saat tombol kuning (EDIT/OK) ditekan
+function prosesHitungTurun() {
+    eksekusiKalkulasiLokal();
+    flow.innerText = "Hasil Akhir Perhitungan:";
+    inputBaru = true;
+    operatorAktif = "+"; // Reset ke default untuk transaksi berikutnya
+}
+
+// Logika Satu Tombol untuk CLEAR dan DEL
 function handleClearClick() {
     if (clickTimer == null) {
         clickTimer = setTimeout(function () {
             clickTimer = null;
-            // Aksi Klik Sekali (Delete Single)
-            scr.innerText = scr.innerText.length > 1 ? scr.innerText.slice(0, -1) : "0";
+            // Klik 1x: Hapus satu angka ke belakang (DEL)
+            if (scr.innerText.length > 1) {
+                scr.innerText = scr.innerText.slice(0, -1);
+            } else {
+                scr.innerText = "0";
+            }
         }, 250);
     } else {
         clearTimeout(clickTimer);
         clickTimer = null;
-        // Aksi Klik Dua Kali (Clear All)
+        // Klik 2x cepat: Reset Total (CLEAR ALL)
         scr.innerText = "0";
+        totalAkumulasi = 0;
+        operatorAktif = "+";
+        inputBaru = true;
+        flow.innerText = "Mulai perhitungan...";
     }
 }
 
-// Membuka dan menutup panel menu pilihan melayang
 function klikTombolPilih() {
     const menu = document.getElementById('dropdown-menu');
     menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
