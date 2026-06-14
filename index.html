@@ -67,18 +67,18 @@
             <button onclick="tekan('9')">9</button>
         </div>
         
-        <!-- BARIS 2: Simbol . sampai = -->
-        <div class="row">
-            <button onclick="tekan('.')">.</button><button onclick="tekan('+')">+</button><button onclick="tekan('-')">-</button>
-            <button onclick="tekan('*')">x</button><button onclick="tekan('/')">:</button>
-            <!-- Tombol Sama Dengan (=) Aktif Normal -->
-            <button onclick="hitungHasil()">=</button>
-        </div>
-        
-            <!-- BARIS 3: Area Kotak Transparan Terbawah -->
+            <!-- BARIS 2: Operator Utama (*, :, +, -) -->
+    <div class="rom">
+        <button onclick="tekan('*')" type="button">*</button>
+        <button onclick="tekan(':')" type="button">:</button>
+        <button onclick="tekan('+')" type="button">+</button>
+        <button onclick="tekan('-')" type="button">-</button>
+    </div>
+
+    <!-- BARIS 3: Tombol Fungsi (PILIH, EDIT, CLEAR/DEL) -->
     <div class="rom row-bottom" style="position: relative;">
         
-        <!-- Pembungkus khusus agar tombol PILIH dan Dropdown Menu bersatu -->
+        <!-- Pembungkus PILIH dan Dropdown Menu -->
         <div class="pilih-wrapper" style="position: relative; flex: 1; display: flex;">
             <button onclick="klikTombolPilih()" class="btn-pilih" type="button">PILIH</button>
             
@@ -112,6 +112,7 @@
                         <span>Segera Datang</span>
                     </div>
                 </div>
+
                 <!-- KOTAK 3: RIWAYAT -->
                 <div class="menu-group" style="padding: 8px 0; text-align: left;">
                     <div class="group-header" onclick="toggleSub('sec-riwayat')" style="background: #f8f9fa; padding: 8px 12px; display: flex; justify-content: space-between; cursor: pointer; font-weight: bold; font-size: 14px;">
@@ -127,22 +128,21 @@
         </div> <!-- Penutup .pilih-wrapper -->
 
         <button id="btn-edit" onclick="nodeEdit()" class="btn-edit" type="button">EDIT</button>
-        <button onclick="del()" ondblclick="clearAll()" class="btn-clear" type="button">CLEAR</button>
-    </div> <!-- Penutup .rom.row-bottom -->
+        
+        <!-- Gabungan Tombol Clear dan Delete (Klik=Hapus 1 angka, Dobel Klik=Hapus semua) -->
+        <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR/DEL</button>
+    </div>
 
-</div> <!-- Penutup .calculator utama Anda -->
+</div> <!-- Penutup .calculator utama -->
 
 <script>
 const scr = document.getElementById("screen");
 let isEdit = false;
+let clickTimer = null;
 
-// Memastikan fungsi menangkap karakter tombol dengan benar
 function tekan(karakter) {
     if (isEdit) return;
-    
-    // Konversi nilai string jika tidak sengaja bertipe object event
     let v = String(karakter);
-    
     if (scr.innerText === "0" && !"+-*/%x:^Σ".includes(v)) {
         scr.innerText = v;
     } else {
@@ -156,12 +156,10 @@ function hitungHasil() {
         let txt = scr.innerText;
         let riwayatAwal = txt;
 
-        // Normalisasi operator visual ke operator komputasi JavaScript
         txt = txt.replace(/x/g, "*").replace(/:/g, "/");
         txt = txt.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         txt = txt.replace(/(\d+)%/g, "($1/100)");
 
-        // Logika Eksekusi Sigma
         txt = txt.replace(/Σ(\d+)/g, function(match, angka) {
             let total = 0;
             for (let i = 1; i <= parseInt(angka); i++) { total += i; }
@@ -170,14 +168,12 @@ function hitungHasil() {
 
         let res = eval(txt);
         
-        // Simpan ke Riwayat
         const containerRiwayat = document.getElementById('h-txt');
         if (containerRiwayat) {
             if (containerRiwayat.innerText.includes("Belum ada riwayat")) {
                 containerRiwayat.innerHTML = "";
             }
             let barisBaru = document.createElement("div");
-            barisBaru.className = "history-list-item";
             barisBaru.style.borderBottom = "1px dashed #eee";
             barisBaru.style.padding = "4px 0";
             barisBaru.innerText = riwayatAwal + " = " + res;
@@ -191,9 +187,21 @@ function hitungHasil() {
     }
 }
 
-function del() {
-    if (!isEdit) {
-        scr.innerText = scr.innerText.length > 1 ? scr.innerText.slice(0, -1) : "0";
+// Mengatur logika satu tombol untuk Delete dan Clear All
+function handleClearClick() {
+    if (clickTimer == null) {
+        clickTimer = setTimeout(function () {
+            clickTimer = null;
+            // Klik sekali: Hapus satu karakter terakhir (DEL)
+            if (!isEdit) {
+                scr.innerText = scr.innerText.length > 1 ? scr.innerText.slice(0, -1) : "0";
+            }
+        }, 250); // Jeda waktu deteksi klik ganda
+    } else {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        // Klik dua kali: Bersihkan semua (CLEAR)
+        clearAll();
     }
 }
 
