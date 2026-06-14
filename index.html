@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Retro Final</title>
+    <title>Kalkulator Beruntun Akuntansi</title>
     <style>
         /* Kontainer Utama Kalkulator */
         .calculator {
             width: 380px;
-            height: 730px; /* Memastikan tinggi pas di layar */
+            height: 730px;
             background: #ffffff;
             border: 6px solid #000000;
             border-radius: 4px;
@@ -21,53 +21,48 @@
             flex-direction: column;
         }
 
-        /* AREA LAYAR UTAMA (DIBESARKAN) */
+        /* AREA LAYAR UTAMA (SETENGAH ATAS - DIPERBESAR) */
         .screen-container {
-            flex: 1; /* Layar mengambil area maksimal setengah ke atas */
+            flex: 1;
             border: 5px solid #000000;
             padding: 15px;
             background: #ffffff;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             margin-bottom: 15px;
             min-height: 320px;
-        }
-        
-        /* Teks Panduan Alur Perhitungan Diisolasi di Sini */
-        .calc-log {
-            font-size: 16px;
-            color: #444;
-            text-align: left;
-            font-family: monospace;
-            font-weight: bold;
-            min-height: 20px;
-        }
-
-        /* Angka Utama Diperbesar Maksimal */
-        #screen {
-            font-size: 95px;
-            text-align: right;
-            font-weight: bold;
-            word-wrap: break-word;
-            line-height: 1;
-            margin-top: auto; 
-            padding-bottom: 15px;
-            overflow: hidden;
-        }
-
-        .screen-divider {
-            border-top: 5px solid #000000;
-            margin-top: 5px;
-        }
-
-        /* AREA KOTAK TOMBOL (DIRAPATKAN KE BAWAH) */
-        .buttons-container {
-            margin-top: auto; /* Memaksa tombol menetap rapat di bawah */
+            overflow-y: auto; /* Memungkinkan baris hasil hitungan di-scroll jika penuh */
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Mengurangi jarak agar tombol makin padat kebawah */
+            align-items: flex-end; /* Memaksa semua teks rata kanan atas */
+            justify-content: flex-start; /* Mulai barisan teks dari paling atas */
+        }
+        
+        /* Gaya Baris Ketikan dan Hasil Hitungan */
+        .calc-row {
+            font-size: 32px; /* Ukuran pas agar muat beberapa baris ke bawah */
+            font-weight: bold;
+            color: #000000;
+            line-height: 1.3;
+            width: 100%;
+            text-align: right;
+            word-wrap: break-word;
+        }
+
+        /* Menyoroti hasil paling baru agar lebih tebal */
+        .calc-row.latest-result {
+            font-size: 40px;
+            color: #1a237e; /* Berwarna biru gelap penanda hasil akhir */
+            border-bottom: 2px dashed #000;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* AREA KOTAK TOMBOL (MERAPAT DI BAWAH) */
+        .buttons-container {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         /* BARIS KOTAK 1: ANGKA 0-9 */
@@ -129,7 +124,7 @@
         }
         .btn-edit {
             flex: 1;
-            background: #ffcc00; /* Kuning */
+            background: #ffcc00;
             border: 4px solid #000000;
             font-weight: bold;
             padding: 12px 0;
@@ -140,7 +135,7 @@
         }
         .btn-clear {
             flex: 1;
-            background: #ff2a2a; /* Merah */
+            background: #ff2a2a;
             color: #ffffff;
             font-weight: bold;
             padding: 12px 0;
@@ -148,7 +143,7 @@
             cursor: pointer;
         }
 
-        /* Dropdown Menu melayang ke atas */
+        /* Dropdown Menu melayang */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -179,11 +174,9 @@
 
 <div class="calculator">
     
-    <!-- 1. AREA LAYAR MONITOR (BESAR - 50%+) -->
-    <div class="screen-container">
-        <div id="calc-flow" class="calc-log">Mulai perhitungan...</div>
-        <div id="screen">0</div>
-        <div class="screen-divider"></div>
+    <!-- 1. AREA LAYAR MONITOR (KOSONG DI AWAL, MENUMPUK KE BAWAH) -->
+    <div class="screen-container" id="screen-display">
+        <!-- Baris-baris kalkulasi otomatis ditambahkan ke sini lewat JavaScript -->
     </div>
 
     <!-- 2. AREA KOTAK TOMBOL (MERAPAT DI BAWAH) -->
@@ -223,7 +216,7 @@
                     <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi & Simbol:</div>
                     <div class="dropdown-item" onclick="tekan('.')">. (Titik Desimal)</div>
                     <div class="dropdown-item" onclick="tekan('%')">% (Persen)</div>
-                    <div class="dropdown-item" onclick="tekan('Σ')"><span>Σ (Sigma)</span></div>
+                    <div class="dropdown-item" onclick="tekan('Σ')">Σ (Sigma)</div>
                     <div class="dropdown-item" onclick="tekan('^')">^ (Pangkat)</div>
                 </div>
             </div>
@@ -239,39 +232,43 @@
 </div>
 
 <script>
-const scr = document.getElementById("screen");
-const flow = document.getElementById("calc-flow");
+const display = document.getElementById("screen-display");
 let clickTimer = null;
 let isManualEdit = false;
 
-// Memasukkan input teks ke layar secara runtut
+let stringRumusAktif = ""; 
+let currentLineElement = null;
+
+// Fungsi saat tombol ditekan
 function tekan(karakter) {
     if (isManualEdit) return;
     let v = String(karakter);
     
-    // Logika pengisian angka normal
-    if (scr.innerText === "0" && !"+-*/%x:^Σ.".includes(v)) {
-        scr.innerText = v;
-    } else {
-        // Mencegah pengetikan titik ganda beruntun
-        if (v === "." && scr.innerText.endsWith(".")) return;
-        scr.innerText += v;
+    // Jika belum ada baris pengetikan aktif, buat baris baru di kanan atas
+    if (!currentLineElement) {
+        currentLineElement = document.createElement("div");
+        currentLineElement.className = "calc-row";
+        display.appendChild(currentLineElement);
     }
+    
+    stringRumusAktif += v;
+    currentLineElement.innerText = stringRumusAktif;
+    
+    // Auto-scroll ke paling bawah layar jika baris sudah sangat banyak
+    display.scrollTop = display.scrollHeight;
 }
 
-// Mengeksekusi string rumus kalkulator di dalam layar
+// Fungsi eksekusi hitung turun ke bawah saat klik Sama Dengan (=)
 function hitungHasil() {
-    if (isManualEdit || scr.innerText === "0" || scr.innerText === "") return;
+    if (isManualEdit || stringRumusAktif === "") return;
     try {
-        let rumusAwal = scr.innerText;
-        let ekspresi = rumusAwal;
+        let ekspresi = stringRumusAktif;
 
-        // Penyelarasan simbol visual ke sintaksis javascript
+        // Normalisasi simbol komputasi JavaScript
         ekspresi = ekspresi.replace(/x/g, "*").replace(/:/g, "/");
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
 
-        // Formula khusus konversi Sigma Σ
         ekspresi = ekspresi.replace(/Σ(\d+)/g, function(match, angka) {
             let total = 0;
             for (let i = 1; i <= parseInt(angka); i++) { total += i; }
@@ -280,25 +277,22 @@ function hitungHasil() {
 
         let hasil = eval(ekspresi);
         
-        flow.innerText = `${rumusAwal} =`;
-        scr.innerText = hasil;
+        // Buat baris baru di bawahnya khusus untuk menampilkan HASIL
+        let resultLine = document.createElement("div");
+        resultLine.className = "calc-row latest-result";
+        resultLine.innerText = "= " + hasil;
+        display.appendChild(resultLine);
+        
+        // Reset penampung rumus untuk baris transaksi berikutnya
+        stringRumusAktif = "";
+        currentLineElement = null;
+        
+        display.scrollTop = display.scrollHeight;
     } catch(e) {
-        scr.innerText = "Error";
+        if (currentLineElement) currentLineElement.innerText = "Error";
+        stringRumusAktif = "";
+        currentLineElement = null;
     }
 }
 
-// Fitur tombol EDIT (Kuning) untuk mengubah teks layar via keyboard
-function aktifkanModeEdit() {
-    isManualEdit = !isManualEdit;
-    scr.contentEditable = isManualEdit ? "true" : "false";
-    document.getElementById("btn-edit").innerText = isManualEdit ? "OK" : "EDIT";
-    if (isManualEdit) {
-        scr.focus();
-    } else {
-        hitungHasil(); // Langsung hitung otomatis jika mode edit selesai dilakukan
-    }
-}
-
-// Klik 1x hapus digit terakhir (DEL), Klik 2x bersihkan total (CLEAR ALL)
-function handleClearClick() {
-    if (clickTimer == null) {
+// Mengizinkan layar diketik manual melalui keyboard laptop/PC jika diinginkan
