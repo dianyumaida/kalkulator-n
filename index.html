@@ -195,7 +195,8 @@
                     <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi:</div>
                     <div class="dropdown-item" onclick="tekan('.')">. (Titik)</div>
                     <div class="dropdown-item" onclick="tekan('%')">% (Persen)</div>
-                    <div class="dropdown-item" onclick="tekan('Σ')">Σ (Sigma)</div>
+                    <!-- Tombol menggunakan kode pemicu unicode aman -->
+                    <div class="dropdown-item" onclick="tekan('\u03A3')">Σ (Sigma)</div>
                     <div class="dropdown-item" onclick="tekan('^')">^ (Pangkat)</div>
                 </div>
             </div>
@@ -220,7 +221,6 @@ function tekan(karakter) {
 }
 
 function renderLayar() {
-    // Tampilkan riwayat lama + baris ketikan aktif saat ini di posisi paling bawah
     let htmlAktif = rumusBarisIni ? `<div class="calc-row">${rumusBarisIni}</div>` : "";
     display.innerHTML = riwayatHitunganHTML + htmlAktif;
     display.scrollTop = display.scrollHeight;
@@ -230,24 +230,32 @@ function hitungHasil() {
     if (isManualEdit || rumusBarisIni === "") return;
     try {
         let ekspresi = rumusBarisIni;
-        ekspresi = ekspresi.replace(/:/g, "/"); // Konversi pembagian aman
+        
+        // 1. Normalisasi operator standar
+        ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
-        ekspresi = ekspresi.replace(/Σ(\d+)/g, function(m, n) {
-            let t = 0; for (let i = 1; i <= parseInt(n); i++) { t += i; } return t;
+        
+        // 2. Perbaikan Deteksi Sigma menggunakan Unicode Aman (\u03A3)
+        ekspresi = ekspresi.replace(/\u03A3(\d+)/g, function(match, angka) {
+            let total = 0; 
+            let batas = parseInt(angka);
+            for (let i = 1; i <= batas; i++) { 
+                total += i; 
+            } 
+            return total;
         });
 
         let hasil = eval(ekspresi);
         
-        // Simpan baris rumus dan baris hasil ke dalam memori riwayat permanen
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
         riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
         
-        rumusBarisIni = ""; // Kosongkan baris ketikan untuk transaksi baru bawahnya
+        rumusBarisIni = ""; 
         renderLayar();
     } catch(e) {
         rumusBarisIni = "";
-        riwayatHitunganHTML += `<div class="calc-row" style="color:red;">Error</div>`;
+        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:20px;">Format Error</div>`;
         renderLayar();
     }
 }
