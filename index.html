@@ -61,7 +61,6 @@
             gap: 10px;
         }
 
-        /* BARIS KOTAK 1: ANGKA */
         .rom-grid-first {
             display: flex;
             justify-content: space-between;
@@ -81,7 +80,6 @@
             cursor: pointer;
         }
 
-        /* BARIS KOTAK 2: OPERATOR */
         .rom-grid-second {
             display: flex;
             justify-content: space-between;
@@ -100,7 +98,6 @@
             cursor: pointer;
         }
 
-        /* BARIS KOTAK 3: NAVIGASI UTAMA */
         .row-bottom {
             display: flex;
             justify-content: space-between;
@@ -164,17 +161,7 @@
             margin-bottom: 15px;
         }
 
-        .dropdown-item {
-            padding: 15px 10px;
-            font-size: 18px;
-            font-weight: bold;
-            border-bottom: 2px dashed #ccc;
-            cursor: pointer;
-            text-align: left;
-            color: #000;
-        }
-        
-        /* GAYA TOMBOL TOGGLE SUB-DROPDOWN INTERNAL */
+        /* HEADERS UNTUK DROPDOWN INTERNAL */
         .menu-header-btn {
             display: flex;
             justify-content: space-between;
@@ -183,10 +170,11 @@
             font-weight: bold;
             border: 3px solid #000000;
             margin-top: 10px;
-            padding: 15px;
-            font-size: 18px;
+            padding: 12px;
+            font-size: 17px;
             cursor: pointer;
         }
+        
         .sub-dropdown-content {
             display: none;
             background: #fafafa;
@@ -195,29 +183,32 @@
             border-bottom: 3px solid #000;
             padding: 5px 0;
         }
+        
         .menu-anak {
-            padding: 10px;
+            padding: 8px 10px;
             font-weight: bold;
             color: #444;
-            font-size: 16px;
+            font-size: 15px;
             background: #eef2f3;
             text-align: left;
         }
+        
         .menu-cucu-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px 12px 30px;
+            padding: 10px 20px 10px 30px;
             font-weight: normal;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             border-bottom: 1px dotted #eee;
         }
+        
         .menu-cucu-row input[type="radio"] {
             cursor: pointer;
             margin: 0;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
         }
 
         .btn-close-menu {
@@ -230,7 +221,6 @@
             font-size: 14px;
         }
 
-        /* GAYA AREA RIWAYAT INTERNAL */
         .history-list-box {
             max-height: 110px;
             overflow-y: auto;
@@ -241,6 +231,7 @@
             text-align: right;
             border-bottom: 1px solid #ccc;
         }
+        
         .btn-hapus-riwayat {
             background: #ff2a2a;
             color: #ffffff;
@@ -300,26 +291,36 @@
             <button class="btn-close-menu" onclick="tutupSemuaMenu()">BATAL ✕</button>
         </div>
         
-        <div class="dropdown-item" onclick="pilihItem('.')">. (Titik Desimal)</div>
-        <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
+        <!-- 1. DROPDOWN TITIK DESIMAL -->
+        <div class="menu-header-btn" onclick="toggleInternalMenu('dot-sub-panel', 'dot-arrow')">
+            <span>. (Titik Desimal Menu)</span>
+            <span id="dot-arrow">▼</span>
+        </div>
+        <div id="dot-sub-panel" class="sub-dropdown-content">
+            <div class="menu-anak">└─ Opsi Titik</div>
+            <div class="menu-cucu-row" onclick="pilihCucu('.', 'dot-opt')">
+                <span>Input Titik Desimal (.)</span>
+                <input type="radio" name="dot-opt">
+            </div>
+        </div>
+
+        <!-- 2. DROPDOWN PERSEN -->
+        <div class="menu-header-btn" onclick="toggleInternalMenu('percent-sub-panel', 'percent-arrow')">
+            <span>% (Persen Menu)</span>
+            <span id="percent-arrow">▼</span>
+        </div>
+        <div id="percent-sub-panel" class="sub-dropdown-content">
+            <div class="menu-anak">└─ Opsi Persen</div>
+            <div class="menu-cucu-row" onclick="pilihCucu('%', 'percent-opt')">
+                <span>Input Persen (%)</span>
+                <input type="radio" name="percent-opt">
+            </div>
+        </div>
         
-        <!-- 1. SUB-DROPDOWN SIGMA -->
+        <!-- 3. DROPDOWN SIGMA -->
         <div class="menu-header-btn" onclick="toggleInternalMenu('sigma-sub-panel', 'sigma-arrow')">
             <span>Σ (Sigma Menu)</span>
             <span id="sigma-arrow">▼</span>
-        </div>
-        <div id="sigma-sub-panel" class="sub-dropdown-content">
-            <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
-            <div class="menu-cucu-row" onclick="pilihCucu('Σ', 'sigma-opt')">
-                <span>Ketik Manual (Σ)</span>
-                <input type="radio" name="sigma-opt">
-            </div>
-            <div class="menu-cucu-row" onclick="pilihCucu('Σ3', 'sigma-opt')">
-                <span>Hingga 3 (Σ3)</span>
-                <input type="radio" name="sigma-opt">
-            </div>
-            <div class="menu-cucu-row" onclick="pilihCucu('Σ5', 'sigma-opt')">
-
 
  <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
     </div>
