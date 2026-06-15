@@ -243,6 +243,15 @@ function renderLayar() {
 
 function hitungHasil() {
     if (isManualEdit || rumusBarisIni === "") return;
+    
+    // CEGAH ERROR SIGMA KOSONG
+    // Jika user menekan tombol "=" saat di layar hanya ada simbol Sigma tanpa angka (misal: "Σ")
+    if (rumusBarisIni === "Σ" || rumusBarisIni === "∑") {
+        rumusBarisIni = "";
+        renderLayar();
+        return;
+    }
+
     try {
         let ekspresi = rumusBarisIni;
         
@@ -250,6 +259,7 @@ function hitungHasil() {
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
+        // PARSING SIGMA KOMPUTASI AMAN
         ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
@@ -262,6 +272,11 @@ function hitungHasil() {
 
         let hasil = eval(ekspresi);
         
+        // Jika hasil perhitungan menghasilkan NaN atau Error bawaan JavaScript
+        if (isNaN(hasil)) {
+            throw new Error("Invalid");
+        }
+
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
         riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
         
@@ -273,6 +288,7 @@ function hitungHasil() {
         renderLayar();
     }
 }
+
 
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
