@@ -1,15 +1,14 @@
+/* 1. Pengaturan Bingkai Utama Kalkulator */
 .calculator {
     width: 380px;
     height: 730px;
-    /* 🌟 MENAMPILKAN GAMBAR KOSTUM ANDA 🌟 */
     background-image: url('Folder/gambar/bodykal.jpg');
-    background-size: cover; /* Memaksa gambar menutup seluruh area kalkulator dengan rapi */
-    background-position: center; /* Memastikan posisi gambar pas di tengah */
-    background-repeat: no-repeat; /* Mencegah gambar berulang/terpotong ganda */
-    
-    border: 6px solid #000000;
+    background-size: 100% 100%; /* Memaksa gambar pas sempurna sesuai bingkai */
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none; /* Dihapus karena gambar sudah punya bingkai hitam */
     border-radius: 4px;
-    padding: 15px;
+    padding: 20px 25px; /* Menyesuaikan agar layar putih pas di dalam bingkai gambar */
     box-shadow: 8px 8px 0px #000000;
     font-family: Arial, sans-serif;
     margin: 10px auto;
@@ -19,119 +18,78 @@
     position: relative;
 }
 
-
+/* 2. Mengosongkan Bingkai Layar Utama Karena Gambar Sudah Menyediakannya */
 .screen-container {
     flex: 1;
-    border: 5px solid #000000;
-    padding: 15px;
-    background: #ffffff;
-    box-sizing: border-box;
-    margin-bottom: 15px;
-    min-height: 320px;
+    border: none; /* Dihapus agar layar putih bawaan gambar tidak tertimpa garis baru */
+    background: transparent; /* Membuatnya transparan agar putihnya gambar terlihat */
+    padding: 10px;
+    margin-bottom: 30px; /* Memberi jarak agar tidak menabrak tombol angka di bawah */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
 
-.calc-row {
-    font-size: 32px;
-    font-weight: bold;
-    color: #000000;
-    line-height: 1.3;
-    width: 100%;
-    text-align: right;
-    word-wrap: break-word;
-}
-
-.calc-row.latest-result {
-    font-size: 40px;
-    color: #1a237e;
-    border-bottom: 2px dashed #000;
-    padding-bottom: 4px;
-    margin-bottom: 8px;
-}
-
-.buttons-container {
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+/* 3. Membuat Tombol Angka Transparan Pas di Atas Gambar Kotak */
 .rom-grid-first {
     display: flex;
     justify-content: space-between;
-    border: 5px solid #000000;
-    padding: 6px;
-    background: #ffffff;
+    border: none; /* Hapus bingkai hitam bawaan kode */
+    padding: 0;
+    background: transparent;
+    margin-bottom: 12px;
 }
 .rom-grid-first button {
     flex: 1;
     height: 42px;
     margin: 0 2px;
-    background: #f2f2f2;
-    border: 3px solid #000000;
-    border-radius: 4px;
+    background: transparent; /* Dibuat transparan agar angka gambar terlihat */
+    border: none; /* Hapus garis tombol bawaan kode */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
+    color: #000000; /* Warna angka hitam tebal */
     cursor: pointer;
 }
 
+/* 4. Membuat Tombol Operator Transparan Pas di Atas Gambar Kotak */
 .rom-grid-second {
     display: flex;
     justify-content: space-between;
-    border: 5px solid #000000;
-    padding: 6px;
-    background: #ffffff;
+    border: none;
+    padding: 0;
+    background: transparent;
+    margin-bottom: 12px;
 }
 .rom-grid-second button {
     flex: 1;
     height: 48px;
-    margin: 0 3px;
-    background: #ffffff;
-    border: 3px solid #000000;
+    margin: 0 4px;
+    background: transparent; /* Transparan */
+    border: none;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 26px;
+    color: #000000;
     cursor: pointer;
 }
 
+/* 5. Mengatur Baris Fungsi Terbawah (PILIH, EDIT, CLEAR) */
 .row-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 5px solid #000000;
-    padding: 10px;
-    background: #e5e5e5;
+    border: none;
+    padding: 0;
+    background: transparent;
+    margin-bottom: 5px;
 }
-.btn-pilih {
-    width: 100%;
-    background: #ffffff;
-    border: 4px solid #000000;
-    font-weight: bold;
-    padding: 12px 0;
-    font-size: 16px;
+.btn-pilih, .btn-edit, .btn-clear {
+    background: transparent !important; /* Dibuat transparan penuh */
+    border: none !important; /* Hapus kotak bawaan kode */
+    color: transparent !important; /* Menyembunyikan teks bawaan kode agar teks dari gambar yang terlihat */
+    height: 50px;
     cursor: pointer;
 }
-.btn-edit {
-    flex: 1;
-    background: #ffcc00;
-    border: 4px solid #000000;
-    font-weight: bold;
-    padding: 12px 0;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 0 12px;
-    text-align: center;
-}
-.btn-clear {
-    flex: 1;
-    background: #ff2a2a;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 12px 0;
-    font-size: 16px;
-    cursor: pointer;
-}
+
 
 .dropdown-menu {
     display: none;
