@@ -77,10 +77,25 @@ function renderLayar() {
     display.scrollTop = display.scrollHeight;
 }
 
+// 🌟 Fungsi Baru: Mengirim salinan angka layar ke dalam Kotak Menu Riwayat PILIH 🌟
+function updateHistoryBoxMenu(dataBaru) {
+    if (!isRecordActive) return; // Jika status OFF, perekaman riwayat dilewati
+    const historyBox = document.getElementById("history-box-content");
+    if (historyBox) {
+        if (historyBox.innerText.includes("Belum ada riwayat")) {
+            historyBox.innerHTML = "";
+        }
+        historyBox.innerHTML += dataBaru;
+        historyBox.scrollTop = historyBox.scrollHeight;
+    }
+}
+
+// Perbarui fungsi hitungHasil Anda agar terhubung dengan fungsi updateHistoryBoxMenu di atas
 function hitungHasil() {
     if (isManualEdit || rumusBarisIni === "") return;
     try {
         let ekspresi = rumusBarisIni;
+        let rumusAsli = rumusBarisIni; // Catat rumus sebelum diubah komputer
         
         if (/[Σ∑\u03A3\u2211]$/.test(ekspresi)) {
             ekspresi = ekspresi.slice(0, -1);
@@ -110,9 +125,15 @@ function hitungHasil() {
 
         let hasil = eval(ekspresi);
         
+        let barisRumus = `<div style="font-size:14px; color:#555;">${rumusAsli}</div>`;
+        let barisHasil = `<div style="font-size:18px; color:#1a237e; border-bottom:1px dashed #ccc; padding-bottom:3px; margin-bottom:5px;">= ${hasil}</div>`;
+        
         if (isRecordActive) {
-            riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
+            riwayatHitunganHTML += `<div class="calc-row">${rumusAsli}</div>`;
             riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
+            
+            // 🌟 PEREKAMAN RIWAYAT BERJALAN DI SINI (Kirim ke menu PILIH) 🌟
+            updateHistoryBoxMenu(barisRumus + barisHasil);
         } else {
             riwayatHitunganHTML = `<div class="calc-row latest-result">= ${hasil}</div>`;
         }
@@ -124,6 +145,24 @@ function hitungHasil() {
         riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:22px;">Format Error</div>`;
         renderLayar();
     }
+}
+
+// Perbarui juga fungsi hapusRiwayatPermanen agar membersihkan teks kotak riwayat menu PILIH
+function hapusRiwayatPermanen(event) {
+    if (event) event.stopPropagation(); 
+    rumusBarisIni = "";
+    riwayatHitunganHTML = "";
+    display.innerHTML = "";
+    
+    // Bersihkan teks di dalam kotak menu riwayat
+    const historyBox = document.getElementById("history-box-content");
+    if (historyBox) {
+        historyBox.innerHTML = "Belum ada riwayat";
+    }
+    
+    setTimeout(function() {
+        tutupSemuaMenu();
+    }, 100);
 }
 
 function aktifkanModeEdit() {
