@@ -136,7 +136,7 @@
             cursor: pointer;
         }
 
-        /* PANEL PILIHAN UKURAN PENUH (FULL SCREEN MODAL) */
+        /* 🌟 GAYA PANEL MODAL MENU UTAMA SESUAI GAMBAR REFERENSI 🌟 */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -144,71 +144,73 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffffff;
+            background: #f4f4f4;
             border: 6px solid #000000;
             z-index: 9999;
-            padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
         }
         
+        /* Bar Atas Judul Menu */
         .menu-title-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid #000000;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            background: #eeeeee;
+            border-bottom: 2px solid #ccc;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        /* HEADERS UNTUK DROPDOWN INTERNAL */
-        .menu-header-btn {
+        /* Desain Folder Anak (Dropdown Header) 100% Mirip Gambar */
+        .folder-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f0f0f0;
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 14px 20px;
+            font-size: 16px;
             font-weight: bold;
-            border: 3px solid #000000;
-            margin-top: 10px;
-            padding: 12px;
-            font-size: 17px;
+            color: #333333;
             cursor: pointer;
         }
-        
+        .folder-header span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Container Pembungkus Cucu Dropdown Content */
         .sub-dropdown-content {
             display: none;
-            background: #fafafa;
-            border-left: 3px solid #000;
-            border-right: 3px solid #000;
-            border-bottom: 3px solid #000;
-            padding: 5px 0;
+            background: #ffffff;
         }
         
-        .menu-anak {
-            padding: 8px 10px;
-            font-weight: bold;
-            color: #444;
-            font-size: 15px;
-            background: #eef2f3;
-            text-align: left;
-        }
-        
-        .menu-cucu-row {
+        /* Desain Baris Opsi Cucu 100% Mirip Gambar */
+        .cucu-radio-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 20px 10px 30px;
-            font-weight: normal;
-            font-size: 15px;
+            padding: 12px 25px 12px 45px; /* Menjorok ke dalam */
+            font-size: 16px;
+            color: #444444;
             cursor: pointer;
-            border-bottom: 1px dotted #eee;
+            border-bottom: 1px solid #f0f0f0;
+            background: #ffffff;
+        }
+        .cucu-radio-row:hover {
+            background: #fafafa;
         }
         
-        .menu-cucu-row input[type="radio"] {
+        /* Desain Lingkaran Radio Button Sisi Kanan */
+        .cucu-radio-row input[type="radio"] {
             cursor: pointer;
             margin: 0;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
+            accent-color: #555;
         }
 
         .btn-close-menu {
@@ -216,11 +218,12 @@
             color: #ffffff;
             border: 2px solid #000000;
             font-weight: bold;
-            padding: 5px 10px;
+            padding: 5px 12px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
         }
 
+        /* Area Cetakan Box Riwayat Internal */
         .history-list-box {
             max-height: 110px;
             overflow-y: auto;
@@ -231,16 +234,15 @@
             text-align: right;
             border-bottom: 1px solid #ccc;
         }
-        
         .btn-hapus-riwayat {
             background: #ff2a2a;
             color: #ffffff;
             border: 2px solid #000;
             font-weight: bold;
-            padding: 6px 12px;
-            margin: 10px;
+            padding: 8px 16px;
+            margin: 12px 45px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             display: inline-block;
         }
     </style>
@@ -284,43 +286,39 @@
         </div>
     </div>
 
-    <!-- MODAL MENU PILIH BESAR / FULL SCREEN -->
+    <!-- 🌟 MODAL MENU PILIH BESAR / FULL SCREEN (STRUKTUR SESUAI GAMBAR) 🌟 -->
     <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar">
-            <span style="font-weight: bold; font-size: 20px;">Daftar Fungsi Pilihan</span>
-            <button class="btn-close-menu" onclick="tutupSemuaMenu()">BATAL ✕</button>
+            <span>-- Pilih Menu --</span>
+            <span style="font-size: 12px;">▼</span>
         </div>
         
-        <!-- 1. DROPDOWN TITIK DESIMAL -->
-        <div class="menu-header-btn" onclick="toggleInternalMenu('dot-sub-panel', 'dot-arrow')">
-            <span>. (Titik Desimal Menu)</span>
-            <span id="dot-arrow">▼</span>
+        <!-- 1. FOLDER ANAK: SIMBOL -->
+        <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')">
+            <span>📁 -- simbol --</span>
+            <span id="arrow-simbol">▼</span>
         </div>
-        <div id="dot-sub-panel" class="sub-dropdown-content">
-            <div class="menu-anak">└─ Opsi Titik</div>
-            <div class="menu-cucu-row" onclick="pilihCucu('.', 'dot-opt')">
-                <span>Input Titik Desimal (.)</span>
-                <input type="radio" name="dot-opt">
+        <div id="simbol-panel" class="sub-dropdown-content">
+            <div class="cucu-radio-row" onclick="pilihCucu('.', 'simbol-opt')">
+                <span>. (Titik Desimal)</span>
+                <input type="radio" name="simbol-opt">
+            </div>
+            <div class="cucu-radio-row" onclick="pilihCucu('%', 'simbol-opt')">
+                <span>% (Persen)</span>
+                <input type="radio" name="simbol-opt">
+            </div>
+            <div class="cucu-radio-row" onclick="pilihCucu('^', 'simbol-opt')">
+                <span>^ (Pangkat)</span>
+                <input type="radio" name="simbol-opt">
             </div>
         </div>
 
-        <!-- 2. DROPDOWN PERSEN -->
-        <div class="menu-header-btn" onclick="toggleInternalMenu('percent-sub-panel', 'percent-arrow')">
-            <span>% (Persen Menu)</span>
-            <span id="percent-arrow">▼</span>
+        <!-- 2. FOLDER ANAK: SIGMA -->
+        <div class="folder-header" onclick="toggleFolder('sigma-panel', 'arrow-sigma')">
+            <span>📁 -- sigma --</span>
+            <span id="arrow-sigma">▼</span>
         </div>
-        <div id="percent-sub-panel" class="sub-dropdown-content">
-            <div class="menu-anak">└─ Opsi Persen</div>
-            <div class="menu-cucu-row" onclick="pilihCucu('%', 'percent-opt')">
-                <span>Input Persen (%)</span>
-                <input type="radio" name="percent-opt">
-            </div>
-        </div>
-        
-        <!-- 3. DROPDOWN SIGMA -->
-        <div class="menu-header-btn" onclick="toggleInternalMenu('sigma-sub-panel', 'sigma-arrow')">
-            <span>Σ (Sigma Menu)</span>
-            <span id="sigma-arrow">▼</span>
+        <div id="sigma-panel" class="sub-dropdown-content">
 
  <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
     </div>
