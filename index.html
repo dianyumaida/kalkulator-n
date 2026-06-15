@@ -4,292 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Beruntun Akuntansi</title>
-    <style>
-        .calculator {
-            width: 380px;
-            height: 730px;
-            background: #ffffff;
-            border: 6px solid #000000;
-            border-radius: 4px;
-            padding: 15px;
-            box-shadow: 8px 8px 0px #000000;
-            font-family: Arial, sans-serif;
-            margin: 10px auto;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* AREA MONITOR LAYAR UTAMA */
-        .screen-container {
-            flex: 1;
-            border: 5px solid #000000;
-            padding: 15px;
-            background: #ffffff;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-            min-height: 320px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .calc-row {
-            font-size: 32px;
-            font-weight: bold;
-            color: #000000;
-            line-height: 1.3;
-            width: 100%;
-            text-align: right;
-            word-wrap: break-word;
-        }
-
-        .calc-row.latest-result {
-            font-size: 40px;
-            color: #1a237e;
-            border-bottom: 2px dashed #000;
-            padding-bottom: 4px;
-            margin-bottom: 8px;
-        }
-
-        /* PANEL KOTAK TOMBOL BAWAH */
-        .buttons-container {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .rom-grid-first {
-            display: flex;
-            justify-content: space-between;
-            border: 5px solid #000000;
-            padding: 6px;
-            background: #ffffff;
-        }
-        .rom-grid-first button {
-            flex: 1;
-            height: 42px;
-            margin: 0 2px;
-            background: #f2f2f2;
-            border: 3px solid #000000;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .rom-grid-second {
-            display: flex;
-            justify-content: space-between;
-            border: 5px solid #000000;
-            padding: 6px;
-            background: #ffffff;
-        }
-        .rom-grid-second button {
-            flex: 1;
-            height: 48px;
-            margin: 0 3px;
-            background: #ffffff;
-            border: 3px solid #000000;
-            font-weight: bold;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .row-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 5px solid #000000;
-            padding: 10px;
-            background: #e5e5e5;
-        }
-        .btn-pilih {
-            width: 100%;
-            background: #ffffff;
-            border: 4px solid #000000;
-            font-weight: bold;
-            padding: 12px 0;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .btn-edit {
-            flex: 1;
-            background: #ffcc00;
-            border: 4px solid #000000;
-            font-weight: bold;
-            padding: 12px 0;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 0 12px;
-            text-align: center;
-        }
-        .btn-clear {
-            flex: 1;
-            background: #ff2a2a;
-            color: #ffffff;
-            font-weight: bold;
-            padding: 12px 0;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* PANEL MODAL MENU PILIH BESAR FULL SCREEN */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #f4f4f4;
-            border: 6px solid #000000;
-            z-index: 9999;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-        
-        .menu-title-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #eeeeee;
-            border-bottom: 2px solid #ccc;
-            padding: 15px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        /* Desain Folder Header */
-        .folder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 14px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333333;
-            cursor: pointer;
-            user-select: none;
-        }
-        .folder-header span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Wadah Konten Dropdown */
-        .sub-dropdown-content {
-            display: none;
-            background: #ffffff;
-        }
-        
-        /* Baris Opsi Cucu Bersistem Radio */
-        .cucu-radio-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 25px 12px 45px;
-            font-size: 16px;
-            color: #444444;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            background: #ffffff;
-        }
-        .cucu-radio-row:hover {
-            background: #fafafa;
-        }
-        
-        .cucu-radio-row input[type="radio"] {
-            cursor: pointer;
-            margin: 0;
-            width: 20px;
-            height: 20px;
-            accent-color: #555;
-        }
-
-        /* Desain Tombol Rekord (ON / OFF) */
-        .record-control-container {
-            display: flex;
-            padding: 10px 45px;
-            gap: 15px;
-            background: #ffffff;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .btn-record {
-            flex: 1;
-            padding: 8px 0;
-            font-weight: bold;
-            font-size: 14px;
-            border: 2px solid #000000;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .btn-record.on {
-            background: #4caf50;
-            color: #ffffff;
-        }
-        .btn-record.off {
-            background: #e0e0e0;
-            color: #333333;
-        }
-        .btn-record.active-status {
-            box-shadow: inset 3px 3px 0px #000000;
-            border: 3px solid #000000;
-        }
-
-        /* Area Tampilan Kotak Riwayat Transaksi Terekam */
-        .history-list-box {
-            max-height: 130px;
-            overflow-y: auto;
-            padding: 10px 15px;
-            margin: 10px 45px;
-            background: #ffffff;
-            font-size: 15px;
-            font-weight: bold;
-            text-align: right;
-            border: 2px solid #000000;
-        }
-
-        .btn-close-menu {
-            background: #ff2a2a;
-            color: #ffffff;
-            border: 2px solid #000000;
-            font-weight: bold;
-            padding: 5px 12px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .btn-hapus-riwayat {
-            background: #ff2a2a;
-            color: #ffffff;
-            border: 2px solid #000;
-            font-weight: bold;
-            padding: 10px 20px;
-            margin: 12px 45px;
-            cursor: pointer;
-            font-size: 15px;
-            display: inline-block;
-            width: calc(100% - 90px);
-            text-align: center;
-            box-sizing: border-box;
-        }
-    </style>
+    <!-- Memanggil file CSS eksternal agar kode tidak menumpuk -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="calculator">
-    
-    <!-- Screen Display -->
+    <!-- Area Layar Utama -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Buttons Container -->
+    <!-- Area Kontainer Tombol Utama -->
     <div class="buttons-container">
+        <!-- Baris 1: Tombol Angka -->
         <div class="rom-grid-first">
             <button onclick="tekan('0')">0</button>
             <button onclick="tekan('1')">1</button>
@@ -303,6 +29,7 @@
             <button onclick="tekan('9')">9</button>
         </div>
 
+        <!-- Baris 2: Tombol Operator -->
         <div class="rom-grid-second">
             <button onclick="tekan('*')">*</button>
             <button onclick="tekan(':')">:</button>
@@ -311,6 +38,7 @@
             <button onclick="hitungHasil()">=</button>
         </div>
 
+        <!-- Baris 3: Tombol Fungsi Navigasi -->
         <div class="row-bottom">
             <div style="flex: 1.2; display: flex;">
                 <button onclick="klikTombolPilih()" class="btn-pilih" type="button">&#9664; PILIH &#9660;</button>
@@ -320,14 +48,14 @@
         </div>
     </div>
 
-    <!-- PANEL MENU PILIH BESAR FULL SCREEN -->
+    <!-- MODAL MENU PILIH BESAR / FULL SCREEN -->
     <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar">
             <span>-- Pilih Menu --</span>
             <span>▼</span>
         </div>
         
-        <!-- 1. FOLDER: SIMBOL -->
+        <!-- 1. FOLDER ANAK: SIMBOL -->
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')">
             <span>📁 -- simbol --</span>
             <span id="arrow-simbol">▼</span>
@@ -336,9 +64,7 @@
             <div class="cucu-radio-row" onclick="pilihCucu('.', 'simbol-opt')">
                 <span>. (Titik Desimal)</span>
                 <input type="radio" name="simbol-opt">
-
-
-</div>
+            </div>
             <div class="cucu-radio-row" onclick="pilihCucu('%', 'simbol-opt')">
                 <span>% (Persen)</span>
                 <input type="radio" name="simbol-opt">
@@ -363,196 +89,37 @@
                 <span>Hingga 3 (Σ3)</span>
                 <input type="radio" name="sigma-opt">
             </div>
-            <div class="cucu-radio-row" onclick="pucuKuadrat('Σ5', 'sigma-opt')">
-            <!-- 🌟 SAMBUNGAN MULAI DARI SINI (Hingga 5 Σ5) 🌟 -->
             <div class="cucu-radio-row" onclick="pilihCucu('Σ5', 'sigma-opt')">
                 <span>Hingga 5 (Σ5)</span>
                 <input type="radio" name="sigma-opt">
             </div>
-        </div> <!-- Penutup #sigma-panel -->
+        </div>
 
-        <!-- 3. FOLDER ANAK: RIWAYAT -->
+        <!-- 3. FOLDER ANAK: RIWAYAT DENGAN OPSI RADIO ON/OFF -->
         <div class="folder-header" onclick="toggleFolder('riwayat-panel', 'arrow-riwayat')">
             <span>📁 -- riwayat --</span>
             <span id="arrow-riwayat">▼</span>
         </div>
         <div id="riwayat-panel" class="sub-dropdown-content">
-            <div class="cucu-radio-row" onclick="pilihCucu('Riwayat', 'riwayat-opt')">
-                <span>Riwayat Hitungan</span>
-                <input type="radio" name="riwayat-opt" id="rad-riwayat-statis">
+            <div class="cucu-radio-row" onclick="pilihOpsiRekord(true, 'rad-on')">
+                <span>Riwayat Hitungan (ON)</span>
+                <input type="radio" name="riwayat-opt" id="rad-on" checked>
+            </div>
+            <div class="cucu-radio-row" onclick="pilihOpsiRekord(false, 'rad-off')">
+                <span>Riwayat Hitungan (OFF)</span>
+                <input type="radio" name="riwayat-opt" id="rad-off">
             </div>
             <button type="button" class="btn-hapus-riwayat" onclick="hapusRiwayatPermanen(event)">Hapus</button>
         </div>
 
-        <!-- Tombol Batal Untuk Kembali Ke Kalkulator Utama -->
-        <div style="padding: 20px; text-align: center;">
-            <button type="button" class="btn-close-menu" onclick="tutupSemuaMenu()" style="width: 100%; padding: 12px 0; font-size: 16px;">KEMBALI KE KALKULATOR ✕</button>
+        <!-- Tombol Batal Keluar Menu -->
+        <div style="padding-top: 10px; text-align: center;">
+            <button type="button" class="btn-close-menu" onclick="tutupSemuaMenu()">KEMBALI KE KALKULATOR X</button>
         </div>
-    </div> <!-- Penutup #dropdown-menu -->
+    </div>
+</div>
 
-</div> <!-- Penutup .calculator UTAMA Anda -->
-
-<!-- LOGIKA JAVASCRIPT LENGKAP -->
-<script>
-const display = document.getElementById("screen-display");
-let clickTimer = null;
-let isManualEdit = false;
-
-let rumusBarisIni = ""; 
-let riwayatHitunganHTML = ""; 
-
-function tekan(karakter) {
-    if (isManualEdit) return;
-    rumusBarisIni += String(karakter);
-    renderLayar();
-}
-
-function klikTombolPilih() {
-    document.getElementById('dropdown-menu').style.display = "block";
-}
-
-function toggleFolder(panelId, arrowId) {
-    const subPanel = document.getElementById(panelId);
-    const arrow = document.getElementById(arrowId);
-    
-    if (subPanel.style.display === "block") {
-        subPanel.style.display = "none";
-        arrow.innerText = "▼";
-    } else {
-        subPanel.style.display = "block";
-        arrow.innerText = "▲";
-    }
-}
-
-function pilihCucu(teksRumus, radioName) {
-    const eventTarget = window.event ? window.event.currentTarget : null;
-    if (eventTarget) {
-        const radio = eventTarget.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-    }
-
-    if (teksRumus !== 'Riwayat') {
-        tekan(teksRumus);
-    }
-    
-    setTimeout(function() {
-        tutupSemuaMenu();
-        document.querySelectorAll(`input[name="${radioName}"]`).forEach(r => r.checked = false);
-    }, 180);
-}
-
-function tutupSemuaMenu() {
-    document.getElementById('dropdown-menu').style.display = "none";
-    document.getElementById('simbol-panel').style.display = "none";
-    document.getElementById('sigma-panel').style.display = "none";
-    document.getElementById('riwayat-panel').style.display = "none";
-    
-    document.getElementById('arrow-simbol').innerText = "▼";
-    document.getElementById('arrow-sigma').innerText = "▼";
-    document.getElementById('arrow-riwayat').innerText = "▼";
-}
-
-function hapusRiwayatPermanen(event) {
-    if (event) event.stopPropagation(); 
-    rumusBarisIni = "";
-    riwayatHitunganHTML = "";
-    display.innerHTML = "";
-    
-    const radRiwayat = document.getElementById('rad-riwayat-statis');
-    if (radRiwayat) radRiwayat.checked = false;
-    
-    setTimeout(function() {
-        tutupSemuaMenu();
-    }, 100);
-}
-
-function renderLayar() {
-    let htmlAktif = rumusBarisIni ? `<div class="calc-row">${rumusBarisIni}</div>` : "";
-    display.innerHTML = riwayatHitunganHTML + htmlAktif;
-    display.scrollTop = display.scrollHeight;
-}
-
-function hitungHasil() {
-    if (isManualEdit || rumusBarisIni === "") return;
-    try {
-        let ekspresi = rumusBarisIni;
-        
-        // 1. Bersihkan jika ada simbol Sigma menggantung di ujung rumus tanpa angka (Contoh: "5+Σ")
-        if (/[Σ∑\u03A3\u2211]$/.test(ekspresi)) {
-            ekspresi = ekspresi.slice(0, -1);
-        }
-        
-        if (ekspresi === "" || ekspresi === "+" || ekspresi === "-" || ekspresi === "*" || ekspresi === ":") {
-            rumusBarisIni = "";
-            renderLayar();
-            return;
-        }
-
-        // 2. Normalisasi operator pembagian dan perpangkatan
-        ekspresi = ekspresi.replace(/:/g, "/"); 
-        ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
-        ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
-
-        /* 🌟 FITUR PINTAR BARU: MEMPERBAIKI FORMAT ANGKA DI DEPAN SIGMA 🌟 */
-        /* Jika Anda mengetik "5Σ", skrip ini otomatis mengubahnya menjadi "5*Σ" agar bisa dikalikan */
-        ekspresi = ekspresi.replace(/(\d+)([Σ∑\u03A3\u2211])/g, "$1*$2");
-        
-        /* 3. LOGIKA DETEKSI SIGMA MANDIRI (Contoh: Mengubah "Σ5" menjadi "15") */
-        ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
-            let total = 0; 
-            let batas = parseInt(angka) || 0;
-            for (let i = 1; i <= batas; i++) { 
-                total += i; 
-            } 
-            return "(" + total + ")"; // Dibungkus tanda kurung agar aman dikalikan dengan angka di depannya
-        });
-
-        // Hapus paksa sisa simbol Sigma terisolasi yang lolos dari filter angka
-        ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211]/g, "0");
-
-        // 4. Bersihkan tumpukan ganda tanda tambah/kurang agar tidak merusak komputasi
-        ekspresi = ekspresi.replace(/\+\+/g, "+");
-        ekspresi = ekspresi.replace(/\-\-/g, "+");
-
-        // 5. Eksekusi kalkulasi string rumus akhir
-        let hasil = eval(ekspresi);
-        
-        riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
-        riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
-        
-        rumusBarisIni = ""; 
-        renderLayar();
-    } catch(e) {
-        rumusBarisIni = "";
-        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:22px;">Format Error</div>`;
-        renderLayar();
-    }
-}
-
-function aktifkanModeEdit() {
-    isManualEdit = !isManualEdit;
-    display.contentEditable = isManualEdit ? "true" : "false";
-    document.getElementById("btn-edit").innerText = isManualEdit ? "OK" : "EDIT";
-    if (isManualEdit) display.focus();
-}
-
-function handleClearClick() {
-    if (clickTimer == null) {
-        clickTimer = setTimeout(function () {
-            clickTimer = null;
-            if (rumusBarisIni.length > 0) {
-                rumusBarisIni = rumusBarisIni.slice(0, -1);
-                renderLayar();
-            }
-        }, 250);
-    } else {
-        clearTimeout(clickTimer);
-        clickTimer = null;
-        rumusBarisIni = "";
-        riwayatHitunganHTML = "";
-        display.innerHTML = "";
-    }
-}
-</script>
+<!-- Memanggil file logika JavaScript eksternal -->
+<script src="script.js"></script>
 </body>
 </html>
