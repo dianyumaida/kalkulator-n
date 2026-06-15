@@ -136,7 +136,7 @@
             cursor: pointer;
         }
 
-        /* 🌟 GAYA PANEL MODAL MENU UTAMA SESUAI GAMBAR REFERENSI 🌟 */
+        /* PANEL MODAL MENU PILIH BESAR FULL SCREEN */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -151,7 +151,6 @@
             overflow-y: auto;
         }
         
-        /* Bar Atas Judul Menu */
         .menu-title-bar {
             display: flex;
             justify-content: space-between;
@@ -163,7 +162,7 @@
             font-size: 18px;
         }
 
-        /* Desain Folder Anak (Dropdown Header) 100% Mirip Gambar */
+        /* Desain Folder Header */
         .folder-header {
             display: flex;
             justify-content: space-between;
@@ -175,6 +174,7 @@
             font-weight: bold;
             color: #333333;
             cursor: pointer;
+            user-select: none;
         }
         .folder-header span {
             display: flex;
@@ -182,18 +182,18 @@
             gap: 8px;
         }
 
-        /* Container Pembungkus Cucu Dropdown Content */
+        /* Wadah Konten Cucu Dropdown */
         .sub-dropdown-content {
-            display: none;
+            display: none; /* Dikontrol penuh transisinya lewat skrip JS */
             background: #ffffff;
         }
         
-        /* Desain Baris Opsi Cucu 100% Mirip Gambar */
+        /* Baris Opsi Cucu Bersistem Radio */
         .cucu-radio-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 25px 12px 45px; /* Menjorok ke dalam */
+            padding: 12px 25px 12px 45px;
             font-size: 16px;
             color: #444444;
             cursor: pointer;
@@ -204,7 +204,6 @@
             background: #fafafa;
         }
         
-        /* Desain Lingkaran Radio Button Sisi Kanan */
         .cucu-radio-row input[type="radio"] {
             cursor: pointer;
             margin: 0;
@@ -223,27 +222,19 @@
             font-size: 13px;
         }
 
-        /* Area Cetakan Box Riwayat Internal */
-        .history-list-box {
-            max-height: 110px;
-            overflow-y: auto;
-            padding: 10px 15px;
-            background: #ffffff;
-            font-size: 15px;
-            font-weight: bold;
-            text-align: right;
-            border-bottom: 1px solid #ccc;
-        }
+        /* Tombol Hapus Riwayat */
         .btn-hapus-riwayat {
             background: #ff2a2a;
             color: #ffffff;
             border: 2px solid #000;
             font-weight: bold;
-            padding: 8px 16px;
-            margin: 12px 45px;
+            padding: 10px 20px;
+            margin: 15px auto;
             cursor: pointer;
-            font-size: 14px;
-            display: inline-block;
+            font-size: 15px;
+            display: block;
+            width: 80%;
+            text-align: center;
         }
     </style>
 </head>
@@ -251,12 +242,11 @@
 
 <div class="calculator">
     
-    <!-- 1. AREA MONITOR LAYAR UTAMA -->
+    <!-- Screen Display -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- 2. PANEL KOTAK TOMBOL BAWAH -->
+    <!-- Buttons Container -->
     <div class="buttons-container">
-        <!-- Baris 1: Angka 0-9 -->
         <div class="rom-grid-first">
             <button onclick="tekan('0')">0</button>
             <button onclick="tekan('1')">1</button>
@@ -270,7 +260,6 @@
             <button onclick="tekan('9')">9</button>
         </div>
 
-        <!-- Baris 2: Operator * : + - = -->
         <div class="rom-grid-second">
             <button onclick="tekan('*')">*</button>
             <button onclick="tekan(':')">:</button>
@@ -279,7 +268,6 @@
             <button onclick="hitungHasil()">=</button>
         </div>
 
-        <!-- Baris 3: Navigasi Utama -->
         <div class="row-bottom">
             <div style="flex: 1.2; display: flex;">
                 <button onclick="klikTombolPilih()" class="btn-pilih" type="button">&#9664; PILIH &#9660;</button>
@@ -287,7 +275,7 @@
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
-    </div> <!-- Penutup .buttons-container -->
+    </div>
 
     <!-- MODAL MENU PILIH BESAR / FULL SCREEN -->
     <div id="dropdown-menu" class="dropdown-menu">
@@ -330,13 +318,15 @@
                 <span>Hingga 3 (Σ3)</span>
                 <input type="radio" name="sigma-opt">
             </div>
+            <div class="cucu-radio-row" onclick="pucuKuadrat('Σ5', 'sigma-opt')">
+            <!-- 🌟 SAMBUNGAN MULAI DARI SINI (Hingga 5 Σ5) 🌟 -->
             <div class="cucu-radio-row" onclick="pilihCucu('Σ5', 'sigma-opt')">
                 <span>Hingga 5 (Σ5)</span>
                 <input type="radio" name="sigma-opt">
             </div>
-        </div>
+        </div> <!-- Penutup #sigma-panel -->
 
-        <!-- 3. FOLDER ANAK: RIWAYAT (YANG HILANG SEBELUMNYA) -->
+        <!-- 3. FOLDER ANAK: RIWAYAT -->
         <div class="folder-header" onclick="toggleFolder('riwayat-panel', 'arrow-riwayat')">
             <span>📁 -- riwayat --</span>
             <span id="arrow-riwayat">▼</span>
@@ -353,11 +343,11 @@
         <div style="padding: 20px; text-align: center;">
             <button type="button" class="btn-close-menu" onclick="tutupSemuaMenu()" style="width: 100%; padding: 12px 0; font-size: 16px;">KEMBALI KE KALKULATOR ✕</button>
         </div>
-    </div>
+    </div> <!-- Penutup #dropdown-menu -->
 
-</div> <!-- Penutup .calculator UTAMA -->
+</div> <!-- Penutup .calculator UTAMA Anda -->
 
-<!-- LOGIKA JAVASCRIPT -->
+<!-- LOGIKA JAVASCRIPT LENGKAP -->
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
@@ -380,12 +370,12 @@ function toggleFolder(panelId, arrowId) {
     const subPanel = document.getElementById(panelId);
     const arrow = document.getElementById(arrowId);
     
-    subPanel.classList.toggle('buka-panel');
-    
-    if (subPanel.classList.contains('buka-panel')) {
-        arrow.innerText = "▲";
-    } else {
+    if (subPanel.style.display === "block") {
+        subPanel.style.display = "none";
         arrow.innerText = "▼";
+    } else {
+        subPanel.style.display = "block";
+        arrow.innerText = "▲";
     }
 }
 
@@ -408,10 +398,9 @@ function pilihCucu(teksRumus, radioName) {
 
 function tutupSemuaMenu() {
     document.getElementById('dropdown-menu').style.display = "none";
-    
-    document.getElementById('simbol-panel').classList.remove('buka-panel');
-    document.getElementById('sigma-panel').classList.remove('buka-panel');
-    document.getElementById('riwayat-panel').classList.remove('buka-panel');
+    document.getElementById('simbol-panel').style.display = "none";
+    document.getElementById('sigma-panel').style.display = "none";
+    document.getElementById('riwayat-panel').style.display = "none";
     
     document.getElementById('arrow-simbol').innerText = "▼";
     document.getElementById('arrow-sigma').innerText = "▼";
