@@ -30,66 +30,86 @@
     flex-direction: column;
 }
 
-/* 3. Membuat Tombol Angka Transparan Pas di Atas Gambar Kotak */
+/* 1. Mengatur Baris Tombol Angka (0-9) */
 .rom-grid-first {
     display: flex;
     justify-content: space-between;
-    border: none; /* Hapus bingkai hitam bawaan kode */
-    padding: 0;
-    background: transparent;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
     margin-bottom: 12px;
 }
 .rom-grid-first button {
     flex: 1;
-    height: 42px;
+    height: 45px; /* Tinggi disesuaikan dengan kotak gambar */
     margin: 0 2px;
-    background: transparent; /* Dibuat transparan agar angka gambar terlihat */
-    border: none; /* Hapus garis tombol bawaan kode */
-    font-weight: bold;
-    font-size: 18px;
-    color: #000000; /* Warna angka hitam tebal */
+    background: transparent !important; /* Murni transparan */
+    border: none !important; /* Hapus garis kode */
+    outline: none;
     cursor: pointer;
+    display: block;
 }
 
-/* 4. Membuat Tombol Operator Transparan Pas di Atas Gambar Kotak */
+/* 2. Mengatur Baris Tombol Operator (* : + - =) */
 .rom-grid-second {
     display: flex;
     justify-content: space-between;
-    border: none;
-    padding: 0;
-    background: transparent;
-    margin-bottom: 12px;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    margin-bottom: 15px;
 }
 .rom-grid-second button {
     flex: 1;
-    height: 48px;
+    height: 55px; /* Tinggi disesuaikan dengan kotak operator gambar */
     margin: 0 4px;
-    background: transparent; /* Transparan */
-    border: none;
-    font-weight: bold;
-    font-size: 26px;
-    color: #000000;
+    background: transparent !important; /* Murni transparan */
+    border: none !important; /* Hapus garis kode */
+    outline: none;
     cursor: pointer;
+    display: block;
 }
 
-/* 5. Mengatur Baris Fungsi Terbawah (PILIH, EDIT, CLEAR) */
+/* 3. Mengatur Baris Tombol Fungsi Terbawah (PILIH, EDIT, CLEAR) */
 .row-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: none;
-    padding: 0;
-    background: transparent;
-    margin-bottom: 5px;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
 }
-.btn-pilih, .btn-edit, .btn-clear {
-    background: transparent !important; /* Dibuat transparan penuh */
-    border: none !important; /* Hapus kotak bawaan kode */
-    color: transparent !important; /* Menyembunyikan teks bawaan kode agar teks dari gambar yang terlihat */
-    height: 50px;
+/* Membuat area klik tombol transparan menutupi penuh gambar PILIH */
+.row-bottom div {
+    flex: 1.2;
+    display: flex;
+}
+.btn-pilih {
+    width: 100%;
+    height: 50px; /* Tinggi disesuaikan dengan tombol PILIH di gambar */
+    background: transparent !important;
+    border: none !important;
+    outline: none;
     cursor: pointer;
 }
-
+/* Membuat area klik transparan menutupi penuh gambar EDIT dan CLEAR */
+.btn-edit {
+    flex: 1;
+    height: 50px;
+    margin: 0 10px;
+    background: transparent !important;
+    border: none !important;
+    outline: none;
+    cursor: pointer;
+}
+.btn-clear {
+    flex: 1;
+    height: 50px;
+    background: transparent !important;
+    border: none !important;
+    outline: none;
+    cursor: pointer;
+}
 
 .dropdown-menu {
     display: none;
