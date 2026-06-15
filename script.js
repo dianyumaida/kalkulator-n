@@ -164,6 +164,22 @@ function hapusRiwayatPermanen(event) {
         tutupSemuaMenu();
     }, 100);
 }
+/* 🌟 FUNGSI BARU: MENGATUR MODE REKORD ON / OFF LEWAT KLIK BARIS RADIO 🌟 */
+function pilihOpsiRekord(status, radioId) {
+    // 1. Ubah variabel perekam secara global (true = merekam, false = berhenti)
+    isRecordActive = status;
+    
+    // 2. Paksa browser untuk mencentang bulatan radio button terkait
+    const radioElement = document.getElementById(radioId);
+    if (radioElement) {
+        radioElement.checked = true;
+    }
+    
+    // 3. Beri jeda visual bulatan terisi (180ms) lalu otomatis kembali ke kalkulator
+    setTimeout(function() {
+        tutupSemuaMenu();
+    }, 180);
+}
 
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
