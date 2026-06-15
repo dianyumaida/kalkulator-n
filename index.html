@@ -214,7 +214,6 @@
     </div>
 
 </div>
-
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
@@ -231,8 +230,49 @@ function tekan(karakter) {
 
 function pilihItem(karakter) {
     tekan(karakter);
-    // Menutup menu dropdown setelah item dipilih
+    tutupSemuaMenu();
+}
+
+// FUNGSI UTAMA MEMBUKA DROPDOWN UTAMA
+function klikTombolPilih() {
+    document.getElementById('dropdown-menu').style.display = "block";
+}
+
+// BUKA TUTUP SUB-DROPDOWN SIGMA
+function toggleSubDropdown(event) {
+    if (event) event.stopPropagation();
+    const subPanel = document.getElementById('sigma-sub-panel');
+    const arrow = document.getElementById('sigma-arrow');
+    
+    if (subPanel.style.display === "block") {
+        subPanel.style.display = "none";
+        arrow.innerText = "▼";
+    } else {
+        subPanel.style.display = "block";
+        arrow.innerText = "▲";
+    }
+}
+
+// LOGIKA PILIHAN CUCU RADIO BUTTON
+function pilihCucu(teksRumus) {
+    const eventTarget = window.event ? window.event.currentTarget : null;
+    if (eventTarget) {
+        const radio = eventTarget.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+    }
+
+    tekan(teksRumus);
+    
+    setTimeout(function() {
+        tutupSemuaMenu();
+        document.querySelectorAll('input[name="sigma-opt"]').forEach(r => r.checked = false);
+    }, 180);
+}
+
+function tutupSemuaMenu() {
     document.getElementById('dropdown-menu').style.display = "none";
+    document.getElementById('sigma-sub-panel').style.display = "none";
+    document.getElementById('sigma-arrow').innerText = "▼";
 }
 
 function renderLayar() {
@@ -241,54 +281,63 @@ function renderLayar() {
     display.scrollTop = display.scrollHeight;
 }
 
+// 🌟 LOGIKA PERHITUNGAN SUPER AMAN ANTI-ERROR 🌟
 function hitungHasil() {
     if (isManualEdit || rumusBarisIni === "") return;
-    
-    // CEGAH ERROR SIGMA KOSONG
-    // Jika user menekan tombol "=" saat di layar hanya ada simbol Sigma tanpa angka (misal: "Σ")
-    if (rumusBarisIni === "Σ" || rumusBarisIni === "∑") {
-        rumusBarisIni = "";
-        renderLayar();
-        return;
-    }
-
     try {
         let ekspresi = rumusBarisIni;
         
+        // 1. Bersihkan jika ada simbol Sigma menggantung di ujung rumus tanpa angka (Contoh: "5+Σ")
+        if (/[Σ∑\u03A3\u2211]$/.test(ekspresi)) {
+            ekspresi = ekspresi.slice(0, -1);
+        }
+        
+        // Jika setelah dibersihkan teks menjadi kosong atau hanya berisi operator biasa, batalkan perhitungan
+        if (ekspresi === "" || ekspresi === "+" || ekspresi === "-" || ekspresi === "*" || ekspresi === ":") {
+            rumusBarisIni = "";
+            renderLayar();
+            return;
+        }
+
+        // 2. Normalisasi pembagian dan perpangkatan dasar
         ekspresi = ekspresi.replace(/:/g, "/"); 
         ekspresi = ekspresi.replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)");
         ekspresi = ekspresi.replace(/(\d+)%/g, "($1/100)");
         
-        // PARSING SIGMA KOMPUTASI AMAN
+        // 3. LOGIKA DETEKSI SIGMA MANDIRI (Contoh: Mengubah "Σ5" menjadi "15")
+        // Skrip ini mencari huruf Sigma yang diikuti oleh deretan angka (\d+)
         ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(match, angka) {
             let total = 0; 
             let batas = parseInt(angka) || 0;
-            for (let i = 1; i <= batas; i++) { total += i; } 
-            return String(total);
+            for (let i = 1; i <= batas; i++) { 
+                total += i; 
+            } 
+            return String(total); // Hasil kalkulasi Sigma langsung dikirim berupa teks angka murni
         });
 
+        // Jika masih ada sisa simbol Sigma terisolasi yang lolos dari filter angka di atas, hapus paksa
+        ekspresi = ekspresi.replace(/[Σ∑\u03A3\u2211]/g, "0");
+
+        // 4. Bersihkan tumpukan ganda tanda tambah/kurang agar tidak merusak komputasi JavaScript
         ekspresi = ekspresi.replace(/\+\+/g, "+");
         ekspresi = ekspresi.replace(/\-\-/g, "+");
 
+        // 5. Eksekusi kalkulasi string rumus akhir
         let hasil = eval(ekspresi);
         
-        // Jika hasil perhitungan menghasilkan NaN atau Error bawaan JavaScript
-        if (isNaN(hasil)) {
-            throw new Error("Invalid");
-        }
-
+        // Simpan catatan ke riwayat papan layar
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
         riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
         
         rumusBarisIni = ""; 
         renderLayar();
     } catch(e) {
+        // Jika komputasi tetap mendeteksi kesalahan rumus matematika buatan user
         rumusBarisIni = "";
         riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:22px;">Format Error</div>`;
         renderLayar();
     }
 }
-
 
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
@@ -314,12 +363,7 @@ function handleClearClick() {
         display.innerHTML = "";
     }
 }
-
-// JAVASCRIPT UNTUK MEMBUKA PANEL MENU MELAYANG
-function klikTombolPilih() {
-    const menu = document.getElementById('dropdown-menu');
-    menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-}
 </script>
+
 </body>
 </html>
