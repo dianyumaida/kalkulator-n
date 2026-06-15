@@ -18,9 +18,10 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            position: relative; /* Menjadi patokan agar menu melayang pas di atas tombol */
+            position: relative;
         }
 
+        /* AREA MONITOR LAYAR UTAMA */
         .screen-container {
             flex: 1;
             border: 5px solid #000000;
@@ -52,6 +53,7 @@
             margin-bottom: 8px;
         }
 
+        /* PANEL KOTAK TOMBOL BAWAH */
         .buttons-container {
             margin-top: auto;
             display: flex;
@@ -59,6 +61,7 @@
             gap: 10px;
         }
 
+        /* BARIS KOTAK 1: ANGKA */
         .rom-grid-first {
             display: flex;
             justify-content: space-between;
@@ -78,6 +81,7 @@
             cursor: pointer;
         }
 
+        /* BARIS KOTAK 2: OPERATOR */
         .rom-grid-second {
             display: flex;
             justify-content: space-between;
@@ -96,6 +100,7 @@
             cursor: pointer;
         }
 
+        /* BARIS KOTAK 3: NAVIGASI UTAMA */
         .row-bottom {
             display: flex;
             justify-content: space-between;
@@ -134,34 +139,118 @@
             cursor: pointer;
         }
 
-        /* 🌟 POSISI MENU DROPDOWN DIPERBAIKI (DILUAR FLEXBOX) 🌟 */
+        /* PANEL PILIHAN UKURAN PENUH (FULL SCREEN MODAL) */
         .dropdown-menu {
             display: none;
             position: absolute;
-            bottom: 75px; /* Mengambang tepat di atas baris tombol fungsi */
-            left: 15px;
-            width: calc(100% - 30px);
-            background: #f9f9f9; /* Warna abu-abu terang kontras agar terlihat jelas */
-            border: 4px solid #000000;
-            box-shadow: 0px -5px 12px rgba(0,0,0,0.3);
-            z-index: 9999; /* Dipaksa tampil di lapisan paling atas */
-            padding: 10px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border: 6px solid #000000;
+            z-index: 9999;
+            padding: 20px;
             box-sizing: border-box;
+            overflow-y: auto;
         }
+        
+        .menu-title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
         .dropdown-item {
-            padding: 12px 10px;
-            font-size: 16px;
+            padding: 15px 10px;
+            font-size: 18px;
             font-weight: bold;
-            border-bottom: 1px dashed #000000;
+            border-bottom: 2px dashed #ccc;
             cursor: pointer;
             text-align: left;
             color: #000;
         }
-        .dropdown-item:last-child {
-            border-bottom: none;
+        
+        /* GAYA TOMBOL TOGGLE SUB-DROPDOWN INTERNAL */
+        .menu-header-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f0f0f0;
+            font-weight: bold;
+            border: 3px solid #000000;
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
         }
-        .dropdown-item:hover {
-            background: #e5e5e5;
+        .sub-dropdown-content {
+            display: none;
+            background: #fafafa;
+            border-left: 3px solid #000;
+            border-right: 3px solid #000;
+            border-bottom: 3px solid #000;
+            padding: 5px 0;
+        }
+        .menu-anak {
+            padding: 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 16px;
+            background: #eef2f3;
+            text-align: left;
+        }
+        .menu-cucu-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px 12px 30px;
+            font-weight: normal;
+            font-size: 16px;
+            cursor: pointer;
+            border-bottom: 1px dotted #eee;
+        }
+        .menu-cucu-row input[type="radio"] {
+            cursor: pointer;
+            margin: 0;
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-close-menu {
+            background: #ff2a2a;
+            color: #ffffff;
+            border: 2px solid #000000;
+            font-weight: bold;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* GAYA AREA RIWAYAT INTERNAL */
+        .history-list-box {
+            max-height: 110px;
+            overflow-y: auto;
+            padding: 10px 15px;
+            background: #ffffff;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: right;
+            border-bottom: 1px solid #ccc;
+        }
+        .btn-hapus-riwayat {
+            background: #ff2a2a;
+            color: #ffffff;
+            border: 2px solid #000;
+            font-weight: bold;
+            padding: 6px 12px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -169,10 +258,10 @@
 
 <div class="calculator">
     
-    <!-- Screen Area -->
+    <!-- Screen Display -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Buttons Area -->
+    <!-- Buttons Container -->
     <div class="buttons-container">
         <div class="rom-grid-first">
             <button onclick="tekan('0')">0</button>
@@ -204,13 +293,35 @@
         </div>
     </div>
 
-    <!-- 🌟 SEKARANG DROPDOWN DILETAK KAN DI SINI (LAYER ATAS MANDIRI) 🌟 -->
+    <!-- MODAL MENU PILIH BESAR / FULL SCREEN -->
     <div id="dropdown-menu" class="dropdown-menu">
-        <div style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; text-align: left;">Fungsi Pilihan:</div>
+        <div class="menu-title-bar">
+            <span style="font-weight: bold; font-size: 20px;">Daftar Fungsi Pilihan</span>
+            <button class="btn-close-menu" onclick="tutupSemuaMenu()">BATAL ✕</button>
+        </div>
+        
         <div class="dropdown-item" onclick="pilihItem('.')">. (Titik Desimal)</div>
         <div class="dropdown-item" onclick="pilihItem('%')">% (Persen)</div>
-        <div class="dropdown-item" onclick="pilihItem('Σ')">Σ (Sigma)</div>
-        <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
+        
+        <!-- 1. SUB-DROPDOWN SIGMA -->
+        <div class="menu-header-btn" onclick="toggleInternalMenu('sigma-sub-panel', 'sigma-arrow')">
+            <span>Σ (Sigma Menu)</span>
+            <span id="sigma-arrow">▼</span>
+        </div>
+        <div id="sigma-sub-panel" class="sub-dropdown-content">
+            <div class="menu-anak">└─ Σ Berurutan (1+2+3...)</div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ', 'sigma-opt')">
+                <span>Ketik Manual (Σ)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ3', 'sigma-opt')">
+                <span>Hingga 3 (Σ3)</span>
+                <input type="radio" name="sigma-opt">
+            </div>
+            <div class="menu-cucu-row" onclick="pilihCucu('Σ5', 'sigma-opt')">
+
+
+ <div class="dropdown-item" onclick="pilihItem('^')">^ (Pangkat)</div>
     </div>
 
 </div>
