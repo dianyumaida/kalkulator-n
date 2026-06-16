@@ -44,10 +44,8 @@
     pointer-events: auto !important; /* Mengizinkan klik manual murni pada baris teks saja */
 }
 
-
-
 /* ======================================================= */
-/* 1. BARIS TOMBOL ANGKA (0-9) - PENYETELAN AKHIR ANGKA 9 */
+/* 1. BARIS TOMBOL ANGKA (0-9) - PENYETELAN ULANG AKURAT */
 /* ======================================================= */
 .rom-grid-first {
     display: grid !important;
@@ -72,22 +70,25 @@
     pointer-events: auto !important;
 }
 
-/* Angka 0, 1, 2 dikunci pas sesuai tes Anda */
-.btn-num-0, .btn-num-1, .btn-num-2 { margin-left: -5px !important; margin-right: 5px !important; }
+/* 🌟 ANGKA 0: Digeser ke kiri sedikit lagi 🌟 */
+.btn-num-0 { margin-left: -9px !important; margin-right: 9px !important; }
+
+/* Angka 1, 2 tetap pas */
+.btn-num-1, .btn-num-2 { margin-left: -5px !important; margin-right: 5px !important; }
+
 /* Angka 3, 4 dikunci pas */
 .btn-num-3, .btn-num-4 { margin-left: 0px !important; margin-right: 0px !important; }
-/* Angka 5, 6, 7, 8 dikunci pas */
-.btn-num-5, .btn-num-6, .btn-num-7, .btn-num-8 { margin-left: 5px !important; margin-right: -5px !important; }
 
-/* 🌟 KHUSUS ANGKA 9: Digeser Ke Kiri Sedikit Sesuai Instruksi Anda 🌟 */
-.btn-num-9 {
-    margin-left: 1px !important; /* Diubah dari 5px ke 1px agar bergeser ke kiri */
-    margin-right: -1px !important;
-}
+/* Angka 5, 6 tetap pas */
+.btn-num-5, .btn-num-6 { margin-left: 5px !important; margin-right: -5px !important; }
+
+/* 🌟 ANGKA 7, 8, 9: Digeser ke kanan sedikit lagi 🌟 */
+.btn-num-7, .btn-num-8 { margin-left: 9px !important; margin-right: -9px !important; }
+.btn-num-9 { margin-left: 6px !important; margin-right: -6px !important; }
 
 
 /* ======================================================= */
-/* 2. BARIS TOMBOL NAVIGASI BAWAH - GESER KIRI-BAWAH SEDIKIT */
+/* 2. BARIS TOMBOL NAVIGASI BAWAH - DIPAKSA GESER KIRI BAWAH */
 /* ======================================================= */
 .row-bottom {
     display: flex !important;
@@ -108,45 +109,50 @@
     padding: 0 !important;
 }
 
-/* 🌟 Tombol PILIH: Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
+/* 🌟 Tombol PILIH: Dipaksa bergeser ke kiri dan bawah 🌟 */
 .btn-pilih {
     width: 100% !important;
     height: 50px !important;
-    margin-top: 8px !important;   /* Menurunkan kebawah sedikit lagi */
-    margin-left: -4px !important;  /* Menggeser ke kiri sedikit */
-    margin-right: 4px !important;
+    position: relative !important;
+    top: 10px !important;    /* Dipaksa turun ke bawah */
+    left: -8px !important;   /* Dipaksa geser ke kiri */
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
-/* 🌟 Tombol EDIT (DELETE): Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
+/* 🌟 Tombol EDIT (DELETE): Dipaksa bergeser ke kiri dan bawah 🌟 */
 .btn-edit {
     flex: 1 !important;
     height: 50px !important;
-    margin-left: 6px !important;   /* Diubah dari 10px ke 6px agar bergeser ke kiri */
+    position: relative !important;
+    top: 14px !important;    /* Dipaksa turun ke bawah */
+    left: -4px !important;   /* Dipaksa geser ke kiri */
+    margin-left: 6px !important;
     margin-right: 6px !important;
-    margin-top: 11px !important;   /* Menurunkan kebawah sedikit lagi dari 8px ke 11px */
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
-/* 🌟 Tombol CLEAR: Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
+/* 🌟 Tombol CLEAR: Dipaksa bergeser ke kiri dan bawah 🌟 */
 .btn-clear {
     flex: 1 !important;
     height: 50px !important;
-    margin-left: 10px !important;  /* Diubah dari 16px ke 10px agar bergeser ke kiri */
+    position: relative !important;
+    top: 14px !important;    /* Dipaksa turun ke bawah */
+    left: -2px !important;   /* Dipaksa geser ke kiri */
+    margin-left: 10px !important;
     margin-right: -10px !important;
-    margin-top: 11px !important;   /* Menurunkan kebawah sedikit lagi dari 8px ke 11px */
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
+    
 
 .dropdown-menu {
     display: none;
