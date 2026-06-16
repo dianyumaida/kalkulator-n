@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Beruntun Akuntansi</title>
     <style>
-        /* 🌟 ID DAN KELAS DIUBAH ACAK UNTUK MENGHANCURKAN CACHE HP 🌟 */
+        /* FRAME UTAMA KALKULATOR */
         #retro-calc-box {
             width: 380px;
             height: 730px;
@@ -23,9 +23,10 @@
             overflow: hidden;
         }
 
+        /* AREA MONITOR LAYAR UTAMA */
         #retro-screen-view {
             position: absolute;
-            top: 4.5%;    /* 🌟 SILAKAN UBAH PERSENTASE INI UNTUK NAIK/TURUN LAYAR 🌟 */
+            top: 4.5%;    
             right: 5%;    
             width: 90%;   
             height: 42%;  
@@ -56,6 +57,7 @@
             margin-bottom: 8px;
         }
 
+        /* AREA LAPISAN SENSOR TOMBOL */
         #retro-buttons-layer {
             position: absolute;
             top: 0;
@@ -77,8 +79,7 @@
             position: absolute; 
         }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN TOMBOL ANGKA 🌟 */
-        /* Ubah 53% menjadi 50% jika ingin menaikkan, atau 55% jika ingin menurunkan */
+        /* 🌟 BARIS 1: TOMBOL ANGKA (DITURUNKAN KE 53%) 🌟 */
         .rom-grid-first button { top: 53%; height: 7%; }
         
         .btn-num-0 { left: 4%;  width: 8.5%; }
@@ -92,8 +93,7 @@
         .btn-num-8 { left: 80%; width: 8.5%; }
         .btn-num-9 { left: 89.5%; width: 8.5%; }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN TOMBOL OPERATOR 🌟 */
-        /* Ubah 67% jika posisi operator (* : + - =) kurang naik atau kurang turun */
+        /* 🌟 BARIS 2: TOMBOL SIMBOL OPERATOR (DITURUNKAN KE 67%) 🌟 */
         .rom-grid-second button { top: 67%; height: 9%; }
         
         .btn-op-mul { left: 4%; width: 17%; }
@@ -102,8 +102,7 @@
         .btn-op-sub { left: 61%; width: 17%; }
         .btn-op-equal { left: 80%; width: 17%; }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN BARIS KOTAK KETIGA 🌟 */
-        /* Ubah 83% jika baris PILIH, EDIT, CLEAR kurang naik atau kurang turun */
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (DITURUNKAN KE 83%) 🌟 */
         .row-bottom button { top: 83%; height: 8%; }
         
         .btn-pilih { left: 4%; width: 28%; }
@@ -284,15 +283,13 @@
         <!-- FOLDER 2 -->
         <div class="folder-header" onclick="toggleFolder('sigma-panel', 'arrow-sigma')">
             <span>📁 -- sigma --</span>
-
-            
-        
-             <span id="arrow-sigma">▼</span>
+            <span id="arrow-sigma">▼</span>
         </div>
         <div id="sigma-panel" class="sub-dropdown-content">
             <div class="cucu-radio-row" onclick="pilihCucu('Σ', 'sigma-opt')">
                 <span>Ketik Manual (Σ)</span>
                 <input type="radio" name="sigma-opt">
+
             </div>
             <div class="cucu-radio-row" onclick="pilihCucu('Σ3', 'sigma-opt')">
                 <span>Hingga 3 (Σ3)</span>
