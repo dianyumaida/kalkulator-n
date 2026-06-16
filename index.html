@@ -6,7 +6,7 @@
     <title>Kalkulator Beruntun Akuntansi</title>
     <style>
         /* FRAME UTAMA KALKULATOR */
-        #retro-calc-box {
+        #retro-calc-box-v3 {
             width: 380px;
             height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
@@ -24,7 +24,7 @@
         }
 
         /* AREA MONITOR LAYAR UTAMA */
-        #retro-screen-view {
+        #retro-screen-view-v3 {
             position: absolute;
             top: 4.5%;    
             right: 5%;    
@@ -58,7 +58,7 @@
         }
 
         /* AREA LAPISAN SENSOR TOMBOL */
-        #retro-buttons-layer {
+        #retro-buttons-layer-v3 {
             position: absolute;
             top: 0;
             left: 0;
@@ -68,7 +68,7 @@
             z-index: 10;
         }
 
-        #retro-buttons-layer button {
+        #retro-buttons-layer-v3 button {
             background: transparent !important;
             border: none !important;
             outline: none !important;
@@ -79,33 +79,32 @@
             position: absolute; 
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (DITURUNKAN KE 53%) 🌟 */
-        .rom-grid-first button { top: 53%; height: 7%; }
+        /* 🌟 POSISI PERSENTASE AWAL BARIS TOMBOL (DAPAT DISETEL LEWAT INPUT BAWAH) 🌟 */
+        .rom-grid-first button  { height: 7%; }
+        .rom-grid-second button { height: 9%; }
+        .row-bottom button      { height: 8%; }
         
-        .btn-num-0 { left: 4%;  width: 8.5%; }
+        /* Lebar dan Posisi Kolom Angka (Rata Tengah) */
+        .btn-num-0 { left: 4%;   width: 8.5%; }
         .btn-num-1 { left: 13.5%; width: 8.5%; }
-        .btn-num-2 { left: 23%; width: 8.5%; }
+        .btn-num-2 { left: 23%;   width: 8.5%; }
         .btn-num-3 { left: 32.5%; width: 8.5%; }
-        .btn-num-4 { left: 42%; width: 8.5%; }
+        .btn-num-4 { left: 42%;   width: 8.5%; }
         .btn-num-5 { left: 51.5%; width: 8.5%; }
-        .btn-num-6 { left: 61%; width: 8.5%; }
+        .btn-num-6 { left: 61%;   width: 8.5%; }
         .btn-num-7 { left: 70.5%; width: 8.5%; }
-        .btn-num-8 { left: 80%; width: 8.5%; }
+        .btn-num-8 { left: 80%;   width: 8.5%; }
         .btn-num-9 { left: 89.5%; width: 8.5%; }
 
-        /* 🌟 BARIS 2: TOMBOL SIMBOL OPERATOR (DITURUNKAN KE 67%) 🌟 */
-        .rom-grid-second button { top: 67%; height: 9%; }
-        
-        .btn-op-mul { left: 4%; width: 17%; }
+        /* Lebar dan Posisi Kolom Operator */
+        .btn-op-mul { left: 4%;  width: 17%; }
         .btn-op-div { left: 23%; width: 17%; }
         .btn-op-add { left: 42%; width: 17%; }
         .btn-op-sub { left: 61%; width: 17%; }
         .btn-op-equal { left: 80%; width: 17%; }
 
-        /* 🌟 BARIS 3: FUNGSI TERBAWAH (DITURUNKAN KE 83%) 🌟 */
-        .row-bottom button { top: 83%; height: 8%; }
-        
-        .btn-pilih { left: 4%; width: 28%; }
+        /* Lebar dan Posisi Kolom Fungsi Terbawah */
+        .btn-pilih { left: 4%;  width: 28%; }
         .btn-edit  { left: 36%; width: 28%; }
         .btn-clear { left: 68%; width: 28%; }
 
@@ -211,19 +210,37 @@
             box-shadow: 4px 4px 0px #000000;
             text-align: center;
         }
+
+        /* PANEL SLIDER BYPASS UNTUK MENYETEL JARAK DI HP */
+        #cache-bypass-tuner {
+            width: 380px;
+            margin: 10px auto;
+            padding: 10px;
+            background: #eaeaea;
+            border: 2px solid #000;
+            font-family: monospace;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+        .tuner-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .tuner-row input { width: 60%; }
     </style>
 </head>
 <body>
 
 <div id="retro-calc-box">
-    
     <!-- Screen Display -->
     <div id="retro-screen-view"></div>
 
     <!-- Area Lapisan Sensor Tombol Absolut -->
-    <div id="retro-buttons-layer">
+    <div id="retro-buttons-layer-v3">
         <!-- Kelompok Baris 1: Angka -->
-        <div class="rom-grid-first">
+        <div class="rom-grid-first" id="row-1-group">
             <button onclick="tekan('0')" class="btn-num-0" type="button"></button>
             <button onclick="tekan('1')" class="btn-num-1" type="button"></button>
             <button onclick="tekan('2')" class="btn-num-2" type="button"></button>
@@ -237,7 +254,7 @@
         </div>
 
         <!-- Kelompok Baris 2: Operator -->
-        <div class="rom-grid-second">
+        <div class="rom-grid-second" id="row-2-group">
             <button onclick="tekan('*')" class="btn-op-mul" type="button"></button>
             <button onclick="tekan(':')" class="btn-op-div" type="button"></button>
             <button onclick="tekan('+')" class="btn-op-add" type="button"></button>
@@ -246,7 +263,7 @@
         </div>
 
         <!-- Kelompok Baris 3: Fungsi Terbawah -->
-        <div class="row-bottom">
+        <div class="row-bottom" id="row-3-group">
             <button onclick="klikTombolPilih()" class="btn-pilih" type="button"></button>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button"></button>
             <button onclick="handleClearClick()" class="btn-clear" type="button"></button>
@@ -274,6 +291,7 @@
                 <span>% (Persen)</span>
                 <input type="radio" name="simbol-opt">
             </div>
+
             <div class="cucu-radio-row" onclick="pilihCucu('^', 'simbol-opt')">
                 <span>^ (Pangkat)</span>
                 <input type="radio" name="simbol-opt">
