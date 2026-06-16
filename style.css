@@ -42,15 +42,19 @@
     word-wrap: break-word;
     pointer-events: auto !important;
 }
-
-/* 3. Baris Tombol Angka (0-9) - Di-reset Rapi Rata Tengah */
+/* ======================================================= */
+/* 1. BARIS TOMBOL ANGKA (0-9) - TERPAKSA NAIK MASUK KOTAK */
+/* ======================================================= */
 .rom-grid-first {
     display: grid !important;
     grid-template-columns: repeat(10, 1fr) !important;
-    column-gap: 2px !important; /* Jarak antar kolom merata */
+    column-gap: 2px !important;
     border: none !important;
     padding: 0 !important;
-    margin: 0 0 12px 0 !important; 
+    
+    /* 🌟 JALUR PERBAIKAN: Margin pertama diubah menjadi -15px agar baris angka NAIK ke atas masuk kotak gambar 🌟 */
+    margin: -15px 0 12px 0 !important; 
+    
     background: transparent !important;
     width: 100% !important;
     pointer-events: auto !important;
@@ -58,7 +62,7 @@
     z-index: 20;
 }
 .rom-grid-first button {
-    height: 46px !important;
+    height: 46px !important; /* Tinggi area klik tombol angka */
     background: transparent !important;
     border: none !important;
     outline: none !important;
@@ -68,7 +72,7 @@
     pointer-events: auto !important;
 }
 
-/* Penyetelan Mikro Individual Angka Sesuai Catatan Anda */
+/* Penyetelan Mikro Kiri-Kanan Angka */
 .btn-num-0 { margin-left: -3px !important; }
 .btn-num-7, .btn-num-8, .btn-num-9 { margin-left: 3px !important; }
 
