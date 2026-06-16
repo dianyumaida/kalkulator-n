@@ -31,19 +31,20 @@
     flex-direction: column;
 }
 /* 1. Mengunci Baris Tombol Angka (0-9) Menggunakan Grid Mutlak */
+/* 1. Baris Tombol Angka (0-9) - Dipaskan ke Tengah Kotak Angka */
 .rom-grid-first {
     display: grid !important;
-    grid-template-columns: repeat(10, 1fr) !important; /* Membagi 10 kolom sama rata */
-    column-gap: 2.2px !important; /* Mengatur kerapatan horizontal antar angka */
+    grid-template-columns: repeat(10, 1fr) !important;
+    column-gap: 1.8px !important; /* Celah dirapatkan sedikit agar pas di tengah kotak */
     border: none !important;
     padding: 0 !important;
-    /* Geser angka ke kiri/kanan jika kurang pas: gunakan margin-left minus atau plus */
-    margin: 0 -1px 12px -2px !important; 
+    /* Nilai terakhir diubah menjadi -8px untuk mendorong sisa pergeseran ke kiri */
+    margin: 0 -1px 12px -8px !important; 
     background: transparent !important;
-    width: 100.5% !important;
+    width: 102.5% !important; /* Mengimbangi geseran kiri agar tombol 9 tidak terpotong */
 }
 .rom-grid-first button {
-    height: 46px !important; /* Tinggi area klik tombol angka */
+    height: 46px !important;
     background: transparent !important;
     border: none !important;
     outline: none !important;
@@ -52,20 +53,20 @@
     padding: 0 !important;
 }
 
-/* 2. Mengunci Baris Tombol Operator (* : + - =) Menggunakan Grid Mutlak */
+/* 2. Baris Tombol Operator (* : + - =) - Dipaskan ke Tengah Kotak Simbol */
 .rom-grid-second {
     display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important; /* Membagi 5 kolom sama rata */
-    column-gap: 4px !important; /* Mengatur kerapatan horizontal antar operator */
+    grid-template-columns: repeat(5, 1fr) !important;
+    column-gap: 3.5px !important; /* Celah dirapatkan sedikit */
     border: none !important;
     padding: 0 !important;
-    /* Geser operator ke kiri/kanan jika kurang pas */
-    margin: 0 -1px 15px -1px !important; 
+    /* Nilai terakhir diubah menjadi -7px untuk mendorong sisa pergeseran ke kiri */
+    margin: 0 -1px 15px -7px !important; 
     background: transparent !important;
-    width: 100.5% !important;
+    width: 102.5% !important;
 }
 .rom-grid-second button {
-    height: 56px !important; /* Tinggi area klik tombol operator */
+    height: 56px !important;
     background: transparent !important;
     border: none !important;
     outline: none !important;
@@ -73,6 +74,7 @@
     display: block !important;
     padding: 0 !important;
 }
+
 
 
 /* 5. Baris Tombol Fungsi Terbawah (PILIH, EDIT, CLEAR) */
