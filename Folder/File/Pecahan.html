@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Pecahan Berlapis 10 Tingkat</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Menggunakan MathJax untuk merender rumus matematika kompleks -->
+    <script src="https://polyfill.io"></script>
+    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kalkulator Pecahan Berlapis 10</h1>
+        
+        <!-- Tampilan Rumus Utama -->
+        <div class="formula-box">
+            <h3>Bentuk Rumus Matematika:</h3>
+            <div id="math-formula">
+                \[x = \csc(y) + \frac{\int_{0}^{1} \int_{0}^{1} \int_{0}^{1} z \,dx\,dy\,dz}{\log(y) + \frac{\sum_{n=1}^{3} n}{1 + \frac{x_{in}}{y + \frac{z}{1 + \frac{x_{in}}{y + \frac{z}{1 + \frac{1}{2}}}}}}}\]
+            </div>
+        </div>
+
+        <!-- Input Pengguna -->
+        <div class="input-section">
+            <h3>Masukkan Nilai Variabel:</h3>
+            <div class="input-group">
+                <label for="inputX">Nilai $x_{in}$ (Sisi Dalam):</label>
+                <input type="number" id="inputX" value="1" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="inputY">Nilai $y$ (Dalam Radian, $y > 1$):</label>
+                <input type="number" id="inputY" value="2" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="inputZ">Nilai $z$:</label>
+                <input type="number" id="inputZ" value="1.5" step="0.1">
+            </div>
+            <button onclick="hitungPecahanBerlapis()">Hitung Nilai $x$ Utama</button>
+        </div>
+
+        <!-- Tampilan Hasil Akhir -->
+        <div class="result-box">
+            <h3>Hasil Akhir Konten:</h3>
+            <div id="output-result">Klik tombol untuk menghitung...</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+<body>
+/* Pengaturan Dasar Halaman */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Kontainer Utama */
+.container {
+    background-color: #ffffff;
+    max-width: 750px;
+    width: 100%;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1, h3 {
+    color: #2c3e50;
+    text-align: center;
+}
+
+/* Kotak Tampilan Rumus Matematika */
+.formula-box {
+    background-color: #f8f9fa;
+    border-left: 5px solid #3498db;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 4px;
+    overflow-x: auto; /* Agar rumus panjang bisa di-scroll pada layar hp */
+}
+
+/* Bagian Input Form */
+.input-section {
+    background-color: #edf2f7;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+label {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+input {
+    width: 50%;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Tombol Hitung */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Kotak Output Hasil */
+.result-box {
+    background-color: #e6fffa;
+    border: 2px dashed #319795;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #234e52;
+}
+function hitungPecahanBerlapis() {
+    // 1. Ambil nilai input dari user
+    const x_in = parseFloat(document.getElementById('inputX').value);
+    const y = parseFloat(document.getElementById('inputY').value);
+    const z = parseFloat(document.getElementById('inputZ').value);
+
+    // Validasi dasar logaritma alami ln(y) dan pembagian nol cosecan
+    if (y <= 0 || Math.sin(y) === 0) {
+        document.getElementById('output-result').innerHTML = 
+            "<span style='color: red;'>Error: Nilai y harus > 0 dan nilai sin(y) tidak boleh 0!</span>";
+        return;
+    }
+
+    // 2. Hitung Komponen Terpisah atas
+    // Hasil rumus Integral Tiga Tingkat (batas 0 sampai 1 untuk x, y, z dari fungsi f(z) = z)
+    // ∫(0->1) ∫(0->1) ∫(0->1) z dx dy dz = 1 * 1 * [0.5 * z^2](0->1) = 0.5
+    const hasilIntegral = 0.5;
+
+    // Hasil rumus Sigma (1 + 2 + 3)
+    const hasilSigma = 6;
+
+    // 3. Proses Pecahan Berlapis dari Bawah ke Atas (Bottom-Up)
+    let lvl10 = 1 + (1 / 2);                       // Tingkat 10 & 9 basah
+    let lvl8  = y + (z / lvl10);                    // Tingkat 8
+    let lvl7  = 1 + (x_in / lvl8);                  // Tingkat 7
+    let lvl6  = y + (z / lvl7);                    // Tingkat 6
+    let lvl5  = 1 + (x_in / lvl6);                  // Tingkat 5
+
+    // 4. Integrasi ke Tingkat Atas Utama
+    const logY = Math.log(y);                      // Logaritma Alami (ln)
+    const penyebutUtama = logY + (hasilSigma / lvl5);
+    
+    const pecahanUtama = hasilIntegral / penyebutUtama;
+
+    // Hitung Cosecan (1 / sin(y))
+    const cosecY = 1 / Math.sin(y);
+
+    // 5. Hasil Akhir Total Matematika
+    const x_total = cosecY + pecahanUtama;
+
+    // 6. Cetak hasil ke layar HTML
+    document.getElementById('output-result').innerHTML = `
+        Hasil Perhitungan Nilai x Utama = <span style="color: #2b6cb0;">${x_total.toFixed(6)}</span>
+        <br><small style="font-weight: normal; color: #718096; font-size: 13px;">
+        (Csc(y): ${cosecY.toFixed(4)} | Integral: ${hasilIntegral} | Sigma: ${hasilSigma} | Denom Lapisan: ${lvl5.toFixed(4)})
+        </small>
+    `;
+}
+</script>
+</body>
+</html>
