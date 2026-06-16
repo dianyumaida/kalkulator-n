@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Beruntun Akuntansi</title>
     <style>
-        /* FRAME UTAMA KALKULATOR */
-        .calculator {
+        /* 🌟 ID DAN KELAS DIUBAH ACAK UNTUK MENGHANCURKAN CACHE HP 🌟 */
+        #retro-calc-box {
             width: 380px;
             height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
@@ -19,17 +19,16 @@
             font-family: Arial, sans-serif;
             margin: 10px auto;
             box-sizing: border-box;
-            position: relative; /* Menjadi jangkar utama koordinat absolut di bawah */
+            position: relative; 
             overflow: hidden;
         }
 
-        /* AREA STRUKTUR UTAMA LAYAR PUTIH */
-        .screen-container {
+        #retro-screen-view {
             position: absolute;
-            top: 4.5%;    /* Mengunci posisi atas layar putih gambar */
-            right: 5%;    /* Mengunci posisi kanan layar putih gambar */
-            width: 90%;   /* Lebar area teks layar putih */
-            height: 42%;  /* Tinggi area teks layar putih */
+            top: 4.5%;    /* 🌟 SILAKAN UBAH PERSENTASE INI UNTUK NAIK/TURUN LAYAR 🌟 */
+            right: 5%;    
+            width: 90%;   
+            height: 42%;  
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -57,30 +56,29 @@
             margin-bottom: 8px;
         }
 
-        /* AREA GRID UTAMA UNTUK AREA SENSOR KLIK TRANSPARAN */
-        .buttons-container {
+        #retro-buttons-layer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Lapisan luar transparan tidak mengganggu klik */
+            pointer-events: none; 
             z-index: 10;
         }
 
-        .buttons-container button {
+        #retro-buttons-layer button {
             background: transparent !important;
             border: none !important;
             outline: none !important;
             cursor: pointer !important;
             padding: 0 !important;
             margin: 0 !important;
-            pointer-events: auto !important; /* Murni hanya tombol yang bisa diklik */
-            position: absolute; /* Dikunci mati menggunakan koordinat persentase gambar */
+            pointer-events: auto !important; 
+            position: absolute; 
         }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK BARIS TOMBOL ANGKA (0-9) 🌟 */
-        /* Mengunci posisi vertikal baris angka pada 53% tinggi kalkulator */
+        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN TOMBOL ANGKA 🌟 */
+        /* Ubah 53% menjadi 50% jika ingin menaikkan, atau 55% jika ingin menurunkan */
         .rom-grid-first button { top: 53%; height: 7%; }
         
         .btn-num-0 { left: 4%;  width: 8.5%; }
@@ -94,8 +92,8 @@
         .btn-num-8 { left: 80%; width: 8.5%; }
         .btn-num-9 { left: 89.5%; width: 8.5%; }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK BARIS TOMBOL OPERATOR (* : + - =) 🌟 */
-        /* Mengunci posisi vertikal baris operator pada 67% tinggi kalkulator */
+        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN TOMBOL OPERATOR 🌟 */
+        /* Ubah 67% jika posisi operator (* : + - =) kurang naik atau kurang turun */
         .rom-grid-second button { top: 67%; height: 9%; }
         
         .btn-op-mul { left: 4%; width: 17%; }
@@ -104,8 +102,8 @@
         .btn-op-sub { left: 61%; width: 17%; }
         .btn-op-equal { left: 80%; width: 17%; }
 
-        /* 🌟 KOORDINAT PERSENTASE UNTUK BARIS FUNGSI TERBAWAH 🌟 */
-        /* Mengunci posisi vertikal baris navigasi bawah pada 83% tinggi kalkulator */
+        /* 🌟 KOORDINAT PERSENTASE UNTUK NAIK/TURUN BARIS KOTAK KETIGA 🌟 */
+        /* Ubah 83% jika baris PILIH, EDIT, CLEAR kurang naik atau kurang turun */
         .row-bottom button { top: 83%; height: 8%; }
         
         .btn-pilih { left: 4%; width: 28%; }
@@ -218,13 +216,13 @@
 </head>
 <body>
 
-<div class="calculator">
+<div id="retro-calc-box">
     
     <!-- Screen Display -->
-    <div class="screen-container" id="screen-display"></div>
+    <div id="retro-screen-view"></div>
 
     <!-- Area Lapisan Sensor Tombol Absolut -->
-    <div class="buttons-container">
+    <div id="retro-buttons-layer">
         <!-- Kelompok Baris 1: Angka -->
         <div class="rom-grid-first">
             <button onclick="tekan('0')" class="btn-num-0" type="button"></button>
@@ -276,12 +274,6 @@
             <div class="cucu-radio-row" onclick="pilihCucu('%', 'simbol-opt')">
                 <span>% (Persen)</span>
                 <input type="radio" name="simbol-opt">
-
-            
-     </div>
-            <div class="cucu-radio-row" onclick="pilihCucu('%', 'simbol-opt')">
-                <span>% (Persen)</span>
-                <input type="radio" name="simbol-opt">
             </div>
             <div class="cucu-radio-row" onclick="pilihCucu('^', 'simbol-opt')">
                 <span>^ (Pangkat)</span>
@@ -289,10 +281,13 @@
             </div>
         </div>
 
-        <!-- 2. FOLDER ANAK: SIGMA -->
+        <!-- FOLDER 2 -->
         <div class="folder-header" onclick="toggleFolder('sigma-panel', 'arrow-sigma')">
             <span>📁 -- sigma --</span>
-            <span id="arrow-sigma">▼</span>
+
+            
+        
+             <span id="arrow-sigma">▼</span>
         </div>
         <div id="sigma-panel" class="sub-dropdown-content">
             <div class="cucu-radio-row" onclick="pilihCucu('Σ', 'sigma-opt')">
