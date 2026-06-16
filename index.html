@@ -21,24 +21,22 @@
             box-sizing: border-box;
             position: relative; 
             overflow: hidden;
+            /* Memberi jarak aman agar area konten pas di dalam bingkai gambar */
+            padding: 30px 25px; 
         }
 
-        /* AREA MONITOR STANDAR LAYAR PUTIH GAMBAR */
+        /* AREA MONITOR LAYAR PUTIH GAMBAR */
         .screen-container {
-            position: absolute;
-            top: 4.5%;    
-            right: 5%;    
-            width: 90%;   
-            height: 42%;  
+            height: 300px; /* Dikunci tingginya agar pas dengan area layar gambar */
+            background: transparent !important; /* Transparan agar warna layar gambar terlihat */
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            pointer-events: auto !important;
-            z-index: 5;
+            margin-bottom: 45px; /* Jarak pendorong agar tidak menabrak baris tombol bawah */
         }
-
+        
         .calc-row {
             font-size: 32px;
             font-weight: bold;
@@ -57,277 +55,120 @@
             margin-bottom: 8px;
         }
 
-        /* AREA STRUKTUR UTAMA SENSOR KLIK TOMBOL */
+        /* CONTAINER AREA TOMBOL (4 KOLOM X 4 BARIS) */
         .buttons-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; 
-            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Mengatur jarak vertikal antar baris tombol */
         }
 
-        .buttons-container button {
-            background: transparent !important;
-            border: none !important;
+        .rom-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 Kolom Merata */
+            gap: 10px; /* Jarak horizontal antar tombol */
+        }
+
+        /* SENSOR TOMBOL DIBUAT MURNI TRANSPARAN */
+        .rom-grid button {
+            height: 52px; /* Tinggi tombol yang sangat pas untuk disentuh di HP */
+            background: transparent !important; /* 100% Transparan agar gambar tombol asli kelihatan */
+            border: none !important; /* Menghilangkan kotak bawaan kode */
             outline: none !important;
-            cursor: pointer !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            pointer-events: auto !important; 
-            position: absolute; 
-        }
-
-        /* 🌟 POSISI PERSENTASE AMAN SENSOR KLIK 🌟 */
-        /* Baris 1: Tombol Angka (0-9) */
-        .rom-grid-first button { top: 55%; height: 7%; }
-        .btn-num-0 { left: 4%;   width: 8.5%; }
-        .btn-num-1 { left: 13.5%; width: 8.5%; }
-        .btn-num-2 { left: 23%;   width: 8.5%; }
-        .btn-num-3 { left: 32.5%; width: 8.5%; }
-        .btn-num-4 { left: 42%;   width: 8.5%; }
-        .btn-num-5 { left: 51.5%; width: 8.5%; }
-        .btn-num-6 { left: 61%;   width: 8.5%; }
-        .btn-num-7 { left: 70.5%; width: 8.5%; }
-        .btn-num-8 { left: 80%;   width: 8.5%; }
-        .btn-num-9 { left: 89.5%; width: 8.5%; }
-
-        /* Baris 2: Operator Utama (* : + - =) */
-        .rom-grid-second button { top: 68%; height: 9%; }
-        .btn-op-mul { left: 4%;  width: 17%; }
-        .btn-op-div { left: 23%; width: 17%; }
-        .btn-op-add { left: 42%; width: 17%; }
-        .btn-op-sub { left: 61%; width: 17%; }
-        .btn-op-equal { left: 80%; width: 17%; }
-
-        /* Baris 3: Fungsi Terbawah (PILIH EDIT CLEAR) */
-        .row-bottom button { top: 84%; height: 8%; }
-        .btn-pilih { left: 4%;  width: 28%; }
-        .btn-edit  { left: 36%; width: 28%; }
-        .btn-clear { left: 68%; width: 28%; }
-
-        /* PANEL MODAL MENU PILIH BESAR FULL SCREEN */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #f4f4f4;
-            border: 6px solid #000000;
-            z-index: 9999;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-        
-        .menu-title-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #eeeeee;
-            border-bottom: 2px solid #ccc;
-            padding: 15px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .folder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 14px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333333;
             cursor: pointer;
-            user-select: none;
-        }
-        .folder-header span {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .sub-dropdown-content {
-            display: none;
-            background: #ffffff;
-        }
-
-        .cucu-radio-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 25px 12px 45px;
-            font-size: 16px;
-            color: #444444;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            background: #ffffff;
-        }
-
-        .cucu-radio-row input[type="radio"] {
-            cursor: pointer;
-            margin: 0;
-            width: 20px;
-            height: 20px;
-            accent-color: #555;
-        }
-
-        .btn-hapus-riwayat {
-            background: #ff2a2a;
-            color: #ffffff;
-            border: 3px solid #000000;
-            font-weight: bold;
-            padding: 12px 0;
-            margin: 15px auto;
-            cursor: pointer;
-            font-size: 16px;
-            display: block;
-            width: 85%;
-            text-align: center;
-            box-shadow: 4px 4px 0px #000000;
-        }
-
-        .btn-close-menu {
-            background: #ff2a2a;
-            color: #ffffff;
-            border: 3px solid #000000;
-            font-weight: bold;
-            padding: 15px 0;
-            cursor: pointer;
-            font-size: 16px;
-            width: 85%;
-            display: block;
-            margin: 10px auto;
-            box-shadow: 4px 4px 0px #000000;
-            text-align: center;
         }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    
-    <!-- Screen Display -->
+    <!-- Layar Utama Transparan -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Area Lapisan Sensor Tombol Absolut -->
+    <!-- Area Tombol Transparan Tepat di Atas Kotak Gambar -->
     <div class="buttons-container">
-        <!-- Kelompok Baris 1: Angka -->
-        <div class="rom-grid-first">
-            <button onclick="tekan('0')" class="btn-num-0" type="button"></button>
-            <button onclick="tekan('1')" class="btn-num-1" type="button"></button>
-            <button onclick="tekan('2')" class="btn-num-2" type="button"></button>
-            <button onclick="tekan('3')" class="btn-num-3" type="button"></button>
-            <button onclick="tekan('4')" class="btn-num-4" type="button"></button>
-            <button onclick="tekan('5')" class="btn-num-5" type="button"></button>
-            <button onclick="tekan('6')" class="btn-num-6" type="button"></button>
-            <button onclick="tekan('7')" class="btn-num-7" type="button"></button>
-            <button onclick="tekan('8')" class="btn-num-8" type="button"></button>
-            <button onclick="tekan('9')" class="btn-num-9" type="button"></button>
-        </div>
-
-        <!-- Kelompok Baris 2: Operator -->
-        <div class="rom-grid-second">
-            <button onclick="tekan('*')" class="btn-op-mul" type="button"></button>
-            <button onclick="tekan(':')" class="btn-op-div" type="button"></button>
-            <button onclick="tekan('+')" class="btn-op-add" type="button"></button>
-            <button onclick="tekan('-')" class="btn-op-sub" type="button"></button>
-            <button onclick="hitungHasil()" class="btn-op-equal" type="button"></button>
-        </div>
-
-        <!-- Kelompok Baris 3: Fungsi Terbawah -->
-        <div class="row-bottom">
-            <button onclick="klikTombolPilih()" class="btn-pilih" type="button"></button>
-            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button"></button>
-            <button onclick="handleClearClick()" class="btn-clear" type="button"></button>
-        </div>
-    </div>
-
-    <!-- MODAL MENU PILIH BESAR / FULL SCREEN -->
-    <div id="dropdown-menu" class="dropdown-menu">
-        <div class="menu-title-bar">
-            <span>-- Pilih Menu --</span>
-            <span>▼</span>
-        </div>
-        
-        <!-- FOLDER 1 -->
-        <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')">
-            <span>📁 -- simbol --</span>
-            <span id="arrow-simbol">▼</span>
-        </div>
-        <div id="simbol-panel" class="sub-dropdown-content">
-            <div class="cucu-radio-row" onclick="pilihCucu('.', 'simbol-opt')">
-                <span>. (Titik Desimal)</span>
-                <input type="radio" name="simbol-opt">
-            </div>
-            <div class="cucu-radio-row" onclick="pilihCucu('%', 'simbol-opt')">
-                <span>% (Persen)</span>
-                <input type="radio" name="simbol-opt">
-            </div>
-            <div class="cucu-radio-row" onclick="pilihCucu('^', 'simbol-opt')">
-                <span>^ (Pangkat)</span>
-                <input type="radio" name="simbol-opt">
-            </div>
-        </div>
-
-        <!-- FOLDER 2 -->
-        <div class="folder-header" onclick="toggleFolder('sigma-panel', 'arrow-sigma')">
-            <span>📁 -- sigma --</span>
-            <span id="arrow-sigma">▼</span>
-        </div>
-        <div id="sigma-panel" class="sub-dropdown-content">
-            <div class="cucu-radio-row" onclick="pilihCucu('Σ', 'sigma-opt')">
-                <span>Ketik Manual (Σ)</span>
-                <input type="radio" name="sigma-opt">
-            </div>
-
-            <div class="cucu-radio-row" onclick="pilihCucu('Σ3', 'sigma-opt')">
-                <span>Hingga 3 (Σ3)</span>
-                <input type="radio" name="sigma-opt">
-            </div>
-            <div class="cucu-radio-row" onclick="pilihCucu('Σ5', 'sigma-opt')">
-                <span>Hingga 5 (Σ5)</span>
-                <input type="radio" name="sigma-opt">
-            </div>
-        </div>
-
-                <!-- 3. FOLDER ANAK: RIWAYAT -->
-        <div class="folder-header" onclick="toggleFolder('riwayat-panel', 'arrow-riwayat')">
-            <span>📁 -- riwayat --</span>
-            <span id="arrow-riwayat">▼</span>
-        </div>
-        <div id="riwayat-panel" class="sub-dropdown-content">
-            <div class="cucu-radio-row" onclick="pilihOpsiRekord(true, 'rad-on')">
-                <span>Riwayat Hitungan (ON)</span>
-                <input type="radio" name="riwayat-opt" id="rad-on" checked>
-            </div>
-            <div class="cucu-radio-row" onclick="pilihOpsiRekord(false, 'rad-off')">
-                <span>Riwayat Hitungan (OFF)</span>
-                <input type="radio" name="riwayat-opt" id="rad-off">
-            </div>
-
-            <!-- 🌟 KOTAK BARU: Tempat Menampilkan Teks Log Hitungan Terekam 🌟 -->
-            <div id="history-box-content" style="max-height: 120px; overflow-y: auto; padding: 12px; margin: 10px 45px; background: #ffffff; font-size: 16px; font-weight: bold; text-align: right; border: 3px solid #000000; min-height: 40px; box-sizing: border-box;">
-                Belum ada riwayat
-            </div>
+        <div class="rom-grid">
+            <!-- Baris 1 -->
+            <button onclick="tekan('7')"></button>
+            <button onclick="tekan('8')"></button>
+            <button onclick="tekan('9')"></button>
+            <button onclick="tekan('*')"></button>
             
-            <button type="button" class="btn-hapus-riwayat" onclick="hapusRiwayatPermanen(event)">Hapus</button>
-        </div>
-
-
-        <!-- Tombol Batal Keluar Menu -->
-        <div style="padding-top: 10px; text-align: center;">
-            <button type="button" class="btn-close-menu" onclick="tutupSemuaMenu()">KEMBALI KE KALKULATOR X</button>
+            <!-- Baris 2 -->
+            <button onclick="tekan('4')"></button>
+            <button onclick="tekan('5')"></button>
+            <button onclick="tekan('6')"></button>
+            <button onclick="tekan(':')"></button>
+            
+            <!-- Baris 3 -->
+            <button onclick="tekan('1')"></button>
+            <button onclick="tekan('2')"></button>
+            <button onclick="tekan('3')"></button>
+            <button onclick="tekan('+')"></button>
+            
+            <!-- Baris 4 -->
+            <button onclick="tekan('0')"></button>
+            <button onclick="handleClearClick()"></button>
+            <button onclick="hitungHasil()"></button>
+            <button onclick="tekan('-')"></button>
         </div>
     </div>
 </div>
 
-<!-- Memanggil file logika JavaScript eksternal -->
-<script src="script.js"></script>
+<script>
+const display = document.getElementById("screen-display");
+let clickTimer = null;
+
+let rumusBarisIni = ""; 
+let riwayatHitunganHTML = ""; 
+
+function tekan(karakter) {
+    rumusBarisIni += String(karakter);
+    renderLayar();
+}
+
+function renderLayar() {
+    let htmlAktif = rumusBarisIni ? `<div class="calc-row">${rumusBarisIni}</div>` : "";
+    display.innerHTML = riwayatHitunganHTML + htmlAktif;
+    display.scrollTop = display.scrollHeight;
+}
+
+function hitungHasil() {
+    if (rumusBarisIni === "") return;
+    try {
+        let ekspresi = rumusBarisIni;
+        ekspresi = ekspresi.replace(/:/g, "/"); 
+
+        let hasil = eval(ekspresi);
+        
+        riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
+        riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
+        
+        rumusBarisIni = ""; 
+        renderLayar();
+    } catch(e) {
+        rumusBarisIni = "";
+        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:24px;">Error</div>`;
+        renderLayar();
+    }
+}
+
+function handleClearClick() {
+    if (clickTimer == null) {
+        clickTimer = setTimeout(function () {
+            clickTimer = null;
+            if (rumusBarisIni.length > 0) {
+                rumusBarisIni = rumusBarisIni.slice(0, -1);
+                renderLayar();
+            }
+        }, 250);
+    } else {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        rumusBarisIni = "";
+        riwayatHitunganHTML = "";
+        display.innerHTML = "";
+    }
+}
+</script>
 </body>
 </html>
