@@ -45,8 +45,9 @@
 }
 
 
+
 /* ======================================================= */
-/* 1. BARIS TOMBOL ANGKA (0-9) - DIPAKSA RUN KEMBALI */
+/* 1. BARIS TOMBOL ANGKA (0-9) - PENYETELAN AKHIR ANGKA 9 */
 /* ======================================================= */
 .rom-grid-first {
     display: grid !important;
@@ -56,9 +57,9 @@
     margin: 0 0 12px 0 !important; 
     background: transparent !important;
     width: 100% !important;
-    pointer-events: auto !important; /* Membuka paksa sensor ketukan browser */
+    pointer-events: auto !important;
     position: relative;
-    z-index: 20; /* Meningkatkan lapisan tombol agar berada di atas background */
+    z-index: 20;
 }
 .rom-grid-first button {
     height: 46px !important;
@@ -68,47 +69,25 @@
     cursor: pointer !important;
     display: block !important;
     padding: 0 !important;
-    pointer-events: auto !important; /* Menjamin ketukan jari langsung terproses */
+    pointer-events: auto !important;
 }
 
-/* Jarak Individual Angka */
+/* Angka 0, 1, 2 dikunci pas sesuai tes Anda */
 .btn-num-0, .btn-num-1, .btn-num-2 { margin-left: -5px !important; margin-right: 5px !important; }
+/* Angka 3, 4 dikunci pas */
 .btn-num-3, .btn-num-4 { margin-left: 0px !important; margin-right: 0px !important; }
-.btn-num-5, .btn-num-6, .btn-num-7, .btn-num-8, .btn-num-9 { margin-left: 5px !important; margin-right: -5px !important; }
+/* Angka 5, 6, 7, 8 dikunci pas */
+.btn-num-5, .btn-num-6, .btn-num-7, .btn-num-8 { margin-left: 5px !important; margin-right: -5px !important; }
 
-
-/* ======================================================= */
-/* 2. BARIS TOMBOL OPERATOR (* : + - =) */
-/* ======================================================= */
-.rom-grid-second {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    column-gap: 3.5px !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: -12px -1px 25px -1px !important; 
-    background: transparent !important;
-    width: 100.5% !important;
-    position: relative;
-    z-index: 20;
-}
-.rom-grid-second button {
-    height: 56px !important;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    cursor: pointer !important;
-    display: block !important;
-    padding: 0 !important;
-}
-.btn-op-equal {
-    margin-left: 6px !important;
-    margin-right: -6px !important;
+/* 🌟 KHUSUS ANGKA 9: Digeser Ke Kiri Sedikit Sesuai Instruksi Anda 🌟 */
+.btn-num-9 {
+    margin-left: 1px !important; /* Diubah dari 5px ke 1px agar bergeser ke kiri */
+    margin-right: -1px !important;
 }
 
 
 /* ======================================================= */
-/* 3. BARIS TOMBOL NAVIGASI BAWAH - PAS SESUAI INSTRUKSI */
+/* 2. BARIS TOMBOL NAVIGASI BAWAH - GESER KIRI-BAWAH SEDIKIT */
 /* ======================================================= */
 .row-bottom {
     display: flex !important;
@@ -129,90 +108,45 @@
     padding: 0 !important;
 }
 
-/* 🌟 Tombol PILIH: Digeser Kebawah Sedikit 🌟 */
+/* 🌟 Tombol PILIH: Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
 .btn-pilih {
     width: 100% !important;
     height: 50px !important;
-    margin-top: 5px !important; /* Menurunkan tombol PILIH */
+    margin-top: 8px !important;   /* Menurunkan kebawah sedikit lagi */
+    margin-left: -4px !important;  /* Menggeser ke kiri sedikit */
+    margin-right: 4px !important;
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
-/* 🌟 Tombol EDIT (DELETE): Geser Ke Kanan Bawah Sedikit 🌟 */
+/* 🌟 Tombol EDIT (DELETE): Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
 .btn-edit {
     flex: 1 !important;
     height: 50px !important;
-    margin-left: 10px !important; /* Diturunkan & geser ke kanan sedikit */
-    margin-right: 2px !important;
-    margin-top: 8px !important;  /* Diturunkan kebawah sedikit */
+    margin-left: 6px !important;   /* Diubah dari 10px ke 6px agar bergeser ke kiri */
+    margin-right: 6px !important;
+    margin-top: 11px !important;   /* Menurunkan kebawah sedikit lagi dari 8px ke 11px */
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
-/* 🌟 Tombol CLEAR: Geser Ke Kanan Bawah Sedikit Lagi 🌟 */
+/* 🌟 Tombol CLEAR: Diturunkan Kebawah Dan Digeser Ke Kiri Sedikit 🌟 */
 .btn-clear {
     flex: 1 !important;
     height: 50px !important;
-    margin-left: 16px !important; /* Digeser makin ke kanan bawah */
-    margin-right: -16px !important;
-    margin-top: 8px !important;   /* Diturunkan kebawah sedikit */
+    margin-left: 10px !important;  /* Diubah dari 16px ke 10px agar bergeser ke kiri */
+    margin-right: -10px !important;
+    margin-top: 11px !important;   /* Menurunkan kebawah sedikit lagi dari 8px ke 11px */
     background: transparent !important;
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
 }
 
-
-
-/* 5. Baris Tombol Fungsi Terbawah (PILIH, EDIT, CLEAR) */
-.row-bottom {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-    width: 100% !important;
-}
-.row-bottom div {
-    flex: 1.2 !important;
-    display: flex !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-.btn-pilih {
-    width: 100% !important;
-    height: 50px !important;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    cursor: pointer !important;
-    padding: 0 !important;
-}
-.btn-edit {
-    flex: 1 !important;
-    height: 50px !important;
-    margin: 0 6px !important; /* Menyesuaikan jarak tombol kuning gambar */
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    cursor: pointer !important;
-    padding: 0 !important;
-}
-.btn-clear {
-    flex: 1 !important;
-    height: 50px !important;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    cursor: pointer !important;
-    padding: 0 !important;
-}
 
 .dropdown-menu {
     display: none;
