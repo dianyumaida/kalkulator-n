@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Dasar Akuntansi</title>
     <style>
-        /* PEMBUNGKUS LUAR: Menjaga agar kalkulator pas di tengah layar HP */
         body {
             margin: 0;
             padding: 0;
@@ -16,7 +15,7 @@
             min-height: 100vh;
         }
 
-        /* FRAME BINGKAI UTAMA KALKULATOR (DIKUNCI PIKSEL TETAP) */
+        /* FRAME BINGKAI UTAMA KALKULATOR */
         .calculator {
             width: 380px;
             height: 730px;
@@ -31,7 +30,7 @@
             margin: 10px auto;
         }
 
-        /* AREA MONITOR LAYAR PUTIHAN ATAS */
+        /* AREA MONITOR LAYAR PUTIHAN */
         .screen-container {
             position: absolute;
             top: 35px;     
@@ -66,7 +65,7 @@
             margin-bottom: 8px;
         }
 
-        /* CONTAINER LAPISAN SENSOR TOMBOL TRANSPARAN */
+        /* CONTAINER LAPISAN SENSOR TOMBOL */
         .buttons-container {
             position: absolute;
             top: 0;
@@ -77,19 +76,25 @@
             z-index: 10;
         }
 
+        /* 🌟 SEKARANG TOMBOL DIBERI LATAR BELAKANG SEMI-TRANSPARAN DAN TEKS HITAM AGAR KELIHATAN 🌟 */
         .buttons-container button {
-            background: transparent !important;
-            border: none !important;
+            background: rgba(255, 255, 255, 0.7) !important; /* Latar putih transparan agar kotak gambar asli di bawahnya tetap samar-samar terlihat */
+            border: 1px solid #000000 !important; /* Diberi garis tepi tipis hitam */
+            color: #000000 !important;             /* Teks angka/simbol hitam tebal */
+            font-weight: bold !important;
+            font-size: 16px !important;
             outline: none !important;
             cursor: pointer !important;
             padding: 0 !important;
             margin: 0 !important;
             pointer-events: auto !important; 
             position: absolute; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DIGESER SERENTAK KE KIRI 🌟 */
-        /* Jarak 'left' dikurangi 6px hingga 10px agar semua angka merapat ke kiri */
+        /* BARIS 1: TOMBOL ANGKA (0-9) - POSISI TETAP */
         .rom-grid-first button { top: 420px; height: 48px; }
         
         .btn-num-0 { left: 10px;  width: 34px; }
@@ -103,9 +108,8 @@
         .btn-num-8 { left: 306px; width: 34px; }
         .btn-num-9 { left: 343px; width: 34px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DIGESER KE KIRI 🌟 */
-        /* Posisi horizontal ditarik lebih ke kiri agar pas di atas gambar kotak simbol */
-        .rom-grid-second button { top: 490px; height: 58px; }
+        /* BARIS 2: TOMBOL OPERATOR (* : + - =) - DITURUNKAN KE 520px AGAR TIDAK NAIK KE ANGKA */
+        .rom-grid-second button { top: 520px; height: 58px; font-size: 22px !important; }
         
         .btn-op-mul { left: 10px;  width: 68px; }
         .btn-op-div { left: 83px;  width: 68px; }
@@ -113,9 +117,8 @@
         .btn-op-sub { left: 229px; width: 68px; }
         .btn-op-equal { left: 302px; width: 68px; }
 
-        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DIGESER KE KIRI 🌟 */
-        /* Posisi ditarik ke kiri agar pas menutup tombol fungsi di gambar */
-        .row-bottom button { top: 565px; height: 55px; }
+        /* BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DITURUNKAN KE 610px */
+        .row-bottom button { top: 610px; height: 55px; }
         
         .btn-pilih { left: 10px;  width: 120px; }
         .btn-edit  { left: 138px; width: 110px; }
@@ -125,39 +128,38 @@
 <body>
 
 <div class="calculator">
-    <!-- Monitor Layar Transparan -->
+    <!-- Monitor Layar -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Lapisan Koordinat Sensor Sentuh Jari Tetap -->
     <div class="buttons-container">
-        <!-- Baris 1: Angka -->
+        <!-- Baris 1: Angka (Teks dimunculkan kembali) -->
         <div class="rom-grid-first">
-            <button onclick="tekan('0')" class="btn-num-0" type="button"></button>
-            <button onclick="tekan('1')" class="btn-num-1" type="button"></button>
-            <button onclick="tekan('2')" class="btn-num-2" type="button"></button>
-            <button onclick="tekan('3')" class="btn-num-3" type="button"></button>
-            <button onclick="tekan('4')" class="btn-num-4" type="button"></button>
-            <button onclick="tekan('5')" class="btn-num-5" type="button"></button>
-            <button onclick="tekan('6')" class="btn-num-6" type="button"></button>
-            <button onclick="tekan('7')" class="btn-num-7" type="button"></button>
-            <button onclick="tekan('8')" class="btn-num-8" type="button"></button>
-            <button onclick="tekan('9')" class="btn-num-9" type="button"></button>
+            <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
+            <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
+            <button onclick="tekan('2')" class="btn-num-2" type="button">2</button>
+            <button onclick="tekan('3')" class="btn-num-3" type="button">3</button>
+            <button onclick="tekan('4')" class="btn-num-4" type="button">4</button>
+            <button onclick="tekan('5')" class="btn-num-5" type="button">5</button>
+            <button onclick="tekan('6')" class="btn-num-6" type="button">6</button>
+            <button onclick="tekan('7')" class="btn-num-7" type="button">7</button>
+            <button onclick="tekan('8')" class="btn-num-8" type="button">8</button>
+            <button onclick="tekan('9')" class="btn-num-9" type="button">9</button>
         </div>
 
-        <!-- Baris 2: Operator -->
+        <!-- Baris 2: Operator (Teks dimunculkan kembali) -->
         <div class="rom-grid-second">
-            <button onclick="tekan('*')" class="btn-op-mul" type="button"></button>
-            <button onclick="tekan(':')" class="btn-op-div" type="button"></button>
-            <button onclick="tekan('+')" class="btn-op-add" type="button"></button>
-            <button onclick="tekan('-')" class="btn-op-sub" type="button"></button>
-            <button onclick="hitungHasil()" class="btn-op-equal" type="button"></button>
+            <button onclick="tekan('*')" class="btn-op-mul" type="button">*</button>
+            <button onclick="tekan(':')" class="btn-op-div" type="button">:</button>
+            <button onclick="tekan('+')" class="btn-op-add" type="button">+</button>
+            <button onclick="tekan('-')" class="btn-op-sub" type="button">-</button>
+            <button onclick="hitungHasil()" class="btn-op-equal" type="button">=</button>
         </div>
 
-        <!-- Baris 3: Navigasi Fungsi Biasa -->
+        <!-- Baris 3: Navigasi Fungsi (Teks dimunculkan kembali) -->
         <div class="row-bottom">
-            <button onclick="void(0)" class="btn-pilih" type="button"></button>
-            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button"></button>
-            <button onclick="handleClearClick()" class="btn-clear" type="button"></button>
+            <button onclick="void(0)" class="btn-pilih" type="button">PILIH</button>
+            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
+            <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
 </div>
@@ -182,7 +184,6 @@ function renderLayar() {
     display.scrollTop = display.scrollHeight;
 }
 
-// Logika hitung hasil standar kalkulator biasa
 function hitungHasil() {
     if (rumusBarisIni === "") return;
     try {
