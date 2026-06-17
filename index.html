@@ -37,7 +37,8 @@
             position: absolute; top: 0; left: 0;
             width: 380px; height: 730px; pointer-events: none; z-index: 10;
         }
-        /* Mengunci gaya teks hitam pekat dempet dengan injeksi manual */
+        
+        /* 🌟 GAYA DASAR TOMBOL UTAMA (SISTEM PENGUNCI DIHAPUS TOTAL) 🌟 */
         .layer-buttons-final button {
             background: rgba(255, 255, 255, 0.4) !important; 
             border: 1px solid rgba(0, 0, 0, 0.3) !important;   
@@ -46,12 +47,8 @@
             cursor: pointer !important; padding: 0 !important; margin: 0 !important;
             pointer-events: auto !important; position: absolute; 
             display: flex; align-items: center; justify-content: center;
-            top: 502px !important; height: 36px !important; width: 30px !important;
+            box-sizing: border-box !important;
         }
-        
-        /* 🌟 GAYA OPERATOR DAN FUNGSI BAWAH INDIVIDU YANG SUDAH DITURUNKAN 🌟 */
-        .layer-buttons-final .btn-op-custom { top: 584px !important; height: 50px !important; width: 64px !important; font-size: 22px !important; }
-        .layer-buttons-final .btn-func-custom { top: 663px !important; height: 48px !important; }
         
         .dropdown-menu {
             display: none; position: absolute; top: 0; left: 0;
@@ -85,29 +82,29 @@
 <div class="calculator-box-final">
     <div class="screen-container-final" id="screen-display"></div>
     <div class="layer-buttons-final">
-        <!-- 🌟 INJEKSI INLINE 'STYLE' LANGSUNG PADA TOMBOL AGAR WAJIB MELEBAR KEBAL CACHE HP 🌟 -->
-        <button onclick="tekan('0')" style="left: 16px !important;" type="button">0</button>
-        <button onclick="tekan('1')" style="left: 52px !important;" type="button">1</button>
-        <button onclick="tekan('2')" style="left: 89px !important;" type="button">2</button>
-        <button onclick="tekan('3')" style="left: 125px !important;" type="button">3</button>
-        <button onclick="tekan('4')" style="left: 161px !important;" type="button">4</button>
-        <button onclick="tekan('5')" style="left: 198px !important;" type="button">5</button>
-        <button onclick="tekan('6')" style="left: 235px !important;" type="button">6</button>
-        <button onclick="tekan('7')" style="left: 271px !important;" type="button">7</button>
-        <button onclick="tekan('8')" style="left: 308px !important;" type="button">8</button>
-        <button onclick="tekan('9')" style="left: 344px !important;" type="button">9</button>
+        <!-- 🌟 KOORDINAT HORIZONTAL DIHITUNG ULANG DENGAN SPREAD MELEBAR PRESISI KE KANAN 🌟 -->
+        <button onclick="tekan('0')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 16px !important;" type="button">0</button>
+        <button onclick="tekan('1')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 52px !important;" type="button">1</button>
+        <button onclick="tekan('2')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 88px !important;" type="button">2</button>
+        <button onclick="tekan('3')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 124px !important;" type="button">3</button>
+        <button onclick="tekan('4')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 160px !important;" type="button">4</button>
+        <button onclick="tekan('5')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 196px !important;" type="button">5</button>
+        <button onclick="tekan('6')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 232px !important;" type="button">6</button>
+        <button onclick="tekan('7')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 268px !important;" type="button">7</button>
+        <button onclick="tekan('8')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 304px !important;" type="button">8</button>
+        <button onclick="tekan('9')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 340px !important;" type="button">9</button>
 
-        <!-- 🌟 TOMBOL OPERATOR DENGAN INJEKSI LANGSUNG 🌟 -->
-        <button onclick="tekan('*')" class="btn-op-custom" style="left: 14px !important;" type="button">*</button>
-        <button onclick="tekan(':')" class="btn-op-custom" style="left: 87px !important;" type="button">:</button>
-        <button onclick="tekan('+')" class="btn-op-custom" style="left: 160px !important;" type="button">+</button>
-        <button onclick="tekan('-')" class="btn-op-custom" style="left: 233px !important;" type="button">-</button>
-        <button onclick="hitungHasil()" class="btn-op-custom" style="left: 306px !important;" type="button">=</button>
+        <!-- 🌟 BARIS OPERATOR DITURUNKAN BEBERAPA MILIMETER SEHINGGA DI TENGAH KOTAK HITAM 🌟 -->
+        <button onclick="tekan('*')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 14px !important;" type="button">*</button>
+        <button onclick="tekan(':')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 86px !important;" type="button">:</button>
+        <button onclick="tekan('+')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 158px !important;" type="button">+</button>
+        <button onclick="tekan('-')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 230px !important;" type="button">-</button>
+        <button onclick="hitungHasil()" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 302px !important; font-size: 22px !important;" type="button">=</button>
 
-        <!-- 🌟 TOMBOL FUNGSI BAWAH DENGAN INJEKSI LANGSUNG 🌟 -->
-        <button onclick="klikTombolPilih()" class="btn-func-custom" style="left: 10px !important; width: 122px !important;" type="button">PILIH</button>
-        <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-func-custom" style="left: 142px !important; width: 106px !important;" type="button">EDIT</button>
-        <button onclick="handleClearClick()" class="btn-func-custom" style="left: 258px !important; width: 112px !important; font-size: 15px !important;" type="button">CLEAR</button>
+        <!-- 🌟 BARIS NAVIGASI FUNGSI DITURUNKAN PAS MENUTUPI TOMBOL ASLI GAMBAR 🌟 -->
+        <button onclick="klikTombolPilih()" style="top: 662px !important; height: 48px !important; width: 122px !important; left: 10px !important;" type="button">PILIH</button>
+        <button id="btn-edit" onclick="aktifkanModeEdit()" style="top: 662px !important; height: 48px !important; width: 106px !important; left: 142px !important;" type="button">EDIT</button>
+        <button onclick="handleClearClick()" style="top: 662px !important; height: 48px !important; width: 112px !important; left: 258px !important; font-size: 15px !important;" type="button">CLEAR</button>
     </div>
 
         <div id="dropdown-menu" class="dropdown-menu">
