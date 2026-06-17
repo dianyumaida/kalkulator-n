@@ -76,13 +76,13 @@
             z-index: 10;
         }
 
-        /* 🌟 SEKARANG TOMBOL DIBERI LATAR BELAKANG SEMI-TRANSPARAN DAN TEKS HITAM AGAR KELIHATAN 🌟 */
+        /* Tombol diberi kotak putih samar dahulu agar Anda bisa melihat pergeserannya saat dites */
         .buttons-container button {
-            background: rgba(255, 255, 255, 0.7) !important; /* Latar putih transparan agar kotak gambar asli di bawahnya tetap samar-samar terlihat */
-            border: 1px solid #000000 !important; /* Diberi garis tepi tipis hitam */
-            color: #000000 !important;             /* Teks angka/simbol hitam tebal */
+            background: rgba(255, 255, 255, 0.6) !important; 
+            border: 1px solid #000000 !important; 
+            color: #000000 !important;             
             font-weight: bold !important;
-            font-size: 16px !important;
+            font-size: 14px !important;
             outline: none !important;
             cursor: pointer !important;
             padding: 0 !important;
@@ -94,35 +94,36 @@
             justify-content: center;
         }
 
-        /* BARIS 1: TOMBOL ANGKA (0-9) - POSISI TETAP */
-        .rom-grid-first button { top: 420px; height: 48px; }
+        /* 🌟 BARIS 1: TOMBOL ANGKA (DITURUNKAN KE 530px & JARAK DIJARANGKAN) 🌟 */
+        /* Jarak 'left' dan lebar 'width' diatur renggang agar pas masuk ke kotak gambar di bawahnya */
+        .rom-grid-first button { top: 530px; height: 42px; }
         
-        .btn-num-0 { left: 10px;  width: 34px; }
-        .btn-num-1 { left: 47px;  width: 34px; }
-        .btn-num-2 { left: 84px;  width: 34px; }
-        .btn-num-3 { left: 121px; width: 34px; }
-        .btn-num-4 { left: 158px; width: 34px; }
-        .btn-num-5 { left: 195px; width: 34px; }
-        .btn-num-6 { left: 232px; width: 34px; }
-        .btn-num-7 { left: 269px; width: 34px; }
-        .btn-num-8 { left: 306px; width: 34px; }
-        .btn-num-9 { left: 343px; width: 34px; }
+        .btn-num-0 { left: 14px;  width: 28px; }
+        .btn-num-1 { left: 50px;  width: 28px; }
+        .btn-num-2 { left: 86px;  width: 28px; }
+        .btn-num-3 { left: 122px; width: 28px; }
+        .btn-num-4 { left: 158px; width: 28px; }
+        .btn-num-5 { left: 194px; width: 28px; }
+        .btn-num-6 { left: 230px; width: 28px; }
+        .btn-num-7 { left: 266px; width: 28px; }
+        .btn-num-8 { left: 302px; width: 28px; }
+        .btn-num-9 { left: 338px; width: 28px; }
 
-        /* BARIS 2: TOMBOL OPERATOR (* : + - =) - DITURUNKAN KE 520px AGAR TIDAK NAIK KE ANGKA */
-        .rom-grid-second button { top: 520px; height: 58px; font-size: 22px !important; }
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (DITURUNKAN KE 600px) 🌟 */
+        .rom-grid-second button { top: 600px; height: 50px; font-size: 20px !important; }
         
-        .btn-op-mul { left: 10px;  width: 68px; }
-        .btn-op-div { left: 83px;  width: 68px; }
-        .btn-op-add { left: 156px; width: 68px; }
-        .btn-op-sub { left: 229px; width: 68px; }
-        .btn-op-equal { left: 302px; width: 68px; }
+        .btn-op-mul { left: 14px;  width: 64px; }
+        .btn-op-div { left: 86px;  width: 64px; }
+        .btn-op-add { left: 158px; width: 64px; }
+        .btn-op-sub { left: 230px; width: 64px; }
+        .btn-op-equal { left: 302px; width: 64px; }
 
-        /* BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DITURUNKAN KE 610px */
-        .row-bottom button { top: 610px; height: 55px; }
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DITURUNKAN KE 678px 🌟 */
+        .row-bottom button { top: 678px; height: 42px; }
         
-        .btn-pilih { left: 10px;  width: 120px; }
-        .btn-edit  { left: 138px; width: 110px; }
-        .btn-clear { left: 256px; width: 114px; }
+        .btn-pilih { left: 14px;  width: 120px; }
+        .btn-edit  { left: 144px; width: 104px; }
+        .btn-clear { left: 258px; width: 108px; }
     </style>
 </head>
 <body>
@@ -132,7 +133,7 @@
     <div class="screen-container" id="screen-display"></div>
 
     <div class="buttons-container">
-        <!-- Baris 1: Angka (Teks dimunculkan kembali) -->
+        <!-- Baris 1: Angka -->
         <div class="rom-grid-first">
             <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
             <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
@@ -146,7 +147,7 @@
             <button onclick="tekan('9')" class="btn-num-9" type="button">9</button>
         </div>
 
-        <!-- Baris 2: Operator (Teks dimunculkan kembali) -->
+        <!-- Baris 2: Operator -->
         <div class="rom-grid-second">
             <button onclick="tekan('*')" class="btn-op-mul" type="button">*</button>
             <button onclick="tekan(':')" class="btn-op-div" type="button">:</button>
@@ -155,7 +156,7 @@
             <button onclick="hitungHasil()" class="btn-op-equal" type="button">=</button>
         </div>
 
-        <!-- Baris 3: Navigasi Fungsi (Teks dimunculkan kembali) -->
+        <!-- Baris 3: Navigasi Fungsi -->
         <div class="row-bottom">
             <button onclick="void(0)" class="btn-pilih" type="button">PILIH</button>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
