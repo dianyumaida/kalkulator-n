@@ -10,7 +10,7 @@
             display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh; overflow-x: hidden; 
         }
-        .calculator {
+        .calculator-box-final {
             width: 380px; height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
             background-size: 380px 730px; background-position: center;
@@ -18,7 +18,7 @@
             box-shadow: none !important; box-sizing: border-box;
             position: relative; margin: 10px auto;
         }
-        .screen-container {
+        .screen-container-final {
             position: absolute; top: 35px; left: 20px;    
             width: 340px; height: 250px; padding: 10px;
             box-sizing: border-box; overflow-y: auto;
@@ -33,11 +33,12 @@
             font-size: 40px; color: #1a237e; border-bottom: 2px dashed #000;
             padding-bottom: 4px; margin-bottom: 8px;
         }
-        .buttons-container {
+        .layer-buttons-final {
             position: absolute; top: 0; left: 0;
             width: 380px; height: 730px; pointer-events: none; z-index: 10;
         }
-        .buttons-container button {
+        /* Mengunci gaya teks hitam pekat dempet dengan injeksi manual */
+        .layer-buttons-final button {
             background: rgba(255, 255, 255, 0.4) !important; 
             border: 1px solid rgba(0, 0, 0, 0.3) !important;   
             color: #000000 !important; font-weight: 900 !important;              
@@ -45,52 +46,13 @@
             cursor: pointer !important; padding: 0 !important; margin: 0 !important;
             pointer-events: auto !important; position: absolute; 
             display: flex; align-items: center; justify-content: center;
+            top: 502px !important; height: 36px !important; width: 30px !important;
         }
         
-        /* 🌟 KALIBRASI TOTAL JARAK HORIZONTAL ANGKA INDIVIDUAL (DIPERLEBAR KE KANAN) 🌟 */
-        #baris-angka-final-tengah {
-            position: absolute; top: 502px; left: 0; width: 380px; height: 36px;
-            display: block !important; box-sizing: border-box; padding: 0; margin: 0;
-        }
-        #baris-angka-final-tengah button { top: 0px !important; height: 36px !important; width: 30px !important; }
+        /* 🌟 GAYA OPERATOR DAN FUNGSI BAWAH INDIVIDU YANG SUDAH DITURUNKAN 🌟 */
+        .layer-buttons-final .btn-op-custom { top: 584px !important; height: 50px !important; width: 64px !important; font-size: 22px !important; }
+        .layer-buttons-final .btn-func-custom { top: 663px !important; height: 48px !important; }
         
-        /* Jarak direnggangkan total agar teks angka pas berbaris satu demi satu di dalam kotak Anda */
-        .btn-num-0 { left: 16px !important; }   
-        .btn-num-1 { left: 52px !important; }   
-        .btn-num-2 { left: 89px !important; }   
-        .btn-num-3 { left: 125px !important; }  
-        .btn-num-4 { left: 161px !important; }  
-        .btn-num-5 { left: 198px !important; }  
-        .btn-num-6 { left: 235px !important; }  
-        .btn-num-7 { left: 271px !important; }  
-        .btn-num-8 { left: 308px !important; }  
-        .btn-num-9 { left: 344px !important; }  
-
-        /* 🌟 KOORDINAT BARIS OPERATOR - DITURUNKAN BEBERAPA MILIMETER 🌟 */
-        #baris-operator-final-tengah {
-            position: absolute; top: 584px; left: 0; width: 380px; height: 50px;
-            display: block !important; box-sizing: border-box; padding: 0; margin: 0;
-        }
-        #baris-operator-final-tengah button { top: 0px !important; height: 50px !important; }
-        
-        /* Jarak horizontal operator disesuaikan merenggang pas menutupi simbol gambar kustom */
-        .btn-op-mul { left: 14px !important;  width: 63px !important; }
-        .btn-op-div { left: 87px !important;  width: 63px !important; }
-        .btn-op-add { left: 160px !important; width: 63px !important; }
-        .btn-op-sub { left: 233px !important; width: 63px !important; }
-        .btn-op-equal { left: 306px !important; width: 63px !important; font-size: 22px !important; }
-
-        /* 🌟 BARIS FUNGSI BAWAH - DITURUNKAN BEBERAPA MILIMETER AGAR PAS 🌟 */
-        .row-bottom {
-            position: absolute; top: 663px; left: 0; width: 380px; height: 48px;
-            display: flex !important; flex-direction: row !important;
-            justify-content: space-between !important; padding: 0 10px 0 10px; box-sizing: border-box;
-        }
-        .row-bottom button { top: 0px !important; height: 48px !important; }
-        .btn-pilih { width: 122px !important; position: relative !important; }
-        .btn-edit  { width: 106px !important; position: relative !important; }
-        .btn-clear { width: 110px !important; font-size: 15px !important; position: relative !important; }
-
         .dropdown-menu {
             display: none; position: absolute; top: 0; left: 0;
             width: 100%; height: 100%; background: #f4f4f4;
@@ -120,33 +82,32 @@
     </style>
 </head>
 <body>
-<div class="calculator">
-    <div class="screen-container" id="screen-display"></div>
-    <div class="buttons-container">
-        <div id="baris-angka-final-tengah">
-            <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
-            <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
-            <button onclick="tekan('2')" class="btn-num-2" type="button">2</button>
-            <button onclick="tekan('3')" class="btn-num-3" type="button">3</button>
-            <button onclick="tekan('4')" class="btn-num-4" type="button">4</button>
-            <button onclick="tekan('5')" class="btn-num-5" type="button">5</button>
-            <button onclick="tekan('6')" class="btn-num-6" type="button">6</button>
-            <button onclick="tekan('7')" class="btn-num-7" type="button">7</button>
-            <button onclick="tekan('8')" class="btn-num-8" type="button">8</button>
-            <button onclick="tekan('9')" class="btn-num-9" type="button">9</button>
-        </div>
-        <div id="baris-operator-final-tengah">
-            <button onclick="tekan('*')" class="btn-op-mul" type="button">*</button>
-            <button onclick="tekan(':')" class="btn-op-div" type="button">:</button>
-            <button onclick="tekan('+')" class="btn-op-add" type="button">+</button>
-            <button onclick="tekan('-')" class="btn-op-sub" type="button">-</button>
-            <button onclick="hitungHasil()" class="btn-op-equal" type="button">=</button>
-        </div>
-        <div class="row-bottom">
-            <button onclick="klikTombolPilih()" class="btn-pilih" type="button">PILIH</button>
-            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
-            <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
-        </div>
+<div class="calculator-box-final">
+    <div class="screen-container-final" id="screen-display"></div>
+    <div class="layer-buttons-final">
+        <!-- 🌟 INJEKSI INLINE 'STYLE' LANGSUNG PADA TOMBOL AGAR WAJIB MELEBAR KEBAL CACHE HP 🌟 -->
+        <button onclick="tekan('0')" style="left: 16px !important;" type="button">0</button>
+        <button onclick="tekan('1')" style="left: 52px !important;" type="button">1</button>
+        <button onclick="tekan('2')" style="left: 89px !important;" type="button">2</button>
+        <button onclick="tekan('3')" style="left: 125px !important;" type="button">3</button>
+        <button onclick="tekan('4')" style="left: 161px !important;" type="button">4</button>
+        <button onclick="tekan('5')" style="left: 198px !important;" type="button">5</button>
+        <button onclick="tekan('6')" style="left: 235px !important;" type="button">6</button>
+        <button onclick="tekan('7')" style="left: 271px !important;" type="button">7</button>
+        <button onclick="tekan('8')" style="left: 308px !important;" type="button">8</button>
+        <button onclick="tekan('9')" style="left: 344px !important;" type="button">9</button>
+
+        <!-- 🌟 TOMBOL OPERATOR DENGAN INJEKSI LANGSUNG 🌟 -->
+        <button onclick="tekan('*')" class="btn-op-custom" style="left: 14px !important;" type="button">*</button>
+        <button onclick="tekan(':')" class="btn-op-custom" style="left: 87px !important;" type="button">:</button>
+        <button onclick="tekan('+')" class="btn-op-custom" style="left: 160px !important;" type="button">+</button>
+        <button onclick="tekan('-')" class="btn-op-custom" style="left: 233px !important;" type="button">-</button>
+        <button onclick="hitungHasil()" class="btn-op-custom" style="left: 306px !important;" type="button">=</button>
+
+        <!-- 🌟 TOMBOL FUNGSI BAWAH DENGAN INJEKSI LANGSUNG 🌟 -->
+        <button onclick="klikTombolPilih()" class="btn-func-custom" style="left: 10px !important; width: 122px !important;" type="button">PILIH</button>
+        <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-func-custom" style="left: 142px !important; width: 106px !important;" type="button">EDIT</button>
+        <button onclick="handleClearClick()" class="btn-func-custom" style="left: 258px !important; width: 112px !important; font-size: 15px !important;" type="button">CLEAR</button>
     </div>
 
         <div id="dropdown-menu" class="dropdown-menu">
