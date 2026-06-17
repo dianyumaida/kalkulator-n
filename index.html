@@ -25,18 +25,19 @@
             background-position: center;
             background-repeat: no-repeat;
             border: none !important;
+            box-shadow: 8px 8px 0px #000000;
             box-sizing: border-box;
             position: relative; 
             margin: 10px auto;
         }
 
-        /* AREA MONITOR LAYAR PUTIHAN ATAS (DIKUNCI TETAP) */
+        /* AREA MONITOR LAYAR PUTIHAN ATAS */
         .screen-container {
             position: absolute;
             top: 35px;     
             left: 20px;    
             width: 340px;  
-            height: 250px; /* Dikurangi tingginya sedikit agar tidak menabrak area tombol yang naik */
+            height: 250px; 
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -87,38 +88,38 @@
             position: absolute; 
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DITARIK NAIK 🌟 */
-        /* Koordinat diturunkan dari 522px ke 420px (Naik 102 piksel ke atas) */
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DIGESER SERENTAK KE KIRI 🌟 */
+        /* Jarak 'left' dikurangi 6px hingga 10px agar semua angka merapat ke kiri */
         .rom-grid-first button { top: 420px; height: 48px; }
         
-        .btn-num-0 { left: 16px;  width: 32px; }
-        .btn-num-1 { left: 52px;  width: 32px; }
-        .btn-num-2 { left: 88px;  width: 32px; }
-        .btn-num-3 { left: 124px; width: 32px; }
-        .btn-num-4 { left: 160px; width: 32px; }
-        .btn-num-5 { left: 196px; width: 32px; }
-        .btn-num-6 { left: 232px; width: 32px; }
-        .btn-num-7 { left: 268px; width: 32px; }
-        .btn-num-8 { left: 304px; width: 32px; }
-        .btn-num-9 { left: 340px; width: 32px; }
+        .btn-num-0 { left: 10px;  width: 34px; }
+        .btn-num-1 { left: 47px;  width: 34px; }
+        .btn-num-2 { left: 84px;  width: 34px; }
+        .btn-num-3 { left: 121px; width: 34px; }
+        .btn-num-4 { left: 158px; width: 34px; }
+        .btn-num-5 { left: 195px; width: 34px; }
+        .btn-num-6 { left: 232px; width: 34px; }
+        .btn-num-7 { left: 269px; width: 34px; }
+        .btn-num-8 { left: 306px; width: 34px; }
+        .btn-num-9 { left: 343px; width: 34px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DITARIK NAIK 🌟 */
-        /* Koordinat diturunkan dari 592px ke 490px agar ikut merapat naik ke atas */
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DIGESER KE KIRI 🌟 */
+        /* Posisi horizontal ditarik lebih ke kiri agar pas di atas gambar kotak simbol */
         .rom-grid-second button { top: 490px; height: 58px; }
         
-        .btn-op-mul { left: 16px;  width: 65px; }
-        .btn-op-div { left: 88px;  width: 65px; }
-        .btn-op-add { left: 160px; width: 65px; }
-        .btn-op-sub { left: 232px; width: 65px; }
-        .btn-op-equal { left: 304px; width: 65px; }
+        .btn-op-mul { left: 10px;  width: 68px; }
+        .btn-op-div { left: 83px;  width: 68px; }
+        .btn-op-add { left: 156px; width: 68px; }
+        .btn-op-sub { left: 229px; width: 68px; }
+        .btn-op-equal { left: 302px; width: 68px; }
 
-        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DITARIK NAIK 🌟 */
-        /* Koordinat diturunkan dari 668px ke 565px agar pas menutup baris ketiga gambar */
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DIGESER KE KIRI 🌟 */
+        /* Posisi ditarik ke kiri agar pas menutup tombol fungsi di gambar */
         .row-bottom button { top: 565px; height: 55px; }
         
-        .btn-pilih { left: 16px;  width: 120px; }
-        .btn-edit  { left: 148px; width: 106px; }
-        .btn-clear { left: 266px; width: 98px; }
+        .btn-pilih { left: 10px;  width: 120px; }
+        .btn-edit  { left: 138px; width: 110px; }
+        .btn-clear { left: 256px; width: 114px; }
     </style>
 </head>
 <body>
@@ -181,6 +182,7 @@ function renderLayar() {
     display.scrollTop = display.scrollHeight;
 }
 
+// Logika hitung hasil standar kalkulator biasa
 function hitungHasil() {
     if (rumusBarisIni === "") return;
     try {
@@ -201,7 +203,6 @@ function hitungHasil() {
     }
 }
 
-// Mengunci mode edit manual
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
     display.contentEditable = isManualEdit ? "true" : "false";
