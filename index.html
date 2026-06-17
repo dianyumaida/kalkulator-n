@@ -47,41 +47,42 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* 🌟 KOORDINAT BARIS ANGKA INDIVIDUAL - DISESUAIKAN DENGAN DESAIN KOTAK ANDA 🌟 */
+        /* 🌟 KALIBRASI TOTAL JARAK HORIZONTAL ANGKA INDIVIDUAL (DIPERLEBAR KE KANAN) 🌟 */
         #baris-angka-final-tengah {
-            position: absolute; top: 504px; left: 0; width: 380px; height: 36px;
+            position: absolute; top: 502px; left: 0; width: 380px; height: 36px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
-        #baris-angka-final-tengah button { top: 0px !important; height: 36px !important; width: 28px !important; }
+        #baris-angka-final-tengah button { top: 0px !important; height: 36px !important; width: 30px !important; }
         
-        /* Mengunci posisi agar teks kode menempel tepat di atas angka desain Anda */
-        .btn-num-0 { left: 16px !important; }   /* Angka 0 di kotak paling kiri luar */
-        .btn-num-1 { left: 52px !important; }   /* Angka 1 masuk kotak pertama */
-        .btn-num-2 { left: 88px !important; }   /* Angka 2 masuk kotak kedua */
-        .btn-num-3 { left: 124px !important; }  /* Angka 3 masuk kotak ketiga */
-        .btn-num-4 { left: 160px !important; }  /* Angka 4 masuk kotak keempat */
-        .btn-num-5 { left: 196px !important; }  /* Angka 5 masuk kotak kelima */
-        .btn-num-6 { left: 232px !important; }  /* Angka 6 masuk kotak keenam */
-        .btn-num-7 { left: 268px !important; }  /* Angka 7 masuk kotak ketujuh */
-        .btn-num-8 { left: 304px !important; }  /* Angka 8 masuk kotak kedelapan */
-        .btn-num-9 { left: 340px !important; }  /* Angka 9 masuk kotak kesembilan */
+        /* Jarak direnggangkan total agar teks angka pas berbaris satu demi satu di dalam kotak Anda */
+        .btn-num-0 { left: 16px !important; }   
+        .btn-num-1 { left: 52px !important; }   
+        .btn-num-2 { left: 89px !important; }   
+        .btn-num-3 { left: 125px !important; }  
+        .btn-num-4 { left: 161px !important; }  
+        .btn-num-5 { left: 198px !important; }  
+        .btn-num-6 { left: 235px !important; }  
+        .btn-num-7 { left: 271px !important; }  
+        .btn-num-8 { left: 308px !important; }  
+        .btn-num-9 { left: 344px !important; }  
 
-        /* 🌟 KOORDINAT BARIS OPERATOR - DITURUNKAN PAS DI TENGAH KOTAK 🌟 */
+        /* 🌟 KOORDINAT BARIS OPERATOR - DITURUNKAN BEBERAPA MILIMETER 🌟 */
         #baris-operator-final-tengah {
-            position: absolute; top: 582px; left: 0; width: 380px; height: 50px;
+            position: absolute; top: 584px; left: 0; width: 380px; height: 50px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
         #baris-operator-final-tengah button { top: 0px !important; height: 50px !important; }
         
-        .btn-op-mul { left: 14px !important;  width: 64px !important; }
-        .btn-op-div { left: 86px !important;  width: 64px !important; }
-        .btn-op-add { left: 158px !important; width: 64px !important; }
-        .btn-op-sub { left: 230px !important; width: 64px !important; }
-        .btn-op-equal { left: 302px !important; width: 64px !important; font-size: 22px !important; }
+        /* Jarak horizontal operator disesuaikan merenggang pas menutupi simbol gambar kustom */
+        .btn-op-mul { left: 14px !important;  width: 63px !important; }
+        .btn-op-div { left: 87px !important;  width: 63px !important; }
+        .btn-op-add { left: 160px !important; width: 63px !important; }
+        .btn-op-sub { left: 233px !important; width: 63px !important; }
+        .btn-op-equal { left: 306px !important; width: 63px !important; font-size: 22px !important; }
 
-        /* 🌟 BARIS FUNGSI BAWAH - DITURUNKAN PAS DI ATAS WARNA KUNING & MERAH 🌟 */
+        /* 🌟 BARIS FUNGSI BAWAH - DITURUNKAN BEBERAPA MILIMETER AGAR PAS 🌟 */
         .row-bottom {
-            position: absolute; top: 660px; left: 0; width: 380px; height: 48px;
+            position: absolute; top: 663px; left: 0; width: 380px; height: 48px;
             display: flex !important; flex-direction: row !important;
             justify-content: space-between !important; padding: 0 10px 0 10px; box-sizing: border-box;
         }
@@ -122,7 +123,6 @@
 <div class="calculator">
     <div class="screen-container" id="screen-display"></div>
     <div class="buttons-container">
-        <!-- 🌟 SUSUNAN URUTAN TOMBOL DISESUAIKAN TEPAT DENGAN DESIGN ASLI GAMBAR ANDA 🌟 -->
         <div id="baris-angka-final-tengah">
             <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
             <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
@@ -148,7 +148,8 @@
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
-    <div id="dropdown-menu" class="dropdown-menu">
+
+        <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')"><span>📁 -- simbol --</span><span id="arrow-simbol">▼</span></div>
         <div id="simbol-panel" class="sub-dropdown-content">
@@ -187,9 +188,7 @@ function hapusRiwayatPermanen(e) { if (e) e.stopPropagation(); rumusBarisIni = "
 function renderLayar() { let h = rumusBarisIni ? `<div class="calc-row">${rumusBarisIni}</div>` : ""; display.innerHTML = riwayatHitunganHTML + h; display.scrollTop = display.scrollHeight; }
 function hitungHasil() { if (rumusBarisIni === "") return; try { let exp = rumusBarisIni, rAsli = rumusBarisIni; if (/[Σ∑\u03A3\u2211]$/.test(exp)) { exp = exp.slice(0, -1); } exp = exp.replace(/:/g, "/").replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)").replace(/(\d+)%/g, "($1/100)").replace(/(\d+)([Σ∑\u03A3\u2211])/g, "$1*$2"); exp = exp.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(m, a) { let t = 0, b = parseInt(a) || 0; for (let i = 1; i <= b; i++) { t += i; } return "(" + t + ")"; }); exp = exp.replace(/[Σ∑\u03A3\u2211]/g, "0").replace(/\+\+/g, "+").replace(/\-\-/g, "+"); let hasil = eval(exp); let bR = `<div style="font-size:14px; color:#555;">${rAsli}</div>`, bH = `<div style="font-size:18px; color:#1a237e; border-bottom:1px dashed #ccc; padding-bottom:3px; margin-bottom:5px;">= ${hasil}</div>`; if (isRecordActive) { riwayatHitunganHTML += `<div class="calc-row">${rAsli}</div><div class="calc-row latest-result">= ${hasil}</div>`; updateHistoryBoxMenu(bR + bH); } else { riwayatHitunganHTML = `<div class="calc-row latest-result">= ${hasil}</div>`; } rumusBarisIni = ""; renderLayar(); } catch(e) { rumusBarisIni = ""; riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:24px;">Error</div>`; renderLayar(); } }
 function aktifkanModeEdit() { isManualEdit = !isManualEdit; display.contentEditable = isManualEdit ? "true" : "false"; if (isManualEdit) display.focus(); }
-function handleClearClick() { if (clickTimer == null) { setTimeout(function () { clickTimer = null; if (rumusBarisIni.length > 0) { rumusBarisIni = rumusBarisIni.slice(0, -1); renderLayar(); } }, 250); } else { clearTimeout(clickTimer); clickTimer = null; rumusBarisIni = ""; riwayatHitunganHTML = ""; display.innerHTML = ""; } }
+function handleClearClick() { if (clickTimer == null) { clickTimer = setTimeout(function () { clickTimer = null; if (rumusBarisIni.length > 0) { rumusBarisIni = rumusBarisIni.slice(0, -1); renderLayar(); } }, 250); } else { clearTimeout(clickTimer); clickTimer = null; rumusBarisIni = ""; riwayatHitunganHTML = ""; display.innerHTML = ""; } }
 </script>
 </body>
 </html>
-
-    
