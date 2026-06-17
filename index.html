@@ -47,39 +47,39 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* 🌟 PERBAIKAN TOTAL KOORDINAT HORIZONTAL: DILEBARKAN PAS KE KANAN 🌟 */
-        #baris-angka-baru {
+        /* 🌟 PENGUNCI MANUAL BARIS ANGKA: KEBAL DARI STRUKTUR OTOMATIS BROWSER 🌟 */
+        #baris-angka-final-tengah {
             position: absolute; top: 502px; left: 0; width: 380px; height: 36px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
-        #baris-angka-baru button { top: 0px !important; height: 36px !important; width: 28px !important; }
+        #baris-angka-final-tengah button { top: 0px !important; height: 36px !important; width: 28px !important; }
         
-        /* Jarak left ditambah bertahap 36px agar merenggang pas di tengah angka gambar */
-        .btn-num-0 { left: 18px !important; }
-        .btn-num-1 { left: 54px !important; }   
-        .btn-num-2 { left: 90px !important; }   
-        .btn-num-3 { left: 126px !important; }  
-        .btn-num-4 { left: 162px !important; }  
-        .btn-num-5 { left: 198px !important; }  
-        .btn-num-6 { left: 234px !important; }  
-        .btn-num-7 { left: 270px !important; }  
-        .btn-num-8 { left: 306px !important; }  
-        .btn-num-9 { left: 342px !important; }
+        /* Koordinat posisi horizontal unik satu per satu agar dipaksa dempet tepat di tengah angka gambar Anda */
+        .btn-num-0 { left: 24px !important; }   /* Digeser ke kanan dari posisi 18px */
+        .btn-num-1 { left: 60px !important; }   /* Digeser ke kanan dari posisi 54px */
+        .btn-num-2 { left: 95px !important; }   /* Digeser ke kanan dari posisi 90px */
+        .btn-num-3 { left: 130px !important; }  /* Digeser ke kanan dari posisi 126px */
+        .btn-num-4 { left: 166px !important; }  /* Menyeimbangkan posisi tengah */
+        .btn-num-5 { left: 202px !important; }  
+        .btn-num-6 { left: 238px !important; }  /* Didorong melebar mengikuti renggangan gambar Anda */
+        .btn-num-7 { left: 274px !important; }  
+        .btn-num-8 { left: 310px !important; }  
+        .btn-num-9 { left: 346px !important; }  /* Didorong penuh ke kanan agar pas di kotak 9 gambar */
 
-        /* 🌟 SENSOR OPERATOR DILEBARKAN DAN DIGESER KE KANAN AGAR PAS KOTAK HITAM 🌟 */
-        .rom-grid-second {
+        /* 🌟 PENGUNCI MANUAL BARIS OPERATOR: DISETEL KUNCI MATI PER TOMBOL 🌟 */
+        #baris-operator-final-tengah {
             position: absolute; top: 578px; left: 0; width: 380px; height: 50px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
-        .rom-grid-second button {
-            top: 0px !important; height: 50px !important; width: 64px !important; font-size: 22px !important;
+        #baris-operator-final-tengah button {
+            top: 0px !important; height: 50px !important;
         }
-        /* Jarak left operator digeser bertahap ke kanan mengikuti gambar kotak hitam */
-        .btn-op-mul { left: 14px !important; }
-        .btn-op-div { left: 86px !important; }
-        .btn-op-add { left: 158px !important; }
-        .btn-op-sub { left: 230px !important; }
-        .btn-op-equal { left: 302px !important; }
+        /* Disetel left manual per operator agar pas dempet menutup gambar simbol asli */
+        .btn-op-mul { left: 16px !important;  width: 63px !important; }
+        .btn-op-div { left: 88px !important;  width: 63px !important; }
+        .btn-op-add { left: 160px !important; width: 63px !important; }
+        .btn-op-sub { left: 232px !important; width: 63px !important; }
+        .btn-op-equal { left: 304px !important; width: 63px !important; font-size: 22px !important; }
 
         /* BARIS 3 FUNGSI BAWAH */
         .row-bottom {
@@ -124,8 +124,8 @@
 <div class="calculator">
     <div class="screen-container" id="screen-display"></div>
     <div class="buttons-container">
-        <!-- Menggunakan ID Baru agar HP dipaksa merespons pergeseran -->
-        <div id="baris-angka-baru">
+        <!-- Menggunakan ID Baru agar HP dipaksa melakukan kalkulasi manual koordinat -->
+        <div id="baris-angka-final-tengah">
             <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
             <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
             <button onclick="tekan('2')" class="btn-num-2" type="button">2</button>
@@ -137,7 +137,7 @@
             <button onclick="tekan('8')" class="btn-num-8" type="button">8</button>
             <button onclick="tekan('9')" class="btn-num-9" type="button">9</button>
         </div>
-        <div class="rom-grid-second">
+        <div id="baris-operator-final-tengah">
             <button onclick="tekan('*')" class="btn-op-mul" type="button">*</button>
             <button onclick="tekan(':')" class="btn-op-div" type="button">:</button>
             <button onclick="tekan('+')" class="btn-op-add" type="button">+</button>
@@ -150,8 +150,7 @@
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
-
-        <div id="dropdown-menu" class="dropdown-menu">
+    <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')"><span>📁 -- simbol --</span><span id="arrow-simbol">▼</span></div>
         <div id="simbol-panel" class="sub-dropdown-content">
@@ -195,3 +194,5 @@ function handleClearClick() { if (clickTimer == null) { clickTimer = setTimeout(
 </body>
 </html>
 
+    
+    
