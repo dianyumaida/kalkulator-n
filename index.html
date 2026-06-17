@@ -3,42 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Beruntun Akuntansi</title>
+    <title>Kalkulator Dasar Akuntansi</title>
     <style>
-        /* FRAME BINGKAI UTAMA KALKULATOR */
+        /* Desain Kalkulator Dasar Standar Tanpa Gambar */
         .calculator {
-            width: 380px;
-            height: 730px;
-            background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            border: none !important;
+            width: 350px;
+            height: 580px;
+            background: #ffffff;
+            border: 5px solid #000000;
             border-radius: 4px;
-            box-shadow: 8px 8px 0px #000000;
+            padding: 15px;
+            box-shadow: 6px 6px 0px #000000;
             font-family: Arial, sans-serif;
-            margin: 10px auto;
+            margin: 20px auto;
             box-sizing: border-box;
-            position: relative; 
-            overflow: hidden;
-            /* Memberi jarak aman agar area konten pas di dalam bingkai gambar */
-            padding: 30px 25px; 
+            display: flex;
+            flex-direction: column;
         }
 
-        /* AREA MONITOR LAYAR PUTIH GAMBAR */
+        /* Area Layar Monitor */
         .screen-container {
-            height: 300px; /* Dikunci tingginya agar pas dengan area layar gambar */
-            background: transparent !important; /* Transparan agar warna layar gambar terlihat */
+            flex: 1;
+            border: 4px solid #000000;
             padding: 10px;
+            background: #ffffff;
             box-sizing: border-box;
+            margin-bottom: 15px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            margin-bottom: 45px; /* Jarak pendorong agar tidak menabrak baris tombol bawah */
         }
         
         .calc-row {
-            font-size: 32px;
+            font-size: 26px;
             font-weight: bold;
             color: #000000;
             line-height: 1.3;
@@ -48,68 +45,71 @@
         }
 
         .calc-row.latest-result {
-            font-size: 40px;
+            font-size: 32px;
             color: #1a237e;
             border-bottom: 2px dashed #000;
             padding-bottom: 4px;
             margin-bottom: 8px;
         }
 
-        /* CONTAINER AREA TOMBOL (4 KOLOM X 4 BARIS) */
+        /* Struktur Grid Tombol */
         .buttons-container {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Mengatur jarak vertikal antar baris tombol */
+            gap: 10px;
         }
 
         .rom-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 Kolom Merata */
-            gap: 10px; /* Jarak horizontal antar tombol */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
 
-        /* SENSOR TOMBOL DIBUAT MURNI TRANSPARAN */
-        .rom-grid button {
-            height: 52px; /* Tinggi tombol yang sangat pas untuk disentuh di HP */
-            background: transparent !important; /* 100% Transparan agar gambar tombol asli kelihatan */
-            border: none !important; /* Menghilangkan kotak bawaan kode */
-            outline: none !important;
+        button {
+            height: 48px;
+            background: #f2f2f2;
+            border: 3px solid #000000;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 18px;
             cursor: pointer;
         }
+        button:active {
+            background: #e0e0e0;
+        }
+        .btn-operator { background: #e5e5e5; }
+        .btn-equal { background: #ffcc00; }
+        .btn-clear { background: #ff2a2a; color: #ffffff; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <!-- Layar Utama Transparan -->
+    <!-- Layar Utama -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Area Tombol Transparan Tepat di Atas Kotak Gambar -->
+    <!-- Tombol Fisik -->
     <div class="buttons-container">
         <div class="rom-grid">
-            <!-- Baris 1 -->
-            <button onclick="tekan('7')"></button>
-            <button onclick="tekan('8')"></button>
-            <button onclick="tekan('9')"></button>
-            <button onclick="tekan('*')"></button>
+            <button onclick="tekan('7')">7</button>
+            <button onclick="tekan('8')">8</button>
+            <button onclick="tekan('9')">9</button>
+            <button onclick="tekan('*')" class="btn-operator">*</button>
             
-            <!-- Baris 2 -->
-            <button onclick="tekan('4')"></button>
-            <button onclick="tekan('5')"></button>
-            <button onclick="tekan('6')"></button>
-            <button onclick="tekan(':')"></button>
+            <button onclick="tekan('4')">4</button>
+            <button onclick="tekan('5')">5</button>
+            <button onclick="tekan('6')">6</button>
+            <button onclick="tekan(':')" class="btn-operator">:</button>
             
-            <!-- Baris 3 -->
-            <button onclick="tekan('1')"></button>
-            <button onclick="tekan('2')"></button>
-            <button onclick="tekan('3')"></button>
-            <button onclick="tekan('+')"></button>
+            <button onclick="tekan('1')">1</button>
+            <button onclick="tekan('2')">2</button>
+            <button onclick="tekan('3')">3</button>
+            <button onclick="tekan('+')" class="btn-operator">+</button>
             
-            <!-- Baris 4 -->
-            <button onclick="tekan('0')"></button>
-            <button onclick="handleClearClick()"></button>
-            <button onclick="hitungHasil()"></button>
-            <button onclick="tekan('-')"></button>
+            <button onclick="tekan('0')">0</button>
+            <button onclick="handleClearClick()" class="btn-clear">C</button>
+            <button onclick="hitungHasil()" class="btn-equal">=</button>
+            <button onclick="tekan('-')" class="btn-operator">-</button>
         </div>
     </div>
 </div>
@@ -117,7 +117,6 @@
 <script>
 const display = document.getElementById("screen-display");
 let clickTimer = null;
-
 let rumusBarisIni = ""; 
 let riwayatHitunganHTML = ""; 
 
@@ -139,15 +138,13 @@ function hitungHasil() {
         ekspresi = ekspresi.replace(/:/g, "/"); 
 
         let hasil = eval(ekspresi);
-        
         riwayatHitunganHTML += `<div class="calc-row">${rumusBarisIni}</div>`;
         riwayatHitunganHTML += `<div class="calc-row latest-result">= ${hasil}</div>`;
-        
         rumusBarisIni = ""; 
         renderLayar();
     } catch(e) {
         rumusBarisIni = "";
-        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:24px;">Error</div>`;
+        riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:20px;">Error</div>`;
         renderLayar();
     }
 }
