@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Dasar Akuntansi</title>
     <style>
+        /* PEMBUNGKUS LUAR: Mengunci total agar posisi kalkulator selalu pas di tengah HP */
         body {
             margin: 0;
             padding: 0;
@@ -13,9 +14,10 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            overflow-x: hidden; /* Mencegah layar bergeser ke kanan/kiri */
         }
 
-        /* FRAME BINGKAI UTAMA KALKULATOR */
+        /* FRAME BINGKAI UTAMA KALKULATOR (DIKUNCI DAN DISTABILKAN) */
         .calculator {
             width: 380px;
             height: 730px;
@@ -76,7 +78,7 @@
             z-index: 10;
         }
 
-        /* Kotak putih samar dipertahankan dulu agar posisi pasnya terlihat jelas di HP Anda */
+        /* Kotak putih samar tetap dimunculkan untuk melihat ketepatan posisi pasnya */
         .buttons-container button {
             background: rgba(255, 255, 255, 0.6) !important; 
             border: 1px solid #000000 !important; 
@@ -94,7 +96,7 @@
             justify-content: center;
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (DINAIKKAN KE 520px & DIGESER KE KANAN 3px) 🌟 */
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DIKUNCI MATI AGAR TIDAK LARI 🌟 */
         .rom-grid-first button { top: 520px; height: 42px; }
         
         .btn-num-0 { left: 17px;  width: 28px; }
@@ -108,7 +110,7 @@
         .btn-num-8 { left: 305px; width: 28px; }
         .btn-num-9 { left: 341px; width: 28px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (DINAIKKAN KE 595px) 🌟 */
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) 🌟 */
         .rom-grid-second button { top: 595px; height: 50px; font-size: 20px !important; }
         
         .btn-op-mul { left: 14px;  width: 64px; }
@@ -117,7 +119,7 @@
         .btn-op-sub { left: 230px; width: 64px; }
         .btn-op-equal { left: 302px; width: 64px; }
 
-        /* 🌟 BARIS 3: FUNGSI TERBAWAH (DINAIKKAN KE 668px) 🌟 */
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) 🌟 */
         .row-bottom button { top: 668px; height: 42px; }
         
         .btn-pilih { left: 14px;  width: 120px; }
