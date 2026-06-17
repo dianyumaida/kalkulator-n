@@ -2,54 +2,55 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Akuntansi Akurat</title>
     <style>
-        /* MENYESUAIKAN TOTAL DENGAN TAMPILAN LAYAR HP ANDA */
-        html, body {
+        /* PEMBUNGKUS LUAR: Mengunci total agar posisi kalkulator selalu pas di tengah HP */
+        body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden; 
         }
 
-        /* 🌟 GARIS PINGGIR DIHAPUS TOTAL & UKURAN ADAPTIF MENGIKUTI LAYAR HP 🌟 */
+        /* FRAME BINGKAI UTAMA KALKULATOR (GARIS PINGGIR DIHAPUS TOTAL) */
         .calculator {
-            width: 100%;
-            max-width: 450px; /* Batas maksimal layar HP standar */
-            height: 100vh;    /* Tinggi penuh layar HP Anda */
+            width: 380px;
+            height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 100% 100%; /* Memaksa gambar mengikuti bentuk layar HP */
-            background-position: center top;
+            background-size: 380px 730px; 
+            background-position: center;
             background-repeat: no-repeat;
-            border: none !important; /* Jaminan tidak ada lagi garis bingkai hitam bawaan kode */
+            border: none !important; /* Jaminan tidak ada lagi garis bingkai hitam luar bawaan kode */
             box-shadow: none !important;
-            margin: 0 auto;
-            position: relative;
             box-sizing: border-box;
+            position: relative; 
+            margin: 10px auto;
         }
 
-        /* AREA MONITOR LAYAR PUTIHAN ATAS (MENGIKUTI PROPORSI LAYAR HP) */
+        /* AREA MONITOR LAYAR PUTIHAN ATAS */
         .screen-container {
             position: absolute;
-            top: 4%;
-            left: 5%;
-            width: 90%;
-            height: 42%;
-            padding: 15px;
+            top: 35px;     
+            left: 20px;    
+            width: 340px;  
+            height: 250px; 
+            padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            background: transparent;
+            pointer-events: auto !important;
             z-index: 5;
+            background: transparent;
         }
 
         .calc-row {
-            font-size: 34px;
+            font-size: 32px;
             font-weight: bold;
             color: #000000;
             line-height: 1.3;
@@ -59,103 +60,108 @@
         }
 
         .calc-row.latest-result {
-            font-size: 42px;
+            font-size: 40px;
             color: #1a237e;
             border-bottom: 2px dashed #000;
             padding-bottom: 4px;
             margin-bottom: 8px;
         }
 
-        /* AREA STRUKTUR UTAMA LAPISAN TOMBOL */
+        /* CONTAINER LAPISAN SENSOR TOMBOL */
         .buttons-container {
             position: absolute;
-            top: 50%; /* Menempatkan seluruh blok tombol di area bawah gambar */
+            top: 0;
             left: 0;
-            width: 100%;
-            height: 50%;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            padding: 0 12px 15px 12px; /* Jarak dinding agar tombol otomatis pas di tengah kotak */
+            width: 380px;
+            height: 730px;
+            pointer-events: none; 
+            z-index: 10;
         }
 
-        /* 🌟 SISTEM LAYOUT FLEXBOX ADAPTIF (MENGIKUTI KERAPATAN KOTAK GAMBAR) 🌟 */
-        .rom-grid-first {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            height: 25%; /* Membagi tinggi baris angka rata */
-            margin-bottom: 10px;
-        }
-
-        .rom-grid-second {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            height: 30%; /* Membagi tinggi baris operator rata */
-            margin-bottom: 10px;
-        }
-
-        .row-bottom {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            height: 28%; /* Membagi tinggi baris fungsi bawah rata */
-        }
-
-        /* 🌟 SENSOR TOMBOL TRANSPARAN TOTAL AGAR TIDAK BERANTAKAN LA GIE 🌟 */
-        button {
-            flex: 1;
-            background: transparent !important; /* 100% Transparan murni tanpa warna kotak mengganggu */
-            border: none !important;            /* Hapus garis penguji yang merusak pemandangan */
+        /* 🌟 TEKS DAN SIMBOL DIMUNCULKAN KEMBALI SECARA PERMANEN (HITAM PEKAT & TEBAL) 🌟 */
+        .buttons-container button {
+            background: transparent !important;       /* Transparan agar gambar di bawahnya terlihat */
+            border: none !important;                  /* Tanpa bingkai kotak merah agar tidak berantakan */
+            color: #000000 !important;                 /* 🌟 Angka dan Simbol HITAM PEKAT DEMPET 🌟 */
+            font-weight: 900 !important;              /* Ketebalan maksimal */
+            font-size: 16px !important;
             outline: none !important;
-            cursor: pointer;
-            height: 100%;
-            margin: 0 2px; /* Memberi celah jarang horizontal otomatis antar tombol */
+            cursor: pointer !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            pointer-events: auto !important; 
+            position: absolute; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Jarak khusus tombol besar bawah agar pas menutupi warna kuning & merah gambar */
-        .btn-pilih { flex: 1.2; }
-        .btn-edit { flex: 1; margin: 0 6px; }
-        .btn-clear { flex: 1; }
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DITURUNKAN SECARA PRESISI & DIJARANGKAN SISI HORIZONTALNYA 🌟 */
+        .rom-grid-first button { top: 540px; height: 38px; }
+        
+        .btn-num-0 { left: 16px;  width: 25px; }
+        .btn-num-1 { left: 52px;  width: 25px; }
+        .btn-num-2 { left: 88px;  width: 25px; }
+        .btn-num-3 { left: 124px; width: 25px; }
+        .btn-num-4 { left: 160px; width: 25px; }
+        .btn-num-5 { left: 196px; width: 25px; }
+        .btn-num-6 { left: 232px; width: 25px; }
+        .btn-num-7 { left: 268px; width: 25px; }
+        .btn-num-8 { left: 304px; width: 25px; }
+        .btn-num-9 { left: 340px; width: 25px; }
+
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DITURUNKAN AGAR TIDAK NAIK KE ANGKA 🌟 */
+        .rom-grid-second button { top: 608px; height: 44px; font-size: 22px !important; }
+        
+        .btn-op-mul { left: 12px;  width: 65px; }
+        .btn-op-div { left: 85px;  width: 65px; }
+        .btn-op-add { left: 158px; width: 65px; }
+        .btn-op-sub { left: 231px; width: 65px; }
+        .btn-op-equal { left: 304px; width: 65px; }
+
+        /* 🌟 BARIS 3: FUNGSI NAVIGASI PALING BAWAH (PILIH, EDIT, CLEAR) - DITURUNKAN KE DASAR 🌟 */
+        .row-bottom button { top: 678px; height: 40px; font-size: 15px !important; }
+        
+        .btn-pilih { left: 12px;  width: 120px; }
+        .btn-edit  { left: 142px; width: 104px; }
+        .btn-clear { left: 256px; width: 110px; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <!-- Monitor Layar Transparan -->
+    <!-- Monitor Layar -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Lapisan Sensor Klik Adaptor Otomatis -->
     <div class="buttons-container">
-        <!-- Baris 1: Angka (10 Kolom Rapat Otomatis Mengikuti Gambar) -->
+        <!-- Baris 1: Angka Menampilkan Karakter -->
         <div class="rom-grid-first">
-            <button onclick="tekan('0')" type="button"></button>
-            <button onclick="tekan('1')" type="button"></button>
-            <button onclick="tekan('2')" type="button"></button>
-            <button onclick="tekan('3')" type="button"></button>
-            <button onclick="tekan('4')" type="button"></button>
-            <button onclick="tekan('5')" type="button"></button>
-            <button onclick="tekan('6')" type="button"></button>
-            <button onclick="tekan('7')" type="button"></button>
-            <button onclick="tekan('8')" type="button"></button>
-            <button onclick="tekan('9')" type="button"></button>
+            <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
+            <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
+            <button onclick="tekan('2')" class="btn-num-2" type="button">2</button>
+            <button onclick="tekan('3')" class="btn-num-3" type="button">3</button>
+            <button onclick="tekan('4')" class="btn-num-4" type="button">4</button>
+            <button onclick="tekan('5')" class="btn-num-5" type="button">5</button>
+            <button onclick="tekan('6')" class="btn-num-6" type="button">6</button>
+            <button onclick="tekan('7')" class="btn-num-7" type="button">7</button>
+            <button onclick="tekan('8')" class="btn-num-8" type="button">8</button>
+            <button onclick="tekan('9')" class="btn-num-9" type="button">9</button>
         </div>
 
-        <!-- Baris 2: Operator (5 Kolom Rapat Otomatis Mengikuti Gambar) -->
+        <!-- Baris 2: Operator Menampilkan Karakter -->
         <div class="rom-grid-second">
-            <button onclick="tekan('*')" type="button"></button>
-            <button onclick="tekan(':')" type="button"></button>
-            <button onclick="tekan('+')" type="button"></button>
-            <button onclick="tekan('-')" type="button"></button>
-            <button onclick="hitungHasil()" type="button"></button>
+            <button onclick="tekan('*')" class="btn-op-mul" type="button">*</button>
+            <button onclick="tekan(':')" class="btn-op-div" type="button">:</button>
+            <button onclick="tekan('+')" class="btn-op-add" type="button">+</button>
+            <button onclick="tekan('-')" class="btn-op-sub" type="button">-</button>
+            <button onclick="hitungHasil()" class="btn-op-equal" type="button">=</button>
         </div>
 
-        <!-- Baris 3: Navigasi Fungsi Biasa -->
+        <!-- Baris 3: Navigasi Fungsi Terbawah -->
         <div class="row-bottom">
-            <button onclick="void(0)" class="btn-pilih" type="button"></button>
-            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button"></button>
-            <button onclick="handleClearClick()" class="btn-clear" type="button"></button>
+            <button onclick="void(0)" class="btn-pilih" type="button">PILIH</button>
+            <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button">EDIT</button>
+            <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
 </div>
