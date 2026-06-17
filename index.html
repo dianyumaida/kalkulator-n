@@ -77,10 +77,10 @@
             z-index: 10;
         }
 
-        /* TEKS DAN BINGKAI TIPIS TETAP DIJAGA AGAR ANDA BISA MELIHAT AKURASI PERGESERANNYA */
+        /* Kotak putih samar transparan dipertahankan agar Anda bisa melihat keakuratannya */
         .buttons-container button {
-            background: rgba(255, 255, 255, 0.2) !important; /* Putih sangat tipis transparan */
-            border: 1px solid rgba(0, 0, 0, 0.3) !important;   /* Garis pembantu tipis */
+            background: rgba(255, 255, 255, 0.4) !important; /* Dibuat sedikit lebih transparan */
+            border: 1px solid rgba(0, 0, 0, 0.4) !important;   
             color: #000000 !important;                        /* Angka hitam pekat tebal */
             font-weight: 900 !important;              
             font-size: 16px !important;
@@ -95,66 +95,66 @@
             height: 100%;
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DITARIK NAIK MASUK KOTAK GAMBAR 🌟 */
-        /* Mengubah posisi 'top' dari 540px ditarik naik ke 496px agar masuk ke tengah kotak */
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DITURUNKAN 6px & DIGESER KIRI 2px 🌟 */
+        /* Mengubah top dari 496px menjadi 502px agar pas di tengah-tengah kotak gambar */
         .rom-grid-first {
             position: absolute;
-            top: 496px; 
+            top: 502px; 
             left: 0;
             width: 380px;
             height: 36px;
             display: flex !important;
             flex-direction: row !important;
             justify-content: space-between !important;
-            padding: 0 11px 0 13px; 
+            padding: 0 13px 0 11px; /* Jarak padding disesuaikan agar bergeser ke kiri */
             box-sizing: border-box;
         }
         .rom-grid-first button {
             width: 28px !important; 
         }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DITARIK NAIK MASUK KOTAK GAMBAR 🌟 */
-        /* Mengubah posisi 'top' dari 608px ditarik naik ke 562px agar masuk ke tengah kotak */
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DITURUNKAN 10px & DIPERLEBAR 🌟 */
+        /* Mengubah top dari 562px menjadi 572px, tinggi disesuaikan menjadi 50px */
         .rom-grid-second {
             position: absolute;
-            top: 562px; 
+            top: 572px; 
             left: 0;
             width: 380px;
-            height: 46px;
+            height: 50px;
             display: flex !important;
             flex-direction: row !important;
             justify-content: space-between !important;
-            padding: 0 8px 0 10px; 
+            padding: 0 6px 0 8px; /* Kerapatan horizontal disesuaikan dengan kotak gambar */
             box-sizing: border-box;
         }
         .rom-grid-second button {
-            width: 63px !important; 
+            width: 65px !important; /* Diperlebar dari 63px menjadi 65px agar menutup kotak penuh */
             font-size: 22px !important;
         }
 
-        /* 🌟 BARIS 3: FUNGSI NAVIGASI BAWAH - DITARIK NAIK MASUK KOTAK GAMBAR 🌟 */
-        /* Mengubah posisi 'top' dari 678px ditarik naik ke 632px agar menutup tombol kuning/merah */
+        /* 🌟 BARIS 3: FUNGSI NAVIGASI BAWAH - DITURUNKAN 13px AGAR PAS MENUTUPI TOMBOL KUNING/MERAH 🌟 */
+        /* Mengubah top dari 632px menjadi 645px, tinggi diatur 48px */
         .row-bottom {
             position: absolute;
-            top: 632px; 
+            top: 645px; 
             left: 0;
             width: 380px;
-            height: 44px;
+            height: 48px;
             display: flex !important;
             flex-direction: row !important;
             justify-content: space-between !important;
-            padding: 0 12px 0 12px;
+            padding: 0 10px 0 10px;
             box-sizing: border-box;
         }
-        .btn-pilih { width: 120px !important; }
-        .btn-edit  { width: 104px !important; }
-        .btn-clear { width: 108px !important; font-size: 15px !important; }
+        .btn-pilih { width: 122px !important; }
+        .btn-edit  { width: 106px !important; }
+        .btn-clear { width: 110px !important; font-size: 15px !important; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <!-- Monitor Layar -->
+    <!-- Monitor Layar Putih Gambar -->
     <div class="screen-container" id="screen-display"></div>
 
     <div class="buttons-container">
