@@ -5,31 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Dasar Akuntansi</title>
     <style>
-        /* FRAME BINGKAI UTAMA KALKULATOR */
+        /* PEMBUNGKUS LUAR: Menjaga agar kalkulator pas di tengah layar HP */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        /* FRAME BINGKAI UTAMA KALKULATOR (DIKUNCI PIKSEL TETAP) */
         .calculator {
             width: 380px;
             height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 100% 100%;
+            background-size: 380px 730px; /* Ukuran gambar dikunci mati sesuai piksel frame */
             background-position: center;
             background-repeat: no-repeat;
             border: none !important;
-            border-radius: 4px;
-            box-shadow: 8px 8px 0px #000000;
-            font-family: Arial, sans-serif;
-            margin: 10px auto;
             box-sizing: border-box;
             position: relative; 
-            overflow: hidden;
+            margin: 10px auto;
         }
 
-        /* AREA MONITOR LAYAR PUTIH GAMBAR */
+        /* AREA MONITOR LAYAR PUTIHAN ATAS (DIKUNCI TETAP) */
         .screen-container {
             position: absolute;
-            top: 4.5%;    
-            right: 5%;    
-            width: 90%;   
-            height: 42%;  
+            top: 35px;     /* Jarak dari atas bingkai kalkulator */
+            left: 20px;    /* Jarak dari kiri bingkai kalkulator */
+            width: 340px;  /* Lebar area teks monitor putih */
+            height: 305px; /* Tinggi area teks monitor putih */
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -37,6 +44,7 @@
             flex-direction: column;
             pointer-events: auto !important;
             z-index: 5;
+            background: transparent;
         }
 
         .calc-row {
@@ -57,13 +65,13 @@
             margin-bottom: 8px;
         }
 
-        /* AREA LAPISAN SENSOR TOMBOL TRANSPARAN */
+        /* CONTAINER LAPISAN SENSOR TOMBOL TRANSPARAN */
         .buttons-container {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 380px;
+            height: 730px;
             pointer-events: none; 
             z-index: 10;
         }
@@ -79,50 +87,49 @@
             position: absolute; 
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (10 KOLOM SEJAJAR SESUAI GAMBAR) 🌟 */
-        /* Koordinat disesuaikan turun ke 72.5% agar masuk ke kotak angka gambar */
-        .rom-grid-first button { top: 72.5%; height: 6.5%; }
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - KUNCI MATI PIKSEL 🌟 */
+        /* Tinggi tombol angka disetel 48px, posisi vertikal (top) dikunci di 522px */
+        .rom-grid-first button { top: 522px; height: 48px; }
         
-        .btn-num-0 { left: 4%;   width: 8.5%; }
-        .btn-num-1 { left: 13.5%; width: 8.5%; }
-        .btn-num-2 { left: 23%;   width: 8.5%; }
-        .btn-num-3 { left: 32.5%; width: 8.5%; }
-        .btn-num-4 { left: 42%;   width: 8.5%; }
-        .btn-num-5 { left: 51.5%; width: 8.5%; }
-        .btn-num-6 { left: 61%;   width: 8.5%; }
-        .btn-num-7 { left: 70.5%; width: 8.5%; }
-        .btn-num-8 { left: 80%;   width: 8.5%; }
-        .btn-num-9 { left: 89.5%; width: 8.5%; }
+        .btn-num-0 { left: 16px;  width: 32px; }
+        .btn-num-1 { left: 52px;  width: 32px; }
+        .btn-num-2 { left: 88px;  width: 32px; }
+        .btn-num-3 { left: 124px; width: 32px; }
+        .btn-num-4 { left: 160px; width: 32px; }
+        .btn-num-5 { left: 196px; width: 32px; }
+        .btn-num-6 { left: 232px; width: 32px; }
+        .btn-num-7 { left: 268px; width: 32px; }
+        .btn-num-8 { left: 304px; width: 32px; }
+        .btn-num-9 { left: 340px; width: 32px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (5 KOLOM SEJAJAR SESUAI GAMBAR) 🌟 */
-        /* Koordinat disesuaikan turun ke 82% agar masuk ke kotak operator gambar */
-        .rom-grid-second button { top: 82%; height: 8%; }
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - KUNCI MATI PIKSEL 🌟 */
+        /* Tinggi tombol operator disetel 58px, posisi vertikal (top) dikunci di 592px */
+        .rom-grid-second button { top: 592px; height: 58px; }
         
-        .btn-op-mul { left: 4%;  width: 17%; }
-        .btn-op-div { left: 23%; width: 17%; }
-        .btn-op-add { left: 42%; width: 17%; }
-        .btn-op-sub { left: 61%; width: 17%; }
-        .btn-op-equal { left: 80%; width: 17%; }
+        .btn-op-mul { left: 16px;  width: 65px; }
+        .btn-op-div { left: 88px;  width: 65px; }
+        .btn-op-add { left: 160px; width: 65px; }
+        .btn-op-sub { left: 232px; width: 65px; }
+        .btn-op-equal { left: 304px; width: 65px; }
 
-        /* 🌟 BARIS 3: FUNGSI NAVIGASI PALING BAWAH (PILIH, EDIT, CLEAR) 🌟 */
-        /* Koordinat disesuaikan turun ke 92.5% agar masuk ke kotak tombol bawah */
-        .row-bottom button { top: 92.5%; height: 7.5%; }
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - KUNCI MATI PIKSEL 🌟 */
+        /* Tinggi tombol fungsi terbawah disetel 55px, posisi vertikal (top) dikunci di 668px */
+        .row-bottom button { top: 668px; height: 55px; }
         
-        .btn-pilih { left: 4%;  width: 32%; }
-        .btn-edit  { left: 39%; width: 28%; }
-        .btn-clear { left: 70%; width: 26%; }
+        .btn-pilih { left: 16px;  width: 120px; }
+        .btn-edit  { left: 148px; width: 106px; }
+        .btn-clear { left: 266px; width: 98px; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    
-    <!-- Screen Display -->
+    <!-- Monitor Layar Transparan -->
     <div class="screen-container" id="screen-display"></div>
 
-    <!-- Area Lapisan Sensor Tombol Absolut Kalkulator Biasa -->
+    <!-- Lapisan Koordinat Sensor Sentuh Jari Tetap -->
     <div class="buttons-container">
-        <!-- Kelompok Baris 1: Angka 10 Kolom -->
+        <!-- Baris 1: Angka -->
         <div class="rom-grid-first">
             <button onclick="tekan('0')" class="btn-num-0" type="button"></button>
             <button onclick="tekan('1')" class="btn-num-1" type="button"></button>
@@ -136,7 +143,7 @@
             <button onclick="tekan('9')" class="btn-num-9" type="button"></button>
         </div>
 
-        <!-- Kelompok Baris 2: Operator 5 Kolom -->
+        <!-- Baris 2: Operator -->
         <div class="rom-grid-second">
             <button onclick="tekan('*')" class="btn-op-mul" type="button"></button>
             <button onclick="tekan(':')" class="btn-op-div" type="button"></button>
@@ -145,9 +152,8 @@
             <button onclick="hitungHasil()" class="btn-op-equal" type="button"></button>
         </div>
 
-        <!-- Kelompok Baris 3: Navigasi Fungsi Biasa -->
+        <!-- Baris 3: Navigasi Fungsi Biasa -->
         <div class="row-bottom">
-            <!-- Tombol PILIH saat ini dikunci kosong agar tidak memicu menu lama terlebih dahulu -->
             <button onclick="void(0)" class="btn-pilih" type="button"></button>
             <button id="btn-edit" onclick="aktifkanModeEdit()" class="btn-edit" type="button"></button>
             <button onclick="handleClearClick()" class="btn-clear" type="button"></button>
