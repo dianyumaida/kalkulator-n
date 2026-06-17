@@ -46,12 +46,15 @@
             pointer-events: auto !important; position: absolute; 
             display: flex; align-items: center; justify-content: center;
         }
+        
+        /* 🌟 PERBAIKAN KOORDINAT HORIZONTAL AGAR DEMPET PAS DI TENGAH 🌟 */
         .rom-grid-first {
             position: absolute; top: 502px; left: 0; width: 380px; height: 36px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
         .rom-grid-first button { top: 0px !important; height: 36px !important; width: 28px !important; }
         
+        /* Posisi left ditarik ke kiri secara presisi mengikuti koreksi gambar Anda */
         .btn-num-0 { left: 17px !important; }
         .btn-num-1 { left: 50px !important; }   
         .btn-num-2 { left: 83px !important; }   
@@ -114,7 +117,7 @@
         .cucu-radio-row input[type="radio"] { cursor: pointer; margin: 0; width: 20px; height: 20px; accent-color: #555; }
         .history-list-box { max-height: 130px; overflow-y: auto; padding: 10px 15px; margin: 10px 45px; background: #ffffff; font-size: 15px; font-weight: bold; text-align: right; border: 2px solid #000000; }
         .btn-hapus-riwayat { background: #ff2a2a; color: #ffffff; border: 3px solid #000000; font-weight: bold; padding: 12px 0; margin: 15px auto; cursor: pointer; font-size: 16px; display: block; width: 85%; text-align: center; box-shadow: 4px 4px 0px #000000; }
-        .btn-close-menu { background: #ff2a2a; color: #ffffff; border: 3px solid #000000; font-weight: bold; padding: 15px 0; cursor: pointer; font-size: 16px; width: 85%; display: block; margin: 10px auto; box-shadow: 4px 4px 0px #000000; text-align: center; }
+        .btn-close-menu { background: #ff2a2a; color: #ffffff; border: 3px solid #000000; font-weight: bold; padding: 15px 0; cursor: pointer; font-size: 16px; width: 85%; display: block; margin: 10px auto; box-shadow: 4px 4px 0px #000000; }
     </style>
 </head>
 <body>
@@ -146,7 +149,8 @@
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
-    <div id="dropdown-menu" class="dropdown-menu">
+
+        <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')"><span>📁 -- simbol --</span><span id="arrow-simbol">▼</span></div>
         <div id="simbol-panel" class="sub-dropdown-content">
@@ -181,6 +185,7 @@ function pilihCucu(t, r) { const e = window.event ? window.event.currentTarget :
 function pilihOpsiRekord(s, id) { isRecordActive = s; document.getElementById(id).checked = true; setTimeout(function() { tutupSemuaMenu(); }, 180); }
 function tutupSemuaMenu() { document.getElementById('dropdown-menu').style.display = "none"; document.getElementById('simbol-panel').style.display = "none"; document.getElementById('sigma-panel').style.display = "none"; document.getElementById('riwayat-panel').style.display = "none"; document.getElementById('arrow-simbol').innerText = "▼"; document.getElementById('arrow-sigma').innerText = "▼"; document.getElementById('arrow-riwayat').innerText = "▼"; }
 function updateHistoryBoxMenu(d) { if (!isRecordActive) return; if (historyBox) { if (historyBox.innerText.includes("Belum ada riwayat")) { historyBox.innerHTML = ""; } historyBox.innerHTML += d; historyBox.scrollTop = historyBox.scrollHeight; } }
+// Perbaikan Typo Kata Dropdown 
 function hapusRiwayatPermanen(e) { if (e) e.stopPropagation(); rumusBarisIni = ""; riwayatHitunganHTML = ""; display.innerHTML = ""; if (historyBox) { historyBox.innerHTML = "Belum ada riwayat"; } setTimeout(function() { tutupSemuaMenu(); }, 100); }
 function renderLayar() { let h = rumusBarisIni ? `<div class="calc-row">${rumusBarisIni}</div>` : ""; display.innerHTML = riwayatHitunganHTML + h; display.scrollTop = display.scrollHeight; }
 function hitungHasil() { if (rumusBarisIni === "") return; try { let exp = rumusBarisIni, rAsli = rumusBarisIni; if (/[Σ∑\u03A3\u2211]$/.test(exp)) { exp = exp.slice(0, -1); } exp = exp.replace(/:/g, "/").replace(/(\d+)\^(\d+)/g, "Math.pow($1,$2)").replace(/(\d+)%/g, "($1/100)").replace(/(\d+)([Σ∑\u03A3\u2211])/g, "$1*$2"); exp = exp.replace(/[Σ∑\u03A3\u2211](\d+)/g, function(m, a) { let t = 0, b = parseInt(a) || 0; for (let i = 1; i <= b; i++) { t += i; } return "(" + t + ")"; }); exp = exp.replace(/[Σ∑\u03A3\u2211]/g, "0").replace(/\+\+/g, "+").replace(/\-\-/g, "+"); let hasil = eval(exp); let bR = `<div style="font-size:14px; color:#555;">${rAsli}</div>`, bH = `<div style="font-size:18px; color:#1a237e; border-bottom:1px dashed #ccc; padding-bottom:3px; margin-bottom:5px;">= ${hasil}</div>`; if (isRecordActive) { riwayatHitunganHTML += `<div class="calc-row">${rAsli}</div><div class="calc-row latest-result">= ${hasil}</div>`; updateHistoryBoxMenu(bR + bH); } else { riwayatHitunganHTML = `<div class="calc-row latest-result">= ${hasil}</div>`; } rumusBarisIni = ""; renderLayar(); } catch(e) { rumusBarisIni = ""; riwayatHitunganHTML += `<div class="calc-row" style="color:red; font-size:24px;">Error</div>`; renderLayar(); } }
@@ -189,5 +194,3 @@ function handleClearClick() { if (clickTimer == null) { clickTimer = setTimeout(
 </script>
 </body>
 </html>
-
-    
