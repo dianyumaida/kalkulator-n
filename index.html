@@ -77,7 +77,7 @@
             z-index: 10;
         }
 
-        /* Kotak putih samar transparan tetap dipertahankan untuk pengecekan terakhir Anda */
+        /* Kotak luar pembantu visual dipertahankan agar Anda bisa melihat posisi presisinya */
         .buttons-container button {
             background: rgba(255, 255, 255, 0.4) !important; 
             border: 1px solid rgba(0, 0, 0, 0.3) !important;   
@@ -95,21 +95,21 @@
             justify-content: center;
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - PENYESUAIAN MIKRO AKHIR ANGKA 5, 6, 7, 8 🌟 */
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - KALIBRASI HORIZONTAL INDIVIDUAL AGAR DEMPET PAS 🌟 */
         .rom-grid-first button { top: 502px; height: 36px; width: 28px !important; }
         
         .btn-num-0 { left: 17px; }
-        .btn-num-1 { left: 53px; }
-        .btn-num-2 { left: 89px; }
-        .btn-num-3 { left: 125px; }
-        .btn-num-4 { left: 160px; } 
-        .btn-num-5 { left: 194px; } /* Digeser ke kiri sedikit dari 195px */
-        .btn-num-6 { left: 230px; } /* Digeser ke kiri sedikit dari 231px */
-        .btn-num-7 { left: 268px; } /* Digeser ke kanan sedikit dari 266px */
-        .btn-num-8 { left: 304px; } /* Digeser ke kanan sedikit dari 302px */
+        .btn-num-1 { left: 49px; }   /* Ditarik ke kiri dari 51.5px */
+        .btn-num-2 { left: 83px; }   /* Ditarik ke kiri dari 86px */
+        .btn-num-3 { left: 118px; }  /* Ditarik ke kiri dari 121.5px */
+        .btn-num-4 { left: 153.5px; }/* Ditarik ke kiri dari 157px */
+        .btn-num-5 { left: 194px; }  /* Didorong ke kanan dari 192.5px */
+        .btn-num-6 { left: 230.5px; }/* Didorong ke kanan dari 228px */
+        .btn-num-7 { left: 267.5px; }/* Didorong ke kanan dari 264.5px */
+        .btn-num-8 { left: 304.5px; }/* Didorong ke kanan dari 301px */
         .btn-num-9 { left: 341px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) 🌟 */
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - KUNCI KOORDINAT PAS 🌟 */
         .rom-grid-second button { top: 578px; height: 50px; width: 65px !important; font-size: 22px !important; }
         
         .btn-op-mul { left: 12px; }
@@ -118,7 +118,7 @@
         .btn-op-sub { left: 231px; }
         .btn-op-equal { left: 304px; }
 
-        /* 🌟 BARIS 3: FUNGSI NAVIGASI BAWAH (PILIH, EDIT, CLEAR) 🌟 */
+        /* 🌟 BARIS 3: FUNGSI NAVIGASI BAWAH (PILIH, EDIT, CLEAR) - KUNCI KOORDINAT PAS 🌟 */
         .row-bottom button { top: 653px; height: 48px; }
         
         .btn-pilih { left: 12px;  width: 122px; }
@@ -162,7 +162,7 @@
             font-weight: bold;
             color: #333333;
             cursor: pointer;
-            user-select: none;
+            user-select: no-select;
         }
         .folder-header span {
             display: flex;
@@ -286,6 +286,3 @@
         <!-- 1. FOLDER ANAK: SIMBOL -->
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')">
             <span>📁 -- simbol --</span>
-            <span id="arrow-simbol">▼</span>
-        </div>
-        <div id="simbol-panel" class="sub-dropdown-content">
