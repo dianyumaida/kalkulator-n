@@ -21,7 +21,7 @@
             width: 380px;
             height: 730px;
             background-image: url('Folder/gambar/bodykal.jpg');
-            background-size: 380px 730px; /* Ukuran gambar dikunci mati sesuai piksel frame */
+            background-size: 380px 730px; 
             background-position: center;
             background-repeat: no-repeat;
             border: none !important;
@@ -33,10 +33,10 @@
         /* AREA MONITOR LAYAR PUTIHAN ATAS (DIKUNCI TETAP) */
         .screen-container {
             position: absolute;
-            top: 35px;     /* Jarak dari atas bingkai kalkulator */
-            left: 20px;    /* Jarak dari kiri bingkai kalkulator */
-            width: 340px;  /* Lebar area teks monitor putih */
-            height: 305px; /* Tinggi area teks monitor putih */
+            top: 35px;     
+            left: 20px;    
+            width: 340px;  
+            height: 250px; /* Dikurangi tingginya sedikit agar tidak menabrak area tombol yang naik */
             padding: 10px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -87,9 +87,9 @@
             position: absolute; 
         }
 
-        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - KUNCI MATI PIKSEL 🌟 */
-        /* Tinggi tombol angka disetel 48px, posisi vertikal (top) dikunci di 522px */
-        .rom-grid-first button { top: 522px; height: 48px; }
+        /* 🌟 BARIS 1: TOMBOL ANGKA (0-9) - DITARIK NAIK 🌟 */
+        /* Koordinat diturunkan dari 522px ke 420px (Naik 102 piksel ke atas) */
+        .rom-grid-first button { top: 420px; height: 48px; }
         
         .btn-num-0 { left: 16px;  width: 32px; }
         .btn-num-1 { left: 52px;  width: 32px; }
@@ -102,9 +102,9 @@
         .btn-num-8 { left: 304px; width: 32px; }
         .btn-num-9 { left: 340px; width: 32px; }
 
-        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - KUNCI MATI PIKSEL 🌟 */
-        /* Tinggi tombol operator disetel 58px, posisi vertikal (top) dikunci di 592px */
-        .rom-grid-second button { top: 592px; height: 58px; }
+        /* 🌟 BARIS 2: TOMBOL OPERATOR (* : + - =) - DITARIK NAIK 🌟 */
+        /* Koordinat diturunkan dari 592px ke 490px agar ikut merapat naik ke atas */
+        .rom-grid-second button { top: 490px; height: 58px; }
         
         .btn-op-mul { left: 16px;  width: 65px; }
         .btn-op-div { left: 88px;  width: 65px; }
@@ -112,9 +112,9 @@
         .btn-op-sub { left: 232px; width: 65px; }
         .btn-op-equal { left: 304px; width: 65px; }
 
-        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - KUNCI MATI PIKSEL 🌟 */
-        /* Tinggi tombol fungsi terbawah disetel 55px, posisi vertikal (top) dikunci di 668px */
-        .row-bottom button { top: 668px; height: 55px; }
+        /* 🌟 BARIS 3: FUNGSI TERBAWAH (PILIH, EDIT, CLEAR) - DITARIK NAIK 🌟 */
+        /* Koordinat diturunkan dari 668px ke 565px agar pas menutup baris ketiga gambar */
+        .row-bottom button { top: 565px; height: 55px; }
         
         .btn-pilih { left: 16px;  width: 120px; }
         .btn-edit  { left: 148px; width: 106px; }
@@ -201,6 +201,7 @@ function hitungHasil() {
     }
 }
 
+// Mengunci mode edit manual
 function aktifkanModeEdit() {
     isManualEdit = !isManualEdit;
     display.contentEditable = isManualEdit ? "true" : "false";
