@@ -47,51 +47,50 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* 🌟 PERBAIKAN KERENGGANGAN BARIS ANGKA AGAR MELEBAR PAS KE KANAN 🌟 */
-        .rom-grid-first {
+        /* 🌟 PERBAIKAN TOTAL KOORDINAT HORIZONTAL: DILEBARKAN PAS KE KANAN 🌟 */
+        #baris-angka-baru {
             position: absolute; top: 502px; left: 0; width: 380px; height: 36px;
             display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
-        .rom-grid-first button { top: 0px !important; height: 36px !important; width: 29px !important; }
+        #baris-angka-baru button { top: 0px !important; height: 36px !important; width: 28px !important; }
         
-        /* Mengatur ulang koordinat horizontal agar meregang pas di tengah angka gambar */
-        .btn-num-0 { left: 16px !important; }
-        .btn-num-1 { left: 52px !important; }   
-        .btn-num-2 { left: 88px !important; }   
-        .btn-num-3 { left: 124px !important; }  
-        .btn-num-4 { left: 160px !important; }  
-        .btn-num-5 { left: 196px !important; }  
-        .btn-num-6 { left: 232px !important; }  
-        .btn-num-7 { left: 268px !important; }  
-        .btn-num-8 { left: 304px !important; }  
-        .btn-num-9 { left: 340px !important; }
+        /* Jarak left ditambah bertahap 36px agar merenggang pas di tengah angka gambar */
+        .btn-num-0 { left: 18px !important; }
+        .btn-num-1 { left: 54px !important; }   
+        .btn-num-2 { left: 90px !important; }   
+        .btn-num-3 { left: 126px !important; }  
+        .btn-num-4 { left: 162px !important; }  
+        .btn-num-5 { left: 198px !important; }  
+        .btn-num-6 { left: 234px !important; }  
+        .btn-num-7 { left: 270px !important; }  
+        .btn-num-8 { left: 306px !important; }  
+        .btn-num-9 { left: 342px !important; }
 
-        /* 🌟 PERBAIKAN SPREAD OPERATOR AGAR SEJAJAR PAS KEMBALI DI TENGAH KOTAK 🌟 */
+        /* 🌟 SENSOR OPERATOR DILEBARKAN DAN DIGESER KE KANAN AGAR PAS KOTAK HITAM 🌟 */
         .rom-grid-second {
             position: absolute; top: 578px; left: 0; width: 380px; height: 50px;
-            display: flex !important; flex-direction: row !important;
-            justify-content: flex-start !important; gap: 8.5px !important; /* Diperlebar dari 7.5px */
-            padding: 0 10px 0 12px; box-sizing: border-box;
+            display: block !important; box-sizing: border-box; padding: 0; margin: 0;
         }
         .rom-grid-second button {
-            top: 0px !important; height: 50px !important;
-            width: 63px !important; font-size: 22px !important;
+            top: 0px !important; height: 50px !important; width: 64px !important; font-size: 22px !important;
         }
-        .btn-op-mul { left: auto !important; position: relative !important; }
-        .btn-op-div { left: auto !important; position: relative !important; }
-        .btn-op-add { left: auto !important; position: relative !important; }
-        .btn-op-sub { left: auto !important; position: relative !important; }
-        .btn-op-equal { left: auto !important; position: relative !important; }
+        /* Jarak left operator digeser bertahap ke kanan mengikuti gambar kotak hitam */
+        .btn-op-mul { left: 14px !important; }
+        .btn-op-div { left: 86px !important; }
+        .btn-op-add { left: 158px !important; }
+        .btn-op-sub { left: 230px !important; }
+        .btn-op-equal { left: 302px !important; }
 
+        /* BARIS 3 FUNGSI BAWAH */
         .row-bottom {
             position: absolute; top: 653px; left: 0; width: 380px; height: 48px;
             display: flex !important; flex-direction: row !important;
-            justify-content: space-between !important; padding: 0 12px 0 12px; box-sizing: border-box;
+            justify-content: space-between !important; padding: 0 10px 0 10px; box-sizing: border-box;
         }
         .row-bottom button { top: 0px !important; height: 48px !important; }
-        .btn-pilih { width: 120px !important; position: relative !important; }
-        .btn-edit  { width: 104px !important; position: relative !important; }
-        .btn-clear { width: 108px !important; font-size: 15px !important; position: relative !important; }
+        .btn-pilih { width: 122px !important; position: relative !important; }
+        .btn-edit  { width: 106px !important; position: relative !important; }
+        .btn-clear { width: 110px !important; font-size: 15px !important; position: relative !important; }
 
         .dropdown-menu {
             display: none; position: absolute; top: 0; left: 0;
@@ -125,7 +124,8 @@
 <div class="calculator">
     <div class="screen-container" id="screen-display"></div>
     <div class="buttons-container">
-        <div class="rom-grid-first">
+        <!-- Menggunakan ID Baru agar HP dipaksa merespons pergeseran -->
+        <div id="baris-angka-baru">
             <button onclick="tekan('0')" class="btn-num-0" type="button">0</button>
             <button onclick="tekan('1')" class="btn-num-1" type="button">1</button>
             <button onclick="tekan('2')" class="btn-num-2" type="button">2</button>
@@ -150,7 +150,8 @@
             <button onclick="handleClearClick()" class="btn-clear" type="button">CLEAR</button>
         </div>
     </div>
-    <div id="dropdown-menu" class="dropdown-menu">
+
+        <div id="dropdown-menu" class="dropdown-menu">
         <div class="menu-title-bar"><span>-- Pilih Menu --</span><span>▼</span></div>
         <div class="folder-header" onclick="toggleFolder('simbol-panel', 'arrow-simbol')"><span>📁 -- simbol --</span><span id="arrow-simbol">▼</span></div>
         <div id="simbol-panel" class="sub-dropdown-content">
@@ -194,4 +195,3 @@ function handleClearClick() { if (clickTimer == null) { clickTimer = setTimeout(
 </body>
 </html>
 
-    
