@@ -37,8 +37,7 @@
             position: absolute; top: 0; left: 0;
             width: 380px; height: 730px; pointer-events: none; z-index: 10;
         }
-        
-        /* 🌟 GAYA DASAR TOMBOL UTAMA (SISTEM PENGUNCI DIHAPUS TOTAL) 🌟 */
+        /* Mengunci gaya teks hitam pekat dempet langsung pada tombol */
         .layer-buttons-final button {
             background: rgba(255, 255, 255, 0.4) !important; 
             border: 1px solid rgba(0, 0, 0, 0.3) !important;   
@@ -82,29 +81,29 @@
 <div class="calculator-box-final">
     <div class="screen-container-final" id="screen-display"></div>
     <div class="layer-buttons-final">
-        <!-- 🌟 KOORDINAT HORIZONTAL DIHITUNG ULANG DENGAN SPREAD MELEBAR PRESISI KE KANAN 🌟 -->
-        <button onclick="tekan('0')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 16px !important;" type="button">0</button>
-        <button onclick="tekan('1')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 52px !important;" type="button">1</button>
-        <button onclick="tekan('2')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 88px !important;" type="button">2</button>
-        <button onclick="tekan('3')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 124px !important;" type="button">3</button>
-        <button onclick="tekan('4')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 160px !important;" type="button">4</button>
-        <button onclick="tekan('5')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 196px !important;" type="button">5</button>
-        <button onclick="tekan('6')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 232px !important;" type="button">6</button>
-        <button onclick="tekan('7')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 268px !important;" type="button">7</button>
-        <button onclick="tekan('8')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 304px !important;" type="button">8</button>
-        <button onclick="tekan('9')" style="top: 502px !important; height: 36px !important; width: 26px !important; left: 340px !important;" type="button">9</button>
+        <!-- 🌟 STRUKTUR INLINE STYLE INDIVIDUAL DIUBAH URUTANNYA SEJAJAR MENGIKUTI MASET DI HP ANDA 🌟 -->
+        <button onclick="tekan('1')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 17px !important;" type="button">1</button>
+        <button onclick="tekan('2')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 51.5px !important;" type="button">2</button>
+        <button onclick="tekan('3')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 86px !important;" type="button">3</button>
+        <button onclick="tekan('4')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 121.5px !important;" type="button">4</button>
+        <button onclick="tekan('5')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 157px !important;" type="button">5</button>
+        <button onclick="tekan('6')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 192.5px !important;" type="button">6</button>
+        <button onclick="tekan('7')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 228px !important;" type="button">7</button>
+        <button onclick="tekan('8')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 264.5px !important;" type="button">8</button>
+        <button onclick="tekan('9')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 301px !important;" type="button">9</button>
+        <button onclick="tekan('0')" style="top: 502px !important; height: 36px !important; width: 28px !important; left: 341px !important;" type="button">0</button>
 
-        <!-- 🌟 BARIS OPERATOR DITURUNKAN BEBERAPA MILIMETER SEHINGGA DI TENGAH KOTAK HITAM 🌟 -->
-        <button onclick="tekan('*')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 14px !important;" type="button">*</button>
-        <button onclick="tekan(':')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 86px !important;" type="button">:</button>
-        <button onclick="tekan('+')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 158px !important;" type="button">+</button>
-        <button onclick="tekan('-')" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 230px !important;" type="button">-</button>
-        <button onclick="hitungHasil()" style="top: 582px !important; height: 50px !important; width: 64px !important; left: 302px !important; font-size: 22px !important;" type="button">=</button>
+        <!-- 🌟 TOMBOL OPERATOR DENGAN INJEKSI LANGSUNG DI TENGAH KOTAK HITAM 🌟 -->
+        <button onclick="tekan('*')" style="top: 578px !important; height: 50px !important; width: 65px !important; left: 12px !important;" type="button">*</button>
+        <button onclick="tekan(':')" style="top: 578px !important; height: 50px !important; width: 65px !important; left: 85px !important;" type="button">:</button>
+        <button onclick="tekan('+')" style="top: 578px !important; height: 50px !important; width: 65px !important; left: 158px !important;" type="button">+</button>
+        <button onclick="tekan('-')" style="top: 578px !important; height: 50px !important; width: 65px !important; left: 231px !important;" type="button">-</button>
+        <button onclick="hitungHasil()" style="top: 578px !important; height: 50px !important; width: 65px !important; left: 304px !important; font-size: 22px !important;" type="button">=</button>
 
-        <!-- 🌟 BARIS NAVIGASI FUNGSI DITURUNKAN PAS MENUTUPI TOMBOL ASLI GAMBAR 🌟 -->
-        <button onclick="klikTombolPilih()" style="top: 662px !important; height: 48px !important; width: 122px !important; left: 10px !important;" type="button">PILIH</button>
-        <button id="btn-edit" onclick="aktifkanModeEdit()" style="top: 662px !important; height: 48px !important; width: 106px !important; left: 142px !important;" type="button">EDIT</button>
-        <button onclick="handleClearClick()" style="top: 662px !important; height: 48px !important; width: 112px !important; left: 258px !important; font-size: 15px !important;" type="button">CLEAR</button>
+        <!-- 🌟 TOMBOL FUNGSI BAWAH DENGAN INJEKSI LANGSUNG MENUTUPI TOMBOL ASLI GAMBAR 🌟 -->
+        <button onclick="klikTombolPilih()" style="top: 653px !important; height: 48px !important; width: 122px !important; left: 12px !important;" type="button">PILIH</button>
+        <button id="btn-edit" onclick="aktifkanModeEdit()" style="top: 653px !important; height: 48px !important; width: 106px !important; left: 146px !important;" type="button">EDIT</button>
+        <button onclick="handleClearClick()" style="top: 653px !important; height: 48px !important; width: 110px !important; left: 266px !important; font-size: 15px !important;" type="button">CLEAR</button>
     </div>
 
         <div id="dropdown-menu" class="dropdown-menu">
@@ -150,3 +149,4 @@ function handleClearClick() { if (clickTimer == null) { clickTimer = setTimeout(
 </script>
 </body>
 </html>
+
