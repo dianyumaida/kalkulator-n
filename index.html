@@ -3,104 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Digital Kustom</title>
+    <title>Kalkulator Kostum Gambar</title>
     <style>
         body {
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Membawa kalkulator agak ke atas */
-            padding-top: 50px;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             margin: 0;
-            
-            /* GAMBAR LATAR BELAKANG ANDA */
-            background-image: url('Folder/gambar/bodykal.jpg'); 
-            background-size: contain;      /* Agar gambar kustom Anda tidak terpotong */
-            background-position: top center;/* Mulai dari atas tengah */
-            background-repeat: no-repeat;
-            background-color: #ffffff;    /* Warna dasar jika gambar tidak penuh */
+            padding: 0;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
         }
-        
-        .calculator {
-            background-color: transparent; /* TRANSPARAN TOTAL */
-            padding: 10px;
-            width: 90%;
-            max-width: 360px;
-            box-shadow: none; /* Menghilangkan bayangan kotak luar */
-        }
-        
-        #display {
+
+        /* Pembungkus utama yang ukurannya mengikuti gambar kostum Anda */
+        .calculator-container {
+            position: relative;
             width: 100%;
-            height: 60px;
-            background-color: rgba(51, 51, 51, 0.9); /* Layar input tetap gelap agar angka terbaca */
+            max-width: 450px; /* Batas lebar maksimal agar tidak terlalu besar di PC */
+            margin-top: 20px;
+        }
+
+        /* Gambar kostum Anda sebagai pondasi utama */
+        .bg-image {
+            width: 100%;
+            display: block;
+            height: auto;
+        }
+
+        /* Menempatkan layar digital pas di atas area layar gambar Anda */
+        #display {
+            position: absolute;
+            top: 5%;         /* Geser naik/turun (persen) agar pas di kolom layar gambar */
+            left: 5%;        /* Jarak dari kiri */
+            width: 90%;      /* Lebar layar */
+            height: 12%;     /* Tinggi layar */
+            background-color: rgba(51, 51, 51, 0.9); /* Latar gelap transparan */
             border: 2px solid #222;
-            color: #fff;
+            color: #ffffff;
             text-align: right;
             font-size: 28px;
             padding: 5px 15px;
             box-sizing: border-box;
             border-radius: 8px;
-            margin-bottom: 20px;
         }
-        
-        .buttons {
+
+        /* Area tombol tak terlihat yang ditempatkan di atas gambar tombol asli */
+        .button-grid {
+            position: absolute;
+            bottom: 5%;      /* Jarak area tombol dari bawah gambar */
+            left: 5%;        /* Jarak area tombol dari kiri */
+            width: 90%;      /* Lebar total area tombol */
+            height: 60%;     /* Tinggi total area tombol */
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(5, 1fr); /* 5 Kolom sesuai gambar Anda */
+            gap: 8px;        /* Jarak antar tombol */
         }
-        
-        /* TOMBOL DIGITAL DIBUAT SEMI-TRANSPARAN */
-        button {
-            padding: 18px 0;
-            font-size: 20px;
-            font-weight: bold;
+
+        /* MEMBUAT TOMBOL MENJADI GAIB / TRANSPARAN TOTAL */
+        .invisible-btn {
+            background: transparent;
+            border: none;
             cursor: pointer;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            background-color: rgba(224, 224, 224, 0.7); /* Transparan 70% */
-            color: #000;
-            transition: 0.1s;
+            outline: none;
+            border-radius: 5px;
+            -webkit-tap-highlight-color: transparent; /* Hilangkan efek highlight biru di HP */
         }
-        
-        button:hover { background-color: rgba(212, 212, 212, 0.9); }
-        
-        .operator { background-color: rgba(255, 149, 0, 0.8); color: white; }
-        .operator:hover { background-color: rgba(224, 132, 0, 1); }
-        
-        .clear { background-color: rgba(255, 59, 48, 0.8); color: white; }
-        .clear:hover { background-color: rgba(211, 47, 47, 1); }
-        
-        .equal { grid-column: span 2; background-color: rgba(52, 199, 89, 0.8); color: white; }
-        .equal:hover { background-color: rgba(40, 167, 69, 1); }
+
+        /* Efek sedikit kilatan warna saat ditekan di HP agar pengguna tahu tombol aktif */
+        .invisible-btn:active {
+            background-color: rgba(0, 0, 0, 0.15); 
+        }
     </style>
 </head>
 <body>
 
-<div class="calculator">
-    <!-- Layar diletakkan di atas gambar Anda -->
-    <input type="text" id="display" readonly>
+<div class="calculator-container">
+    <!-- Gambar kostum Anda diletakkan di sini -->
+    <img src="Folder/gambar/bodykal.jpg" alt="Kalkulator Kostum" class="bg-image">
+
+    <!-- Layar Angka Digital -->
+    <input type="text" id="display" readonly placeholder="0">
     
-    <div class="buttons">
-        <button class="clear" onclick="clearDisplay()">C</button>
-        <button onclick="appendValue('/')" class="operator">/</button>
-        <button onclick="appendValue('*')" class="operator">x</button>
-        <button onclick="appendValue('-')" class="operator">-</button>
+    <!-- Susunan Tombol Transparan (Disesuaikan dengan urutan gambar Anda) -->
+    <div class="button-grid">
+        <!-- Baris 1: Angka 1 sampai 5 -->
+        <button class="invisible-btn" onclick="appendValue('1')"></button>
+        <button class="invisible-btn" onclick="appendValue('2')"></button>
+        <button class="invisible-btn" onclick="appendValue('3')"></button>
+        <button class="invisible-btn" onclick="appendValue('4')"></button>
+        <button class="invisible-btn" onclick="appendValue('5')"></button>
         
-        <button onclick="appendValue('7')">7</button>
-        <button onclick="appendValue('8')">8</button>
-        <button onclick="appendValue('9')">9</button>
-        <button onclick="appendValue('+')" class="operator">+</button>
+        <!-- Baris 2: Angka 6 sampai 0 (ditambah Tombol Clear C) -->
+        <button class="invisible-btn" onclick="appendValue('6')"></button>
+        <button class="invisible-btn" onclick="appendValue('7')"></button>
+        <button class="invisible-btn" onclick="appendValue('8')"></button>
+        <button class="invisible-btn" onclick="appendValue('9')"></button>
+        <button class="invisible-btn" onclick="appendValue('0')"></button>
         
-        <button onclick="appendValue('4')">4</button>
-        <button onclick="appendValue('5')">5</button>
-        <button onclick="appendValue('6')">6</button>
-        <button class="equal" onclick="calculate()">=</button>
+        <!-- Baris 3: Simbol Matematika (* , : , + , - , =) dan Tombol Clear -->
+        <button class="invisible-btn" onclick="appendValue('*')"></button>
+        <button class="invisible-btn" onclick="appendValue('/')"></button> <!-- Simbol Titik Dua (:) diartikan bagi (/) -->
+        <button class="invisible-btn" onclick="appendValue('+')"></button>
+        <button class="invisible-btn" onclick="appendValue('-')"></button>
+        <button class="invisible-btn" onclick="calculate()"></button>
         
-        <button onclick="appendValue('1')">1</button>
-        <button onclick="appendValue('2')">2</button>
-        <button onclick="appendValue('3')">3</button>
-        <button onclick="appendValue('0')">0</button>
+        <!-- Tombol Clear (C) tambahan jika di gambar kostum Anda ada area kosong atau tombol reset -->
+        <!-- Jika letaknya terpisah, nanti posisinya bisa kita geser secara khusus -->
+        <button class="invisible-btn" onclick="clearDisplay()" style="grid-column: span 5; height: 30px; margin-top: 5px; background: rgba(255,0,0,0.05);"></button>
     </div>
 </div>
 
