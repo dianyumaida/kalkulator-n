@@ -1,5 +1,253 @@
 <!DOCTYPE html>
 <html lang="id">
- 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kustom Turunan</title>
+    <!-- Library Math.js untuk pemrosesan turunan rumus matematika -->
+    <script src="https://cloudflare.com"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #e3e7ec; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px; 
+        }
+
+        /* Wadah Kalkulator Menggunakan Gambar bodykal.jpg */
+        .calculator-body { 
+            width: 100%;
+            max-width: 420px; 
+            min-height: 600px;
+            /* Memanggil gambar dari folder relatif Anda */
+            background-image: url('Folder/gambar/bodykal.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); 
+            padding: 30px 25px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        h2 { 
+            font-size: 1.1rem; 
+            text-align: center; 
+            margin-bottom: 15px; 
+            color: #fff; 
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+        
+        /* Area Layar Digital Kalkulator */
+        .screen-area { 
+            margin-bottom: 20px; 
+            background: rgba(238, 243, 235, 0.95); /* Warna layar digital agak kehijauan/abu-abu mendung */
+            padding: 12px;
+            border-radius: 8px;
+            border: 3px solid #333;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .display { 
+            width: 100%; 
+            height: 40px; 
+            font-size: 22px; 
+            border: none;
+            background: transparent;
+            text-align: right; 
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: #111;
+        }
+        .result-box { 
+            width: 100%; 
+            min-height: 40px; 
+            margin-top: 5px; 
+            padding-top: 5px;
+            border-top: 1px dashed #999;
+            font-weight: bold; 
+            font-size: 18px; 
+            text-align: right; 
+            word-wrap: break-word; 
+            font-family: 'Courier New', Courier, monospace;
+            color: #111;
+        }
+        
+        /* Panel Grid Tombol */
+        .grid-panel { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+        }
+        .full-width { grid-column: span 2; }
+        
+        /* Box Pilihan Radio */
+        .radio-box { 
+            display: flex; 
+            justify-content: space-around; 
+            background: rgba(255,255,255,0.85); 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            font-weight: bold;
+        }
+        .radio-box label { display: flex; align-items: center; gap: 5px; cursor: pointer; color: #222; }
+        
+        /* Elemen Pilihan Dropdown & Tombol */
+        label.input-label { 
+            display: block; 
+            font-size: 11px; 
+            font-weight: bold; 
+            margin-bottom: 4px; 
+            color: #fff; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        select, button { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 15px; 
+            border-radius: 8px; 
+            border: 2px solid #333; 
+            background: #ffffff; 
+            font-weight: bold;
+            cursor: pointer; 
+            box-shadow: 0 3px 0 #333;
+        }
+        select:active, button:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #333;
+        }
+        
+        /* Desain khusus tombol sama dengan (=) */
+        .btn-calculate { 
+            background-color: #ff9500; 
+            color: white; 
+            font-size: 24px; 
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-body">
+    <h2>KALKULATOR CUSTOM</h2>
+    
+    <!-- Bagian Layar -->
+    <div class="screen-area">
+        <input type="text" id="mainDisplay" class="display" placeholder="0" readonly>
+        <div id="resultDisplay" class="result-box">Hasil d/dx...</div>
+    </div>
+
+    <!-- Bagian Kontrol Tombol -->
+    <div class="grid-panel">
+        <!-- Status Rekam -->
+        <div class="full-width radio-box">
+            <label><input type="radio" name="rekam" id="rekamOn" checked> 🔴 Rekam Aktif</label>
+            <label><input type="radio" name="rekam" id="rekamOff"> ⚪ Tidak Aktif</label>
+        </div>
+
+        <!-- Dropdown Pilih Anak -->
+        <div>
+            <label class="input-label">PILIH ANAK</label>
+            <select id="pilihAnak" onchange="inputKarakter(this.value, 'anak')">
+                <option value="">-- Pilih --</option>
+                <option value="x">x</option>
+                <option value="a">a</option>
+                <option value="b">b</option>
+                <option value="c">c</option>
+                <option value="d">d</option>
+                <option value="g">g</option>
+            </select>
+        </div>
+
+        <!-- Dropdown Pilih Simbol -->
+        <div>
+            <label class="input-label">PILIH SIMBOL</label>
+            <select id="pilihSimbol" onchange="inputKarakter(this.value, 'simbol')">
+                <option value="">-- Pilih --</option>
+                <option value="(">(</option>
+                <option value=")">)</option>
+                <option value="[">[</option>
+                <option value="]">]</option>
+                <option value=".">.</option>
+                <option value="^">^</option>
+                <option value="%">%</option>
+                <option value="Σ">Σ</option>
+                <option value="+">+</option>
+                <option value="-">-</option>
+            </select>
+        </div>
+
+        <!-- Dropdown Riwayat -->
+        <div class="full-width">
+            <label class="input-label">RIWAYAT AKTIVITAS</label>
+            <select id="riwayatDropdown" onchange="muatRiwayat(this.value)">
+                <option value="">-- Ketuk riwayat rumus --</option>
+            </select>
+        </div>
+
+        <!-- Tombol Hitung Turunan Rumus -->
+        <button class="full-width btn-calculate" onclick="selesaikanTurunan()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('mainDisplay');
+    const resultDisplay = document.getElementById('resultDisplay');
+    const riwayatDropdown = document.getElementById('riwayatDropdown');
+    const rekamOn = document.getElementById('rekamOn');
+
+    function inputKarakter(val, tipe) {
+        if (!val) return;
+        
+        let nilaiInput = val;
+        if (val === '[') nilaiInput = '(';
+        if (val === ']') nilaiInput = ')';
+        
+        display.value += nilaiInput;
+        
+        if (rekamOn.checked) {
+            tambahRiwayat(display.value);
+        }
+        
+        document.getElementById(tipe === 'anak' ? 'pilihAnak' : 'pilihSimbol').selectedIndex = 0;
+    }
+
+    function tambahRiwayat(teks) {
+        const entriAda = Array.from(riwayatDropdown.options).some(opt => opt.value === teks);
+        if (!entriAda) {
+            const opt = document.createElement('option');
+            opt.value = teks;
+            opt.text = teks;
+            riwayatDropdown.appendChild(opt);
+        }
+    }
+
+    function muatRiwayat(val) {
+        if (!val) return;
+        display.value = val;
+        riwayatDropdown.selectedIndex = 0;
+    }
+
+    function selesaikanTurunan() {
+        const rumus = display.value;
+        if (!rumus) {
+            resultDisplay.innerText = "Input kosong";
+            return;
+        }
+        try {
+            const hasilTurunan = math.derivative(rumus, 'x');
+            resultDisplay.innerText = hasilTurunan.toString();
+        } catch (err) {
+            resultDisplay.innerText = "Format rumus salah";
+        }
+    }
+</script>
 </body>
 </html>
