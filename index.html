@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Fisik Kustom</title>
+    <title>Kalkulator Fisik Kustom Bersih</title>
     <!-- Library Math.js untuk pemrosesan turunan rumus matematika -->
     <script src="https://cloudflare.com"></script>
     <style>
@@ -23,8 +23,8 @@
         .calculator-frame { 
             position: relative;
             width: 100%;
-            max-width: 400px; /* Sesuaikan dengan rasio gambar Anda */
-            aspect-ratio: 4 / 7; /* Estimasi rasio HP kalkulator fisik */
+            max-width: 400px; 
+            aspect-ratio: 4 / 7; 
             background-image: url('Folder/gambar/bodykal.jpg'); 
             background-size: 100% 100%;
             background-position: center;
@@ -34,92 +34,76 @@
             overflow: hidden;
         }
 
-        /* 1. LAYAR DIGITAL (Ditempatkan di area layar gambar Anda) */
+        /* LAYAR DIGITAL BERSIH (Tanpa teks panduan & tanpa garis putus-putus) */
         .screen-overlay { 
             position: absolute;
-            top: 8%;     /* Geser % ini untuk paskan dengan posisi layar gambar */
-            left: 8%;    /* Geser % ini untuk paskan dengan posisi layar gambar */
-            width: 84%;  /* Lebar kotak layar transparan */
-            height: 12%; /* Tinggi kotak layar transparan */
+            top: 8%;     
+            left: 8%;    
+            width: 84%;  
+            height: 12%; 
             background: rgba(220, 230, 215, 0.85); /* Efek kaca LCD transparan */
             border-radius: 6px;
-            padding: 8px;
+            padding: 10px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            align-items: center; /* Membuat teks otomatis berada di tengah vertikal */
             border: 2px solid #333;
         }
+        
         .display-input {
             width: 100%;
             border: none;
             background: transparent;
             font-family: 'Courier New', monospace;
-            font-size: 20px;
+            font-size: 24px; /* Ukuran angka disesuaikan agar lebih jelas */
             font-weight: bold;
             text-align: right;
             color: #111;
-        }
-        .display-result {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: right;
-            color: #222;
-            border-top: 1px dashed #777;
-            padding-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            outline: none;
         }
 
-        /* 2. PANEL TOMBOL TRANSPARAN OVERLAY */
+        /* PANEL TOMBOL TRANSPARAN OVERLAY */
         .buttons-overlay {
             position: absolute;
-            top: 25%;    /* Batas atas mulainya tombol di gambar Anda */
+            top: 25%;    
             left: 6%;
             width: 88%;
-            height: 70%; /* Total area jangkauan tombol ke bawah */
+            height: 70%; 
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Default 4 kolom tombol */
-            gap: 8px;    /* Jarak antar tombol transparan */
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 8px;    
         }
 
-        /* Tombol tidak terlihat tetapi bisa diklik aktif */
         .invisible-btn {
-            background: rgba(255, 255, 255, 0.01); /* Transparan total */
+            background: rgba(255, 255, 255, 0.01); 
             border: none;
             border-radius: 8px;
             cursor: pointer;
             outline: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.2); /* Efek sentuh di HP */
+            -webkit-tap-highlight-color: rgba(0,0,0,0.2); 
         }
-        /* Efek visual kilas saat tombol ditekan di HP/Web */
+        
         .invisible-btn:active {
             background: rgba(255, 255, 255, 0.25);
         }
-
-        /* Pengaturan Tombol Khusus Lebar */
-        .span-2 { grid-column: span 2; }
     </style>
 </head>
 <body>
 
 <div class="calculator-frame">
     
-    <!-- Lapisan Layar Digital di Atas Gambar -->
+    <!-- Lapisan Layar Digital Bersih di Atas Gambar -->
     <div class="screen-overlay">
         <input type="text" id="mainDisplay" class="display-input" placeholder="0" readonly>
-        <div id="resultDisplay" class="display-result">Hasil d/dx...</div>
     </div>
 
     <!-- Lapisan Grid Tombol di Atas Gambar -->
     <div class="buttons-overlay">
         
         <!-- Baris 1: Kontrol Rekam & Fungsi -->
-        <button class="invisible-btn" onclick="toggleRekam('ON')"></button> <!-- Area Rekam Aktif -->
-        <button class="invisible-btn" onclick="toggleRekam('OFF')"></button> <!-- Area Tidak Aktif -->
-        <button class="invisible-btn" onclick="muatRiwayat Cepat()"></button> <!-- Area Dropdown Riwayat -->
-        <button class="invisible-btn" onclick="hapusLayar()"></button> <!-- Tombol Kosongkan/Hapus -->
+        <button class="invisible-btn" onclick="toggleRekam('ON')"></button> 
+        <button class="invisible-btn" onclick="toggleRekam('OFF')"></button> 
+        <button class="invisible-btn" onclick="muatRiwayatCepat()"></button> 
+        <button class="invisible-btn" onclick="hapusLayar()"></button> 
 
         <!-- Baris 2: Simbol Karakter Anak -->
         <button class="invisible-btn" onclick="tekanKunci('x')"></button>
@@ -130,8 +114,8 @@
         <!-- Baris 3: Karakter Anak Lanjutan & Simbol Kurung -->
         <button class="invisible-btn" onclick="tekanKunci('d')"></button>
         <button class="invisible-btn" onclick="tekanKunci('g')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('(')"></button> <!-- Mengganti [ -->
-        <button class="invisible-btn" onclick="tekanKunci(')')"></button> <!-- Mengganti ] -->
+        <button class="invisible-btn" onclick="tekanKunci('(')"></button> 
+        <button class="invisible-btn" onclick="tekanKunci(')')"></button> 
 
         <!-- Baris 4: Operator Matematika Kalkulus -->
         <button class="invisible-btn" onclick="tekanKunci('^')"></button>
@@ -141,21 +125,27 @@
 
         <!-- Baris 5: Tombol Eksekusi Utama -->
         <button class="invisible-btn" onclick="tekanKunci('-')"></button>
-        <button class="invisible-btn span-3" style="grid-column: span 3;" onclick="hitungSamaDengan()"></button> <!-- Tombol Besar '=' -->
+        <button class="invisible-btn" style="grid-column: span 3;" onclick="hitungSamaDengan()"></button> 
         
     </div>
 </div>
 
 <script>
     const display = document.getElementById('mainDisplay');
-    const resultDisplay = document.getElementById('resultDisplay');
     
-    let rekamStatus = true; // Default Rekam Aktif
+    let rekamStatus = true; 
     let riwayatMemori = [];
     let riwayatIndeks = 0;
 
     function tekanKunci(karakter) {
+        // Jika layar sedang menampilkan hasil perhitungan, bersihkan dulu sebelum input baru
+        if (display.getAttribute('data-hasil') === 'true') {
+            display.value = '';
+            display.removeAttribute('data-hasil');
+        }
+        
         display.value += karakter;
+        
         if (rekamStatus) {
             if (!riwayatMemori.includes(display.value)) {
                 riwayatMemori.push(display.value);
@@ -173,28 +163,32 @@
             alert("Riwayat masih kosong!");
             return;
         }
-        // Menggilir riwayat lama setiap kali area riwayat di gambar ditekan
         display.value = riwayatMemori[riwayatIndeks];
+        display.removeAttribute('data-hasil');
         riwayatIndeks = (riwayatIndeks + 1) % riwayatMemori.length;
     }
 
     function hapusLayar() {
-        display.value = "";
-        resultDisplay.innerText = "Hasil d/dx...";
+        display.value = "0";
+        display.removeAttribute('data-hasil');
     }
 
     function hitungSamaDengan() {
         const rumus = display.value;
-        if (!rumus) {
-            resultDisplay.innerText = "Kosong";
+        if (!rumus || rumus === "0") {
+            display.value = "0";
             return;
         }
         try {
-            // Melakukan kompilasi penyelesaian turunan d/dx terhadap variabel x
+            // Memproses turunan d/dx dan langsung menimpa teks layar dengan hasil akhirnya
             const hasilTurunan = math.derivative(rumus, 'x');
-            resultDisplay.innerText = hasilTurunan.toString();
+            display.value = hasilTurunan.toString();
+            
+            // Tandai bahwa layar sedang menampilkan hasil perhitungan
+            display.setAttribute('data-hasil', 'true');
         } catch (err) {
-            resultDisplay.innerText = "Rumus tidak valid";
+            display.value = "Error";
+            display.setAttribute('data-hasil', 'true');
         }
     }
 </script>
