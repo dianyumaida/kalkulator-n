@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Rumus Logika</title>
+    <title>Kalkulator Kustom Rumus Logika Resmi</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -32,7 +32,7 @@
             overflow: hidden;
         }
 
-        /* LAYAR DIGITAL TRANSPARAN (Tanpa angka nol bawaan) */
+        /* LAYAR DIGITAL TRANSPARAN */
         .screen-overlay { 
             position: absolute;
             top: 5.5%;  
@@ -51,30 +51,14 @@
             border: none;
             background: transparent;
             font-family: 'Courier New', monospace;
-            font-size: 32px; 
+            font-size: 28px; 
             font-weight: bold;
             text-align: right;
             color: #333; 
             outline: none;
         }
 
-        /* LOGIKA RADIO RECORD (Ditempatkan di ruang kosong tengah gambar) */
-        .record-panel {
-            position: absolute;
-            top: 42%;
-            left: 5%;
-            width: 90%;
-            display: flex;
-            justify-content: space-around;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 6px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .record-panel label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
-
-        /* AREA GRID 3 BARIS TOMBOL FISIK (Hanya berisi Simbol Anak sesuai chat pertama Anda) */
+        /* AREA GRID 3 BARIS TOMBOL FISIK */
         .buttons-grid-overlay {
             position: absolute;
             top: 52%; 
@@ -82,12 +66,12 @@
             width: 92%;      
             height: 30%;     
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Diatur 4 kolom agar pas kotak gambar */
+            grid-template-columns: repeat(4, 1fr); 
             gap: 6px;        
-            border: 2px dashed #28a745; 
+            border: 2px dashed #28a745; /* Garis pandu hijau untuk edit posisi */
         }
 
-        /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH */
+        /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH (PILIH, RIWAYAT, CLEAR) */
         .bottom-menu-overlay {
             position: absolute;
             top: 84%; 
@@ -95,7 +79,7 @@
             width: 92%;
             height: 9%;
             display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr; 
+            grid-template-columns: 1.2fr 1.2fr 1fr; 
             gap: 6px;
         }
 
@@ -107,7 +91,7 @@
             cursor: pointer;
             outline: none;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             justify-content: center;
@@ -131,6 +115,8 @@
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
+            font-size: 13px;
+            padding-left: 2px;
         }
     </style>
 </head>
@@ -143,120 +129,149 @@
         <input type="text" id="mainDisplay" class="display-input" placeholder="" readonly>
     </div>
 
-    <!-- Panel Radio Rekam Aktif / Tidak -->
-    <div class="record-panel">
-        <label><input type="radio" name="rekamLogika" id="rekamOn" checked> 🔴 Rekam Aktif</label>
-        <label><input type="radio" name="rekamLogika" id="rekamOff"> ⚪ Tidak Aktif</label>
-    </div>
-
-    <!-- Jajaran Tombol Fisik Gambar (Hanya berisi Simbol Anak Anda) -->
+    <!-- Jajaran Tombol Fisik Cepat di Atas Gambar (Hanya Simbol Anak) -->
     <div class="buttons-grid-overlay">
-        <!-- Baris Fisik 1 -->
-        <button class="invisible-btn" onclick="tekanKunci(',')">,</button>
+        <!-- Baris 1 -->
+        <button class="invisible-btn" onclick="tekanKunci('(')">(</button>
+        <button class="invisible-btn" onclick="tekanKunci(')')">)</button>
         <button class="invisible-btn" onclick="tekanKunci('[')">[</button>
         <button class="invisible-btn" onclick="tekanKunci(']')">]</button>
-        <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
 
-        <!-- Baris Fisik 2 -->
+        <!-- Baris 2 -->
+        <button class="invisible-btn" onclick="tekanKunci('{')">{</button>
+        <button class="invisible-btn" onclick="tekanKunci('}')">}</button>
+        <button class="invisible-btn" onclick="tekanKunci('=')">=</button>
         <button class="invisible-btn" onclick="tekanKunci('^')">^</button>
+
+        <!-- Baris 3 -->
         <button class="invisible-btn" onclick="tekanKunci('%')">%</button>
         <button class="invisible-btn" onclick="tekanKunci('Σ')">Σ</button>
-        <button class="invisible-btn" onclick="tekanKunci('=')">=</button>
-
-        <!-- Baris Fisik 3 (Kosong/Bisa diisi operator tambahan jika dibutuhkan nanti) -->
-        <button class="invisible-btn" onclick="tekanKunci('+')">+</button>
-        <button class="invisible-btn" onclick="tekanKunci('-')">-</button>
-        <button class="invisible-btn" onclick="tekanKunci('*')">*</button>
-        <button class="invisible-btn" onclick="tekanKunci('/')">/</button>
+        <button class="invisible-btn" onclick="tekanKunci(',')">,</button>
+        <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
     </div>
 
-    <!-- Area Menu Bawah (PILIH, EDIT, CLEAR) -->
+    <!-- Area Menu Bawah Berdasarkan Chat Anda -->
     <div class="bottom-menu-overlay">
         
-        <!-- Dropdown PILIH (Berisi Daftar Variabel Anak Aktif) -->
+        <!-- TOMBOL PILIH (Dropdown Simbol Anak & Sistem Radio) -->
         <div class="dropdown-wrapper">
-            <select id="pilihAnak" onchange="inputDropdown(this.value, 'anak')">
+            <select id="pilihMenu" onchange="prosesPilih(this.value)">
                 <option value="">PILIH ▾</option>
-                <option value="Variabel A">Anak A</option>
-                <option value="Variabel B">Anak B</option>
-                <option value="Variabel C">Anak C</option>
-                <option value="Variabel D">Anak D</option>
-                <option value="Variabel G">Anak G</option>
-            </select>
-        </div>
-
-        <!-- Dropdown EDIT (Berisi Riwayat Aktivitas & Simbol) -->
-        <div class="dropdown-wrapper">
-            <select id="pilihSimbol" onchange="inputDropdown(this.value, 'simbol')">
-                <option value="">EDIT ▾</option>
-                <!-- Bagian Riwayat internal di dalam dropdown -->
-                <optgroup label="--- RIWAYAT RUMUS ---" id="riwayatGroup">
-                    <option value="">(Belum ada riwayat)</option>
-                </optgroup>
-                <optgroup label="--- SIMBOL LAIN ---">
+                <optgroup label="--- SIMBOL ANAK ---">
+                    <option value="(">(</option>
+                    <option value=")">)</option>
                     <option value="[">[</option>
                     <option value="]">]</option>
+                    <option value="{">{</option>
+                    <option value="}">}</option>
                     <option value="=">=</option>
+                    <option value="^">^</option>
+                    <option value="%">%</option>
+                    <option value="Σ">sigma</option>
+                </optgroup>
+                <optgroup label="--- SISTEM RADIO ---">
+                    <option value="RADIO_ON">🔴 Rekam Aktif</option>
+                    <option value="RADIO_OFF">⚪ Tidak Aktif</option>
                 </optgroup>
             </select>
         </div>
 
-        <!-- Tombol Clear (Hanya membersihkan layar lokal, tidak menghapus riwayat) -->
-        <button class="invisible-btn" style="background: rgba(220,53,69,0.6); font-size: 13px;" onclick="hapusLayar()">CLEAR</button>
+        <!-- TOMBOL RIWAYAT (Dropdown List Rekam, Hapus, Kirim WA) -->
+        <div class="dropdown-wrapper">
+            <select id="riwayatMenu" onchange="prosesRiwayat(this.value)">
+                <option value="">RIWAYAT ▾</option>
+                <optgroup label="--- ACTIONS ---">
+                    <option value="AKSI_HAPUS">🗑️ Hapus Riwayat</option>
+                    <option value="AKSI_KIRIM">📤 Kirim ke WA</option>
+                </optgroup>
+                <optgroup label="--- DAFTAR REKAMAN ---" id="daftarRekamanGroup">
+                    <option value="">(Kosong)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <!-- Tombol Clear (Hanya membersihkan layar lokal kalkulator) -->
+        <button class="invisible-btn" style="background: rgba(220,53,69,0.6);" onclick="hapusLayar()">CLEAR</button>
 
     </div>
 </div>
 
 <script>
     const display = document.getElementById('mainDisplay');
-    const rekamOn = document.getElementById('rekamOn');
-    const riwayatGroup = document.getElementById('riwayatGroup');
+    const daftarRekamanGroup = document.getElementById('daftarRekamanGroup');
     
+    let rekamStatus = true; // Default Rekam Aktif
     let riwayatMemori = [];
 
     function tekanKunci(karakter) {
         display.value += karakter;
-        checkDanSimpanRiwayat();
+        simpanKeMemori();
     }
 
-    function inputDropdown(val, tipe) {
+    // Logika Pemrosesan Dropdown "PILIH"
+    function prosesPilih(val) {
         if (!val) return;
 
-        // Jika yang dipilih adalah data dari panggulan riwayat rumus
-        if (tipe === 'simbol' && riwayatMemori.includes(val)) {
-            display.value = val;
+        if (val === "RADIO_ON") {
+            rekamStatus = true;
+            alert("Sistem Radio: REKAM AKTIF");
+        } else if (val === "RADIO_OFF") {
+            rekamStatus = false;
+            alert("Sistem Radio: TIDAK AKTIF");
         } else {
-            // Memasukkan teks variabel anak atau simbol ke layar
+            // Jika memilih simbol anak dari dropdown
             display.value += val;
-            checkDanSimpanRiwayat();
+            simpanKeMemori();
         }
-
-        // Reset tampilan dropdown ke teks utama
-        document.getElementById(tipe === 'anak' ? 'pilihAnak' : 'pilihSimbol').selectedIndex = 0;
+        document.getElementById('pilihMenu').selectedIndex = 0;
     }
 
-    function checkDanSimpanRiwayat() {
-        // Jika Radio "Rekam Aktif" dicentang, masukkan ke dalam memori riwayat dropdown
-        if (rekamOn.checked && display.value.trim() !== "") {
+    // Logika Pemrosesan Dropdown "RIWAYAT"
+    function prosesRiwayat(val) {
+        if (!val) return;
+
+        if (val === "AKSI_HAPUS") {
+            riwayatMemori = [];
+            perbaruiTampilanRiwayat();
+            alert("Riwayat rekaman telah dihapus.");
+        } else if (val === "AKSI_KIRIM") {
+            if (display.value.trim() === "") {
+                alert("Layar kosong, tidak ada rumus untuk dikirim!");
+            } else {
+                // Mengirim isi rumus layar ke tautan WhatsApp Channel Anda
+                const urlWA = "https://whatsapp.com";
+                window.open(urlWA, '_blank');
+            }
+        } else {
+            // Jika memilih salah satu isi daftar rekaman, panggil kembali ke layar
+            display.value = val;
+        }
+        document.getElementById('riwayatMenu').selectedIndex = 0;
+    }
+
+    function simpanKeMemori() {
+        if (rekamStatus && display.value.trim() !== "") {
             if (!riwayatMemori.includes(display.value)) {
                 riwayatMemori.push(display.value);
-                
-                // Perbarui isi list di dalam dropdown EDIT secara langsung
                 perbaruiTampilanRiwayat();
             }
         }
     }
 
     function perbaruiTampilanRiwayat() {
-        // Bersihkan daftar lama di dalam optgroup riwayat
-        riwayatGroup.innerHTML = "";
-        
-        // Masukkan semua daftar memori rumus terbaru
-        riwayatMemori.forEach(rumus => {
+        daftarRekamanGroup.innerHTML = "";
+        if (riwayatMemori.length === 0) {
             let opt = document.createElement('option');
-            opt.value = rumus;
-            opt.text = rumus;
-            riwayatGroup.appendChild(opt);
+            opt.value = "";
+            opt.text = "(Kosong)";
+            daftarRekamanGroup.appendChild(opt);
+            return;
+        }
+        riwayatMemori.forEach(item => {
+            let opt = document.createElement('option');
+            opt.value = item;
+            opt.text = item;
+            daftarRekamanGroup.appendChild(opt);
         });
     }
 
