@@ -34,18 +34,18 @@
             overflow: hidden;
         }
 
-        /* LAYAR DIGITAL TRANSPARAN (Warna biru dihilangkan, menyatu dengan layar gambar) */
+        /* LAYAR DIGITAL TRANSPARAN (Tanpa latar warna, tanpa angka nol bawaan) */
         .screen-overlay { 
             position: absolute;
-            top: 5.5%;  /* Sesuaikan persen ini jika teks angka kurang naik/turun */
-            left: 9%;   /* Sesuaikan persen ini jika teks angka kurang geser kiri/kanan */
+            top: 5.5%;  /* Geser naik turun posisi teks di dalam layar gambar */
+            left: 9%;   
             width: 82%;      
             height: 14%;     
-            background: transparent; /* Layar buatan hilang, menggunakan layar gambar asli */
+            background: transparent; 
             padding: 15px;
             display: flex;
             align-items: center;
-            border: none; /* Menghapus garis bingkai buatan */
+            border: none; 
         }
         
         .display-input {
@@ -56,38 +56,38 @@
             font-size: 32px; 
             font-weight: bold;
             text-align: right;
-            color: #333; /* Warna teks gelap agar terbaca di layar putih gambar */
+            color: #333; 
             outline: none;
         }
 
-        /* AREA GRID TOMBOL KOTAK HITAM (Disesuaikan agar turun pas ke area tombol gambar) */
+        /* PERBAIKAN GRID: Diberi margin-top besar agar terdorong pas ke area tombol hitam gambar */
         .buttons-grid-overlay {
             position: absolute;
-            top: 51.5%; /* Menggeser area tombol agar pas dengan kotak hitam di gambar */
-            left: 5%;        
-            width: 90%;      
-            height: 30%;     
+            top: 66%; /* Menurunkan drastis posisi tombol merah agar masuk ke tombol hitam gambar */
+            left: 4%;        
+            width: 92%;      
+            height: 17%; /* Menyesuaikan tinggi area 3 baris tombol hitam gambar */     
             display: grid;
             grid-template-columns: repeat(5, 1fr); 
-            gap: 5px;        
+            gap: 4px;        
             border: 2px dashed #28a745; /* Garis pandu hijau luar */
         }
 
         /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH (Pilih, Edit, Clear) */
         .bottom-menu-overlay {
             position: absolute;
-            top: 84.5%; /* Menyelaraskan dengan tombol PILIH/EDIT/CLEAR di gambar */
-            left: 5%;
-            width: 90%;
+            top: 84%; /* Disesuaikan agar pas menimpa tombol kuning PILIH, EDIT, CLEAR */
+            left: 4%;
+            width: 92%;
             height: 9%;
             display: grid;
             grid-template-columns: 1.2fr 1fr 1fr; 
-            gap: 5px;
+            gap: 6px;
         }
 
         /* Gaya Tombol Warna Merah Pembantu Koreksi */
         .invisible-btn {
-            background: rgba(220, 53, 69, 0.45); 
+            background: rgba(220, 53, 69, 0.55); 
             border: 1px solid #dc3545;
             border-radius: 4px;
             cursor: pointer;
@@ -100,7 +100,7 @@
             align-items: center;
             text-shadow: 1px 1px 1px #000;
         }
-        .invisible-btn:active { background: rgba(220, 53, 69, 0.75); }
+        .invisible-btn:active { background: rgba(220, 53, 69, 0.85); }
 
         /* Gaya Khusus Dropdown Menu Kuning Pembantu Koreksi */
         .dropdown-wrapper {
@@ -111,7 +111,7 @@
         .dropdown-wrapper select {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.7; 
+            opacity: 0.75; 
             background: #ffc107;
             border: 1px solid #d39e00;
             font-weight: bold;
@@ -126,26 +126,27 @@
     
     <!-- Layar Digital Transparan -->
     <div class="screen-overlay">
-        <input type="text" id="mainDisplay" class="display-input" placeholder="0" readonly>
+        <!-- Placeholder dikosongkan agar tidak memunculkan angka nol di awal -->
+        <input type="text" id="mainDisplay" class="display-input" placeholder="" readonly>
     </div>
 
     <!-- Kisi Tombol 3 Baris Atas Gambar -->
     <div class="buttons-grid-overlay">
-        <!-- Baris Fisik 1 -->
+        <!-- Baris Fisik 1 (Menimpa kotak kosong paling atas di gambar) -->
         <button class="invisible-btn" onclick="tekanKunci('7')">7</button>
         <button class="invisible-btn" onclick="tekanKunci('8')">8</button>
         <button class="invisible-btn" onclick="tekanKunci('9')">9</button>
         <button class="invisible-btn" onclick="tekanKunci('(')">(</button>
         <button class="invisible-btn" onclick="tekanKunci(')')">)</button>
 
-        <!-- Baris Fisik 2 -->
+        <!-- Baris Fisik 2 (Menimpa kotak bertanda *, :, +, - di gambar) -->
         <button class="invisible-btn" onclick="tekanKunci('*')">*</button>
         <button class="invisible-btn" onclick="tekanKunci('/')">:</button>
         <button class="invisible-btn" onclick="tekanKunci('+')">+</button>
         <button class="invisible-btn" onclick="tekanKunci('-')">-</button>
         <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
 
-        <!-- Baris Fisik 3 -->
+        <!-- Baris Fisik 3 (Menimpa kotak angka 1, 2, 3, 0, = di gambar) -->
         <button class="invisible-btn" onclick="tekanKunci('1')">1</button>
         <button class="invisible-btn" onclick="tekanKunci('2')">2</button>
         <button class="invisible-btn" onclick="tekanKunci('3')">3</button>
@@ -185,7 +186,7 @@
         </div>
 
         <!-- Tombol Clear -->
-        <button class="invisible-btn" style="background: rgba(220,53,69,0.5);" onclick="hapusLayar()">CLEAR</button>
+        <button class="invisible-btn" style="background: rgba(220,53,69,0.6);" onclick="hapusLayar()">CLEAR</button>
 
     </div>
 </div>
@@ -201,7 +202,6 @@
             display.value = '';
             display.removeAttribute('data-hasil');
         }
-        if (display.value === "0") display.value = "";
         display.value += karakter;
         
         if (rekamStatus && !riwayatMemori.includes(display.value)) {
@@ -223,7 +223,6 @@
             if (val === '[') nilaiReal = '(';
             if (val === ']') nilaiReal = ')';
             
-            if (display.value === "0") display.value = "";
             display.value += nilaiReal;
             
             if (rekamStatus && !riwayatMemori.includes(display.value)) {
@@ -241,13 +240,13 @@
     }
 
     function hapusLayar() {
-        display.value = "0";
+        display.value = "";
         display.removeAttribute('data-hasil');
     }
 
     function hitungSamaDengan() {
         const rumus = display.value;
-        if (!rumus || rumus === "0") return;
+        if (!rumus) return;
         try {
             const hasilTurunan = math.derivative(rumus, 'x');
             display.value = hasilTurunan.toString();
