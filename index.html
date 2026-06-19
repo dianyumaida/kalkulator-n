@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Fisik Kustom Bersih</title>
+    <title>Koreksi Lengkap - Angka & Simbol</title>
     <!-- Library Math.js untuk pemrosesan turunan rumus matematika -->
     <script src="https://cloudflare.com"></script>
     <style>
@@ -23,7 +23,7 @@
         .calculator-frame { 
             position: relative;
             width: 100%;
-            max-width: 400px; 
+            max-width: 420px; 
             aspect-ratio: 4 / 7; 
             background-image: url('Folder/gambar/bodykal.jpg'); 
             background-size: 100% 100%;
@@ -34,19 +34,19 @@
             overflow: hidden;
         }
 
-        /* LAYAR DIGITAL BERSIH (Tanpa teks panduan & tanpa garis putus-putus) */
+        /* KOTAK LAYAR (Biru Transparan untuk Koreksi) */
         .screen-overlay { 
             position: absolute;
-            top: 8%;     
-            left: 8%;    
-            width: 84%;  
-            height: 12%; 
-            background: rgba(220, 230, 215, 0.85); /* Efek kaca LCD transparan */
+            top: 6%;         /* <--- Atur posisi naik/turun layar */
+            left: 8%;        /* <--- Atur posisi kiri/kanan layar */
+            width: 84%;      /* <--- Atur lebar layar */
+            height: 12%;     /* <--- Atur tinggi layar */
+            background: rgba(0, 123, 255, 0.4); 
             border-radius: 6px;
             padding: 10px;
             display: flex;
-            align-items: center; /* Membuat teks otomatis berada di tengah vertikal */
-            border: 2px solid #333;
+            align-items: center;
+            border: 2px solid #0056b3;
         }
         
         .display-input {
@@ -54,36 +54,44 @@
             border: none;
             background: transparent;
             font-family: 'Courier New', monospace;
-            font-size: 24px; /* Ukuran angka disesuaikan agar lebih jelas */
+            font-size: 24px; 
             font-weight: bold;
             text-align: right;
-            color: #111;
+            color: #fff;
             outline: none;
         }
 
-        /* PANEL TOMBOL TRANSPARAN OVERLAY */
+        /* AREA BLOK TOMBOL (Sekarang menggunakan 5 kolom untuk memuat semua menu) */
         .buttons-overlay {
             position: absolute;
-            top: 25%;    
-            left: 6%;
-            width: 88%;
-            height: 70%; 
+            top: 22%;        /* <--- Atur awal mulainya tombol dari atas */
+            left: 5%;        /* <--- Atur batas kiri blok tombol */
+            width: 90%;      /* <--- Atur total lebar blok tombol */
+            height: 73%;     /* <--- Atur total tinggi blok tombol ke bawah */
             display: grid;
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 8px;    
+            grid-template-columns: repeat(5, 1fr); /* 5 Kolom Tombol */
+            gap: 6px;        
+            border: 2px dashed #28a745; 
         }
 
+        /* TOMBOL KOREKSI (Merah Transparan dengan Label Teks) */
         .invisible-btn {
-            background: rgba(255, 255, 255, 0.01); 
-            border: none;
-            border-radius: 8px;
+            background: rgba(220, 53, 69, 0.5); 
+            border: 1px solid #dc3545;
+            border-radius: 6px;
             cursor: pointer;
             outline: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.2); 
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-shadow: 1px 1px 1px #000;
         }
         
         .invisible-btn:active {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(220, 53, 69, 0.8);
         }
     </style>
 </head>
@@ -91,59 +99,70 @@
 
 <div class="calculator-frame">
     
-    <!-- Lapisan Layar Digital Bersih di Atas Gambar -->
     <div class="screen-overlay">
         <input type="text" id="mainDisplay" class="display-input" placeholder="0" readonly>
     </div>
 
-    <!-- Lapisan Grid Tombol di Atas Gambar -->
+    <!-- Grid Layout Tombol Baru (Total 30 Slot Tombol Koreksi) -->
     <div class="buttons-overlay">
         
-        <!-- Baris 1: Kontrol Rekam & Fungsi -->
-        <button class="invisible-btn" onclick="toggleRekam('ON')"></button> 
-        <button class="invisible-btn" onclick="toggleRekam('OFF')"></button> 
-        <button class="invisible-btn" onclick="muatRiwayatCepat()"></button> 
-        <button class="invisible-btn" onclick="hapusLayar()"></button> 
+        <!-- BARIS 1: Kontrol & Memori -->
+        <button class="invisible-btn" onclick="toggleRekam('ON')">RKM ON</button> 
+        <button class="invisible-btn" onclick="toggleRekam('OFF')">RKM OFF</button> 
+        <button class="invisible-btn" onclick="muatRiwayatCepat()">RIWAYAT</button> 
+        <button class="invisible-btn" onclick="hapusLayar()">CE</button> 
+        <button class="invisible-btn" onclick="tekanKunci('^')">^</button>
 
-        <!-- Baris 2: Simbol Karakter Anak -->
-        <button class="invisible-btn" onclick="tekanKunci('x')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('a')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('b')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('c')"></button>
+        <!-- BARIS 2: Variabel Anak (x, a, b, c, d) -->
+        <button class="invisible-btn" onclick="tekanKunci('x')">x</button>
+        <button class="invisible-btn" onclick="tekanKunci('a')">a</button>
+        <button class="invisible-btn" onclick="tekanKunci('b')">b</button>
+        <button class="invisible-btn" onclick="tekanKunci('c')">c</button>
+        <button class="invisible-btn" onclick="tekanKunci('d')">d</button>
 
-        <!-- Baris 3: Karakter Anak Lanjutan & Simbol Kurung -->
-        <button class="invisible-btn" onclick="tekanKunci('d')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('g')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('(')"></button> 
-        <button class="invisible-btn" onclick="tekanKunci(')')"></button> 
+        <!-- BARIS 3: Variabel g, Simbol, dan Angka Atas -->
+        <button class="invisible-btn" onclick="tekanKunci('g')">g</button>
+        <button class="invisible-btn" onclick="tekanKunci('(')">(</button> 
+        <button class="invisible-btn" onclick="tekanKunci(')')">)</button> 
+        <button class="invisible-btn" onclick="tekanKunci('%')">%</button>
+        <button class="invisible-btn" onclick="tekanKunci('7')">7</button>
 
-        <!-- Baris 4: Operator Matematika Kalkulus -->
-        <button class="invisible-btn" onclick="tekanKunci('^')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('.')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('%')"></button>
-        <button class="invisible-btn" onclick="tekanKunci('+')"></button>
+        <!-- BARIS 4: Angka & Operator -->
+        <button class="invisible-btn" onclick="tekanKunci('8')">8</button>
+        <button class="invisible-btn" onclick="tekanKunci('9')">9</button>
+        <button class="invisible-btn" onclick="tekanKunci('+')">+</button>
+        <button class="invisible-btn" onclick="tekanKunci('-')">-</button>
+        <button class="invisible-btn" onclick="tekanKunci('4')">4</button>
 
-        <!-- Baris 5: Tombol Eksekusi Utama -->
-        <button class="invisible-btn" onclick="tekanKunci('-')"></button>
-        <button class="invisible-btn" style="grid-column: span 3;" onclick="hitungSamaDengan()"></button> 
+        <!-- BARIS 5: Angka & Operator -->
+        <button class="invisible-btn" onclick="tekanKunci('5')">5</button>
+        <button class="invisible-btn" onclick="tekanKunci('6')">6</button>
+        <button class="invisible-btn" onclick="tekanKunci('*')">*</button>
+        <button class="invisible-btn" onclick="tekanKunci('/')">/</button>
+        <button class="invisible-btn" onclick="tekanKunci('1')">1</button>
+
+        <!-- BARIS 6: Angka Bawah & Eksekusi Utama -->
+        <button class="invisible-btn" onclick="tekanKunci('2')">2</button>
+        <button class="invisible-btn" onclick="tekanKunci('3')">3</button>
+        <button class="invisible-btn" onclick="tekanKunci('0')">0</button>
+        <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
+        <button class="invisible-btn" onclick="hitungSamaDengan()">=</button> 
         
     </div>
 </div>
 
 <script>
     const display = document.getElementById('mainDisplay');
-    
     let rekamStatus = true; 
     let riwayatMemori = [];
     let riwayatIndeks = 0;
 
     function tekanKunci(karakter) {
-        // Jika layar sedang menampilkan hasil perhitungan, bersihkan dulu sebelum input baru
         if (display.getAttribute('data-hasil') === 'true') {
             display.value = '';
             display.removeAttribute('data-hasil');
         }
-        
+        if (display.value === "0") display.value = "";
         display.value += karakter;
         
         if (rekamStatus) {
@@ -180,11 +199,8 @@
             return;
         }
         try {
-            // Memproses turunan d/dx dan langsung menimpa teks layar dengan hasil akhirnya
             const hasilTurunan = math.derivative(rumus, 'x');
             display.value = hasilTurunan.toString();
-            
-            // Tandai bahwa layar sedang menampilkan hasil perhitungan
             display.setAttribute('data-hasil', 'true');
         } catch (err) {
             display.value = "Error";
