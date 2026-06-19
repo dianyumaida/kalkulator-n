@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Pas Gambar</title>
-    <!-- Library Math.js untuk pemrosesan turunan rumus matematika -->
-    <script src="https://cloudflare.com"></script>
+    <title>Kalkulator Kustom Rumus Logika</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -19,7 +17,7 @@
             padding: 10px;
         }
 
-        /* Wadah Utama Kalkulator - Mengunci Ukuran Gambar agar Stabil */
+        /* Wadah Utama Kalkulator - Mengunci Ukuran Gambar */
         .calculator-frame { 
             position: relative;
             width: 100%;
@@ -34,10 +32,10 @@
             overflow: hidden;
         }
 
-        /* LAYAR DIGITAL TRANSPARAN (Tanpa latar warna, tanpa angka nol bawaan) */
+        /* LAYAR DIGITAL TRANSPARAN (Tanpa angka nol bawaan) */
         .screen-overlay { 
             position: absolute;
-            top: 5.5%;  /* Geser naik turun posisi teks di dalam layar gambar */
+            top: 5.5%;  
             left: 9%;   
             width: 82%;      
             height: 14%;     
@@ -60,23 +58,39 @@
             outline: none;
         }
 
-        /* PERBAIKAN GRID: Diberi margin-top besar agar terdorong pas ke area tombol hitam gambar */
+        /* LOGIKA RADIO RECORD (Ditempatkan di ruang kosong tengah gambar) */
+        .record-panel {
+            position: absolute;
+            top: 42%;
+            left: 5%;
+            width: 90%;
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .record-panel label { cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+        /* AREA GRID 3 BARIS TOMBOL FISIK (Hanya berisi Simbol Anak sesuai chat pertama Anda) */
         .buttons-grid-overlay {
             position: absolute;
-            top: 66%; /* Menurunkan drastis posisi tombol merah agar masuk ke tombol hitam gambar */
+            top: 52%; 
             left: 4%;        
             width: 92%;      
-            height: 17%; /* Menyesuaikan tinggi area 3 baris tombol hitam gambar */     
+            height: 30%;     
             display: grid;
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 4px;        
-            border: 2px dashed #28a745; /* Garis pandu hijau luar */
+            grid-template-columns: repeat(4, 1fr); /* Diatur 4 kolom agar pas kotak gambar */
+            gap: 6px;        
+            border: 2px dashed #28a745; 
         }
 
-        /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH (Pilih, Edit, Clear) */
+        /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH */
         .bottom-menu-overlay {
             position: absolute;
-            top: 84%; /* Disesuaikan agar pas menimpa tombol kuning PILIH, EDIT, CLEAR */
+            top: 84%; 
             left: 4%;
             width: 92%;
             height: 9%;
@@ -87,20 +101,20 @@
 
         /* Gaya Tombol Warna Merah Pembantu Koreksi */
         .invisible-btn {
-            background: rgba(220, 53, 69, 0.55); 
+            background: rgba(220, 53, 69, 0.6); 
             border: 1px solid #dc3545;
             border-radius: 4px;
             cursor: pointer;
             outline: none;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
             display: flex;
             justify-content: center;
             align-items: center;
             text-shadow: 1px 1px 1px #000;
         }
-        .invisible-btn:active { background: rgba(220, 53, 69, 0.85); }
+        .invisible-btn:active { background: rgba(220, 53, 69, 0.9); }
 
         /* Gaya Khusus Dropdown Menu Kuning Pembantu Koreksi */
         .dropdown-wrapper {
@@ -111,7 +125,7 @@
         .dropdown-wrapper select {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.75; 
+            opacity: 0.85; 
             background: #ffc107;
             border: 1px solid #d39e00;
             font-weight: bold;
@@ -126,135 +140,128 @@
     
     <!-- Layar Digital Transparan -->
     <div class="screen-overlay">
-        <!-- Placeholder dikosongkan agar tidak memunculkan angka nol di awal -->
         <input type="text" id="mainDisplay" class="display-input" placeholder="" readonly>
     </div>
 
-    <!-- Kisi Tombol 3 Baris Atas Gambar -->
-    <div class="buttons-grid-overlay">
-        <!-- Baris Fisik 1 (Menimpa kotak kosong paling atas di gambar) -->
-        <button class="invisible-btn" onclick="tekanKunci('7')">7</button>
-        <button class="invisible-btn" onclick="tekanKunci('8')">8</button>
-        <button class="invisible-btn" onclick="tekanKunci('9')">9</button>
-        <button class="invisible-btn" onclick="tekanKunci('(')">(</button>
-        <button class="invisible-btn" onclick="tekanKunci(')')">)</button>
+    <!-- Panel Radio Rekam Aktif / Tidak -->
+    <div class="record-panel">
+        <label><input type="radio" name="rekamLogika" id="rekamOn" checked> 🔴 Rekam Aktif</label>
+        <label><input type="radio" name="rekamLogika" id="rekamOff"> ⚪ Tidak Aktif</label>
+    </div>
 
-        <!-- Baris Fisik 2 (Menimpa kotak bertanda *, :, +, - di gambar) -->
-        <button class="invisible-btn" onclick="tekanKunci('*')">*</button>
-        <button class="invisible-btn" onclick="tekanKunci('/')">:</button>
-        <button class="invisible-btn" onclick="tekanKunci('+')">+</button>
-        <button class="invisible-btn" onclick="tekanKunci('-')">-</button>
+    <!-- Jajaran Tombol Fisik Gambar (Hanya berisi Simbol Anak Anda) -->
+    <div class="buttons-grid-overlay">
+        <!-- Baris Fisik 1 -->
+        <button class="invisible-btn" onclick="tekanKunci(',')">,</button>
+        <button class="invisible-btn" onclick="tekanKunci('[')">[</button>
+        <button class="invisible-btn" onclick="tekanKunci(']')">]</button>
         <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
 
-        <!-- Baris Fisik 3 (Menimpa kotak angka 1, 2, 3, 0, = di gambar) -->
-        <button class="invisible-btn" onclick="tekanKunci('1')">1</button>
-        <button class="invisible-btn" onclick="tekanKunci('2')">2</button>
-        <button class="invisible-btn" onclick="tekanKunci('3')">3</button>
-        <button class="invisible-btn" onclick="tekanKunci('0')">0</button>
-        <button class="invisible-btn" onclick="hitungSamaDengan()">=</button>
+        <!-- Baris Fisik 2 -->
+        <button class="invisible-btn" onclick="tekanKunci('^')">^</button>
+        <button class="invisible-btn" onclick="tekanKunci('%')">%</button>
+        <button class="invisible-btn" onclick="tekanKunci('Σ')">Σ</button>
+        <button class="invisible-btn" onclick="tekanKunci('=')">=</button>
+
+        <!-- Baris Fisik 3 (Kosong/Bisa diisi operator tambahan jika dibutuhkan nanti) -->
+        <button class="invisible-btn" onclick="tekanKunci('+')">+</button>
+        <button class="invisible-btn" onclick="tekanKunci('-')">-</button>
+        <button class="invisible-btn" onclick="tekanKunci('*')">*</button>
+        <button class="invisible-btn" onclick="tekanKunci('/')">/</button>
     </div>
 
     <!-- Area Menu Bawah (PILIH, EDIT, CLEAR) -->
     <div class="bottom-menu-overlay">
         
-        <!-- Dropdown Pilih Anak -->
+        <!-- Dropdown PILIH (Berisi Daftar Variabel Anak Aktif) -->
         <div class="dropdown-wrapper">
             <select id="pilihAnak" onchange="inputDropdown(this.value, 'anak')">
                 <option value="">PILIH ▾</option>
-                <option value="x">x</option>
-                <option value="a">a</option>
-                <option value="b">b</option>
-                <option value="c">c</option>
-                <option value="d">d</option>
-                <option value="g">g</option>
+                <option value="Variabel A">Anak A</option>
+                <option value="Variabel B">Anak B</option>
+                <option value="Variabel C">Anak C</option>
+                <option value="Variabel D">Anak D</option>
+                <option value="Variabel G">Anak G</option>
             </select>
         </div>
 
-        <!-- Dropdown Edit (Simbol Khusus & Rekam) -->
+        <!-- Dropdown EDIT (Berisi Riwayat Aktivitas & Simbol) -->
         <div class="dropdown-wrapper">
             <select id="pilihSimbol" onchange="inputDropdown(this.value, 'simbol')">
                 <option value="">EDIT ▾</option>
-                <option value="[">[</option>
-                <option value="]">]</option>
-                <option value="^">^</option>
-                <option value="%">%</option>
-                <option value="Σ">Σ</option>
-                <option value="RKM_ON">🔴 Rekam ON</option>
-                <option value="RKM_OFF">⚪ Rekam OFF</option>
-                <option value="LIHAT_RWT">📜 Riwayat</option>
+                <!-- Bagian Riwayat internal di dalam dropdown -->
+                <optgroup label="--- RIWAYAT RUMUS ---" id="riwayatGroup">
+                    <option value="">(Belum ada riwayat)</option>
+                </optgroup>
+                <optgroup label="--- SIMBOL LAIN ---">
+                    <option value="[">[</option>
+                    <option value="]">]</option>
+                    <option value="=">=</option>
+                </optgroup>
             </select>
         </div>
 
-        <!-- Tombol Clear -->
-        <button class="invisible-btn" style="background: rgba(220,53,69,0.6);" onclick="hapusLayar()">CLEAR</button>
+        <!-- Tombol Clear (Hanya membersihkan layar lokal, tidak menghapus riwayat) -->
+        <button class="invisible-btn" style="background: rgba(220,53,69,0.6); font-size: 13px;" onclick="hapusLayar()">CLEAR</button>
 
     </div>
 </div>
 
 <script>
     const display = document.getElementById('mainDisplay');
-    let rekamStatus = true; 
+    const rekamOn = document.getElementById('rekamOn');
+    const riwayatGroup = document.getElementById('riwayatGroup');
+    
     let riwayatMemori = [];
-    let riwayatIndeks = 0;
 
     function tekanKunci(karakter) {
-        if (display.getAttribute('data-hasil') === 'true') {
-            display.value = '';
-            display.removeAttribute('data-hasil');
-        }
         display.value += karakter;
-        
-        if (rekamStatus && !riwayatMemori.includes(display.value)) {
-            riwayatMemori.push(display.value);
-        }
+        checkDanSimpanRiwayat();
     }
 
     function inputDropdown(val, tipe) {
         if (!val) return;
 
-        if (val === "RKM_ON") {
-            rekamStatus = true;
-        } else if (val === "RKM_OFF") {
-            rekamStatus = false;
-        } else if (val === "LIHAT_RWT") {
-            muatRiwayatCepat();
+        // Jika yang dipilih adalah data dari panggulan riwayat rumus
+        if (tipe === 'simbol' && riwayatMemori.includes(val)) {
+            display.value = val;
         } else {
-            let nilaiReal = val;
-            if (val === '[') nilaiReal = '(';
-            if (val === ']') nilaiReal = ')';
-            
-            display.value += nilaiReal;
-            
-            if (rekamStatus && !riwayatMemori.includes(display.value)) {
-                riwayatMemori.push(display.value);
-            }
+            // Memasukkan teks variabel anak atau simbol ke layar
+            display.value += val;
+            checkDanSimpanRiwayat();
         }
+
+        // Reset tampilan dropdown ke teks utama
         document.getElementById(tipe === 'anak' ? 'pilihAnak' : 'pilihSimbol').selectedIndex = 0;
     }
 
-    function muatRiwayatCepat() {
-        if (riwayatMemori.length === 0) return;
-        display.value = riwayatMemori[riwayatIndeks];
-        display.removeAttribute('data-hasil');
-        riwayatIndeks = (riwayatIndeks + 1) % riwayatMemori.length;
+    function checkDanSimpanRiwayat() {
+        // Jika Radio "Rekam Aktif" dicentang, masukkan ke dalam memori riwayat dropdown
+        if (rekamOn.checked && display.value.trim() !== "") {
+            if (!riwayatMemori.includes(display.value)) {
+                riwayatMemori.push(display.value);
+                
+                // Perbarui isi list di dalam dropdown EDIT secara langsung
+                perbaruiTampilanRiwayat();
+            }
+        }
+    }
+
+    function perbaruiTampilanRiwayat() {
+        // Bersihkan daftar lama di dalam optgroup riwayat
+        riwayatGroup.innerHTML = "";
+        
+        // Masukkan semua daftar memori rumus terbaru
+        riwayatMemori.forEach(rumus => {
+            let opt = document.createElement('option');
+            opt.value = rumus;
+            opt.text = rumus;
+            riwayatGroup.appendChild(opt);
+        });
     }
 
     function hapusLayar() {
         display.value = "";
-        display.removeAttribute('data-hasil');
-    }
-
-    function hitungSamaDengan() {
-        const rumus = display.value;
-        if (!rumus) return;
-        try {
-            const hasilTurunan = math.derivative(rumus, 'x');
-            display.value = hasilTurunan.toString();
-            display.setAttribute('data-hasil', 'true');
-        } catch (err) {
-            display.value = "Error";
-            display.setAttribute('data-hasil', 'true');
-        }
     }
 </script>
 </body>
