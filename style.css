@@ -1,4 +1,3 @@
-/* Menghilangkan margin bawaan browser */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -17,8 +16,8 @@ body {
 /* Wadah utama kalkulator */
 .calculator {
     width: 100%;
-    max-width: 360px; /* Batas lebar maksimal agar proporsional di HP */
-    aspect-ratio: 9 / 16; /* Menjaga aspek rasio gambar latar belakang */
+    max-width: 360px; 
+    aspect-ratio: 9 / 16; 
     background-image: url('Folder/gambar/bodykal.jpg');
     background-size: 100% 100%;
     background-position: center;
@@ -29,7 +28,7 @@ body {
     overflow: hidden;
 }
 
-/* Mengatur posisi input display (Layar Putih Atas) */
+/* Layar atas (Terlihat Jelas) */
 #display {
     position: absolute;
     top: 5%;
@@ -40,35 +39,38 @@ body {
     text-align: right;
     padding: 0 15px;
     background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #ccc;
+    border: 3px solid #000; /* Garis tepi hitam tegas */
     border-radius: 8px;
     outline: none;
 }
 
-/* Mengatur grid tombol menjadi 4 kolom otomatis */
+/* Grid 4 Kolom 4 Baris */
 .buttons {
     position: absolute;
     bottom: 5%;
     left: 5%;
     width: 90%;
-    height: 60%; /* Mengambil area 60% dari total tinggi kalkulator */
-    display: grid !important; /* Memaksa grid agar aktif */
-    grid-template-columns: repeat(4, 1fr) !important; /* WAJIB: Membagi menjadi 4 kolom */
-    grid-template-rows: repeat(4, 1fr) !important;    /* WAJIB: Membagi menjadi 4 baris */
-    gap: 10px; /* Jarak antar tombol */
+    height: 60%; 
+    display: grid !important; 
+    grid-template-columns: repeat(4, 1fr) !important; 
+    grid-template-rows: repeat(4, 1fr) !important;    
+    gap: 10px; 
 }
 
-/* Tombol dibuat transparan agar angka bawaan dari gambar bodykal.jpg yang terlihat */
+/* SEKARANG TIMBUL: Berwarna Merah dan Angka Putih Tebal */
 button {
-    background: rgba(255, 255, 255, 0) !important; /* Transparan penuh */
-    color: transparent !important;                 /* Menyembunyikan teks HTML */
-    border: none !important;                       /* Tanpa border */
+    background: rgba(255, 0, 0, 0.7) !important; /* Merah pekat */
+    color: #ffffff !important;                    /* Angka putih tegas */
+    font-size: 1.8rem !important;                 /* Ukuran besar */
+    font-weight: bold !important;                 /* Cetak tebal */
+    border: 2px solid #ffffff !important;         /* Bingkai putih */
     cursor: pointer;
     border-radius: 12px;
-    transition: background 0.1s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Efek visual saat tombol ditekan agar pengguna tahu tombol berfungsi */
 button:active {
-    background: rgba(0, 0, 0, 0.15) !important; /* Efek bayangan gelap tipis saat diklik */
+    background: rgba(139, 0, 0, 1) !important; /* Merah tua saat diklik */
 }
