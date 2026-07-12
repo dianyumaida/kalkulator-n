@@ -13,11 +13,9 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Wadah utama kalkulator */
 .calculator {
-    width: 100%;
-    max-width: 360px; 
-    aspect-ratio: 9 / 16; 
+    width: 360px;
+    height: 740px; 
     background-image: url('Folder/gambar/bodykal.jpg');
     background-size: 100% 100%;
     background-position: center;
@@ -28,49 +26,53 @@ body {
     overflow: hidden;
 }
 
-/* Layar atas (Terlihat Jelas) */
 #display {
     position: absolute;
-    top: 5%;
+    top: 4%;
     left: 5%;
     width: 90%;
-    height: 12%;
+    height: 10%;
     font-size: 2.2rem;
     text-align: right;
     padding: 0 15px;
     background: rgba(255, 255, 255, 0.9);
-    border: 3px solid #000; /* Garis tepi hitam tegas */
+    border: 3px solid #000;
     border-radius: 8px;
     outline: none;
 }
 
-/* Grid 4 Kolom 4 Baris */
 .buttons {
     position: absolute;
-    bottom: 5%;
-    left: 5%;
-    width: 90%;
-    height: 60%; 
+    bottom: 4%;         
+    left: 4%;          
+    width: 92%;        
+    height: 65%; /* Ditinggikan agar mencakup hingga baris kotak kosong bawah */
     display: grid !important; 
     grid-template-columns: repeat(4, 1fr) !important; 
-    grid-template-rows: repeat(4, 1fr) !important;    
-    gap: 10px; 
+    grid-template-rows: repeat(5, 1fr) !important; /* Diubah jadi 5 baris sesuai gambar */
+    gap: 10px;         
 }
 
-/* SEKARANG TIMBUL: Berwarna Merah dan Angka Putih Tebal */
+/* Tombol angka & simbol utama */
 button {
-    background: rgba(255, 0, 0, 0.7) !important; /* Merah pekat */
-    color: #ffffff !important;                    /* Angka putih tegas */
-    font-size: 1.8rem !important;                 /* Ukuran besar */
-    font-weight: bold !important;                 /* Cetak tebal */
-    border: 2px solid #ffffff !important;         /* Bingkai putih */
+    background: rgba(255, 0, 0, 0.6) !important; 
+    color: #ffffff !important;                    
+    font-size: 1.8rem !important;                 
+    font-weight: bold !important;                 
+    border: 2px solid #ffffff !important;         
     cursor: pointer;
-    border-radius: 12px;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+/* Khusus tombol kotak kosong di paling bawah */
+.empty-btn {
+    background: rgba(0, 0, 255, 0.4) !important; /* Diberi warna biru transparan sebagai penanda */
+    border: 2px solid blue !important;
+}
+
 button:active {
-    background: rgba(139, 0, 0, 1) !important; /* Merah tua saat diklik */
+    background: rgba(255, 0, 0, 0.9) !important;
 }
