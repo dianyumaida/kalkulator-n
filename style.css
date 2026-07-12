@@ -8,51 +8,54 @@ body {
 }
 
 .calculator {
-    width: 350px; /* Sesuaikan dengan ukuran gambar Anda */
-    height: 500px; /* Sesuaikan dengan ukuran gambar Anda */
+    width: 360px;       /* Sesuaikan dengan lebar gambar asli Anda */
+    height: 640px;      /* Naikkan tinggi agar ruang tombol di bawah muat pas */
     background-image: url('Folder/gambar/bodykal.jpg');
     background-size: cover;
     background-position: center;
     position: relative;
     border-radius: 20px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
 }
 
-/* Atur posisi layar agar pas di area screen gambar */
+/* Mengatur posisi area input display */
 #display {
     position: absolute;
-    top: 50px; 
-    left: 25px;
-    width: 300px;
-    height: 60px;
-    font-size: 2rem;
+    top: 40px;          /* Sesuaikan agar pas di dalam kotak layar putih atas */
+    left: 20px;
+    width: 320px;
+    height: 70px;
+    font-size: 2.5rem;
     text-align: right;
-    padding-right: 10px;
-    background: rgba(255, 255, 255, 0.8); /* Buat agak transparan */
+    padding-right: 15px;
+    background: transparent; /* Buat transparan jika layarnya sudah ada di gambar */
     border: none;
+    outline: none;
 }
 
-/* Atur posisi tombol di atas gambar */
+/* Mengatur grid tombol agar pas di atas gambar */
 .buttons {
     position: absolute;
-    bottom: 30px;
-    left: 25px;
+    bottom: 20px;       /* Jarak dari bawah bingkai kalkulator */
+    left: 15px;         /* Jarak dari kiri bingkai */
+    width: 330px;       /* Lebar total area tombol */
+    height: 350px;      /* Tinggi total area tombol, sesuaikan dengan gambar */
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    width: 300px;
+    grid-template-columns: repeat(4, 1fr); /* 4 Kolom */
+    grid-template-rows: repeat(4, 1fr);    /* 4 Baris */
+    gap: 8px;           /* Jarak antar kotak (sesuaikan dengan garis hitam gambar) */
 }
 
-/* Buat tombol menjadi transparan jika gambar sudah ada teks angkanya */
+/* Trik membuat tombol tak terlihat namun tetap bisa diklik */
 button {
-    padding: 20px;
-    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0); /* Mengubah opacity menjadi 0 (transparan penuh) */
+    color: transparent;                 /* Menyembunyikan teks tombol HTML agar tidak tumpang tindih */
+    border: none;                       /* Menghilangkan border bawaan HTML */
     cursor: pointer;
-    background: rgba(255, 255, 255, 0.2); /* Transparan */
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
+/* Efek sedikit menggelap saat tombol transparan itu ditekan/diklik */
 button:active {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.15); 
 }
