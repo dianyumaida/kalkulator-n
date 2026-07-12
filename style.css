@@ -13,6 +13,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Wadah utama kalkulator */
 .calculator {
     width: 360px;
     height: 740px; 
@@ -26,6 +27,7 @@ body {
     overflow: hidden;
 }
 
+/* Posisi Layar Atas */
 #display {
     position: absolute;
     top: 4%;
@@ -41,35 +43,36 @@ body {
     outline: none;
 }
 
+/* PERBAIKAN UTAMA: Area grid diperpendek menjadi 45% agar tombolnya menjadi pipih */
 .buttons {
     position: absolute;
-    bottom: 4%;         
-    left: 4%;          
-    width: 92%;        
-    height: 65%; /* Ditinggikan agar mencakup hingga baris kotak kosong bawah */
+    bottom: 1.5%;       /* Diturunkan mepet ke bawah mengikuti gambar */
+    left: 3.5%;         /* Digeser sedikit ke kiri agar pas di tengah kotak */
+    width: 93%;        
+    height: 46%;       /* Ukuran diperkecil agar tombol merah 1 2 3 0 langsung amblas pas ke dalam kotak gambar */
     display: grid !important; 
     grid-template-columns: repeat(4, 1fr) !important; 
-    grid-template-rows: repeat(5, 1fr) !important; /* Diubah jadi 5 baris sesuai gambar */
-    gap: 10px;         
+    grid-template-rows: repeat(5, 1fr) !important; 
+    gap: 8px;          /* Jarak antar tombol diperkecil */
 }
 
 /* Tombol angka & simbol utama */
 button {
-    background: rgba(255, 0, 0, 0.6) !important; 
+    background: rgba(255, 0, 0, 0.6) !important; /* Merah transparan */
     color: #ffffff !important;                    
-    font-size: 1.8rem !important;                 
+    font-size: 1.6rem !important;                 
     font-weight: bold !important;                 
     border: 2px solid #ffffff !important;         
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 6px; /* Sudut kotak dibuat agak lancip mengikuti gambar Anda */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Khusus tombol kotak kosong di paling bawah */
+/* Tombol perencanaan baru di baris paling bawah */
 .empty-btn {
-    background: rgba(0, 0, 255, 0.4) !important; /* Diberi warna biru transparan sebagai penanda */
+    background: rgba(0, 0, 255, 0.5) !important; /* Biru transparan agar tulisan simbol di bawahnya terlihat */
     border: 2px solid blue !important;
 }
 
