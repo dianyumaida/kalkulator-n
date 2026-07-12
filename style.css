@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+.calculator {
+    width: 350px; /* Sesuaikan dengan ukuran gambar Anda */
+    height: 500px; /* Sesuaikan dengan ukuran gambar Anda */
+    background-image: url('Folder/gambar/bodykal.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Atur posisi layar agar pas di area screen gambar */
+#display {
+    position: absolute;
+    top: 50px; 
+    left: 25px;
+    width: 300px;
+    height: 60px;
+    font-size: 2rem;
+    text-align: right;
+    padding-right: 10px;
+    background: rgba(255, 255, 255, 0.8); /* Buat agak transparan */
+    border: none;
+}
+
+/* Atur posisi tombol di atas gambar */
+.buttons {
+    position: absolute;
+    bottom: 30px;
+    left: 25px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 300px;
+}
+
+/* Buat tombol menjadi transparan jika gambar sudah ada teks angkanya */
+button {
+    padding: 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2); /* Transparan */
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+button:active {
+    background: rgba(0, 0, 0, 0.2);
+}
