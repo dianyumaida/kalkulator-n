@@ -3,281 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Kustom Rumus Logika Resmi</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { 
-            font-family: Arial, sans-serif;
-            background-color: #2c3e50; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        /* Wadah Utama Kalkulator - Mengunci Ukuran Gambar */
-        .calculator-frame { 
-            position: relative;
-            width: 100%;
-            max-width: 420px; 
-            aspect-ratio: 4 / 7; 
-            background-image: url('Folder/gambar/bodykal.jpg'); 
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-
-        /* LAYAR DIGITAL TRANSPARAN */
-        .screen-overlay { 
-            position: absolute;
-            top: 5.5%;  
-            left: 9%;   
-            width: 82%;      
-            height: 14%;     
-            background: transparent; 
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            border: none; 
-        }
-        
-        .display-input {
-            width: 100%;
-            border: none;
-            background: transparent;
-            font-family: 'Courier New', monospace;
-            font-size: 28px; 
-            font-weight: bold;
-            text-align: right;
-            color: #333; 
-            outline: none;
-        }
-
-        /* AREA GRID 3 BARIS TOMBOL FISIK */
-        .buttons-grid-overlay {
-            position: absolute;
-            top: 52%; 
-            left: 4%;        
-            width: 92%;      
-            height: 30%;     
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 6px;        
-            border: 2px dashed #28a745; /* Garis pandu hijau untuk edit posisi */
-        }
-
-        /* AREA 3 TOMBOL MENU UTAMA DI PALING BAWAH (PILIH, RIWAYAT, CLEAR) */
-        .bottom-menu-overlay {
-            position: absolute;
-            top: 84%; 
-            left: 4%;
-            width: 92%;
-            height: 9%;
-            display: grid;
-            grid-template-columns: 1.2fr 1.2fr 1fr; 
-            gap: 6px;
-        }
-
-        /* Gaya Tombol Warna Merah Pembantu Koreksi */
-        .invisible-btn {
-            background: rgba(220, 53, 69, 0.6); 
-            border: 1px solid #dc3545;
-            border-radius: 4px;
-            cursor: pointer;
-            outline: none;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-shadow: 1px 1px 1px #000;
-        }
-        .invisible-btn:active { background: rgba(220, 53, 69, 0.9); }
-
-        /* Gaya Khusus Dropdown Menu Kuning Pembantu Koreksi */
-        .dropdown-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-        }
-        .dropdown-wrapper select {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.85; 
-            background: #ffc107;
-            border: 1px solid #d39e00;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 13px;
-            padding-left: 2px;
-        }
-    </style>
+    <title>Kalkulator Keren</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="calculator-frame">
-    
-    <!-- Layar Digital Transparan -->
-    <div class="screen-overlay">
-        <input type="text" id="mainDisplay" class="display-input" placeholder="" readonly>
-    </div>
-
-    <!-- Jajaran Tombol Fisik Cepat di Atas Gambar (Hanya Simbol Anak) -->
-    <div class="buttons-grid-overlay">
-        <!-- Baris 1 -->
-        <button class="invisible-btn" onclick="tekanKunci('(')">(</button>
-        <button class="invisible-btn" onclick="tekanKunci(')')">)</button>
-        <button class="invisible-btn" onclick="tekanKunci('[')">[</button>
-        <button class="invisible-btn" onclick="tekanKunci(']')">]</button>
-
-        <!-- Baris 2 -->
-        <button class="invisible-btn" onclick="tekanKunci('{')">{</button>
-        <button class="invisible-btn" onclick="tekanKunci('}')">}</button>
-        <button class="invisible-btn" onclick="tekanKunci('=')">=</button>
-        <button class="invisible-btn" onclick="tekanKunci('^')">^</button>
-
-        <!-- Baris 3 -->
-        <button class="invisible-btn" onclick="tekanKunci('%')">%</button>
-        <button class="invisible-btn" onclick="tekanKunci('Σ')">Σ</button>
-        <button class="invisible-btn" onclick="tekanKunci(',')">,</button>
-        <button class="invisible-btn" onclick="tekanKunci('.')">.</button>
-    </div>
-
-    <!-- Area Menu Bawah Berdasarkan Chat Anda -->
-    <div class="bottom-menu-overlay">
+    <div class="calculator">
+        <!-- Layar untuk menampilkan angka -->
+        <input type="text" id="display" readonly>
         
-        <!-- TOMBOL PILIH (Dropdown Simbol Anak & Sistem Radio) -->
-        <div class="dropdown-wrapper">
-            <select id="pilihMenu" onchange="prosesPilih(this.value)">
-                <option value="">PILIH ▾</option>
-                <optgroup label="--- SIMBOL ANAK ---">
-                    <option value="(">(</option>
-                    <option value=")">)</option>
-                    <option value="[">[</option>
-                    <option value="]">]</option>
-                    <option value="{">{</option>
-                    <option value="}">}</option>
-                    <option value="=">=</option>
-                    <option value="^">^</option>
-                    <option value="%">%</option>
-                    <option value="Σ">sigma</option>
-                </optgroup>
-                <optgroup label="--- SISTEM RADIO ---">
-                    <option value="RADIO_ON">🔴 Rekam Aktif</option>
-                    <option value="RADIO_OFF">⚪ Tidak Aktif</option>
-                </optgroup>
-            </select>
+        <!-- Baris tombol (sesuaikan jumlah dan posisinya) -->
+        <div class="buttons">
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="appendValue('/')">/</button>
+            <button onclick="appendValue('*')">x</button>
+            <button onclick="appendValue('-')">-</button>
+            
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('+')">+</button>
+            
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="calculate()">=</button>
+            
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendValue('0')">0</button>
         </div>
-
-        <!-- TOMBOL RIWAYAT (Dropdown List Rekam, Hapus, Kirim WA) -->
-        <div class="dropdown-wrapper">
-            <select id="riwayatMenu" onchange="prosesRiwayat(this.value)">
-                <option value="">RIWAYAT ▾</option>
-                <optgroup label="--- ACTIONS ---">
-                    <option value="AKSI_HAPUS">🗑️ Hapus Riwayat</option>
-                    <option value="AKSI_KIRIM">📤 Kirim ke WA</option>
-                </optgroup>
-                <optgroup label="--- DAFTAR REKAMAN ---" id="daftarRekamanGroup">
-                    <option value="">(Kosong)</option>
-                </optgroup>
-            </select>
-        </div>
-
-        <!-- Tombol Clear (Hanya membersihkan layar lokal kalkulator) -->
-        <button class="invisible-btn" style="background: rgba(220,53,69,0.6);" onclick="hapusLayar()">CLEAR</button>
-
     </div>
-</div>
-
-<script>
-    const display = document.getElementById('mainDisplay');
-    const daftarRekamanGroup = document.getElementById('daftarRekamanGroup');
-    
-    let rekamStatus = true; // Default Rekam Aktif
-    let riwayatMemori = [];
-
-    function tekanKunci(karakter) {
-        display.value += karakter;
-        simpanKeMemori();
-    }
-
-    // Logika Pemrosesan Dropdown "PILIH"
-    function prosesPilih(val) {
-        if (!val) return;
-
-        if (val === "RADIO_ON") {
-            rekamStatus = true;
-            alert("Sistem Radio: REKAM AKTIF");
-        } else if (val === "RADIO_OFF") {
-            rekamStatus = false;
-            alert("Sistem Radio: TIDAK AKTIF");
-        } else {
-            // Jika memilih simbol anak dari dropdown
-            display.value += val;
-            simpanKeMemori();
-        }
-        document.getElementById('pilihMenu').selectedIndex = 0;
-    }
-
-    // Logika Pemrosesan Dropdown "RIWAYAT"
-    function prosesRiwayat(val) {
-        if (!val) return;
-
-        if (val === "AKSI_HAPUS") {
-            riwayatMemori = [];
-            perbaruiTampilanRiwayat();
-            alert("Riwayat rekaman telah dihapus.");
-        } else if (val === "AKSI_KIRIM") {
-            if (display.value.trim() === "") {
-                alert("Layar kosong, tidak ada rumus untuk dikirim!");
-            } else {
-                // Mengirim isi rumus layar ke tautan WhatsApp Channel Anda
-                const urlWA = "https://whatsapp.com";
-                window.open(urlWA, '_blank');
-            }
-        } else {
-            // Jika memilih salah satu isi daftar rekaman, panggil kembali ke layar
-            display.value = val;
-        }
-        document.getElementById('riwayatMenu').selectedIndex = 0;
-    }
-
-    function simpanKeMemori() {
-        if (rekamStatus && display.value.trim() !== "") {
-            if (!riwayatMemori.includes(display.value)) {
-                riwayatMemori.push(display.value);
-                perbaruiTampilanRiwayat();
-            }
-        }
-    }
-
-    function perbaruiTampilanRiwayat() {
-        daftarRekamanGroup.innerHTML = "";
-        if (riwayatMemori.length === 0) {
-            let opt = document.createElement('option');
-            opt.value = "";
-            opt.text = "(Kosong)";
-            daftarRekamanGroup.appendChild(opt);
-            return;
-        }
-        riwayatMemori.forEach(item => {
-            let opt = document.createElement('option');
-            opt.value = item;
-            opt.text = item;
-            daftarRekamanGroup.appendChild(opt);
-        });
-    }
-
-    function hapusLayar() {
-        display.value = "";
-    }
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
