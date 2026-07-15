@@ -323,47 +323,33 @@ function imporDataJSON(input) {
 // ========================================================
 const LOCAL_STORAGE_KEY = 'SistemBukuDigital_Data';
 
-// Struktur data standar jika localStorage kosong
+
+// 1. STRUKTUR DATA BARU YANG MEMILIKI KATEGORI (TAG)
 const templateDataBuku = {
     "bab_1": {
         "judul": "Bab 1: Pengenalan Buku",
+        "kategori": "referensi",
         "catatan": "Ini adalah isi catatan bab satu tentang dasar manajemen."
     },
     "bab_2": {
         "judul": "Bab 2: Upload Media & Suara",
+        "kategori": "penting",
         "catatan": "Panduan merekam suara universal menggunakan format Base64 secara offline."
     },
     "bab_3": {
         "judul": "Bab 3: Sinkronisasi Data",
+        "kategori": "tugas",
         "catatan": "Menyimpan data catatan, gambar, dan audio langsung ke dalam localstorage perangkat."
     }
 };
 
-// Variabel bantu untuk Autosave (Debounce)
-let timerAutosave;
-let idBabTerpilih = "bab_1"; // Secara bawaan mengarah ke Bab 1
-
-// Jalankan inisialisasi data saat aplikasi pertama kali dimuat
-document.addEventListener("DOMContentLoaded", () => {
-    inisialisasiDataBuku();
-});
-
-function inisialisasiDataBuku() {
-    if (!localStorage.getItem(LOCAL_STORAGE_KEY)) {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(templateDataBuku));
-    }
-    muatTampilanPohonBuku();
-}
-
-// ========================================================
-// 1. FUNGSI MERENDER DATA KE ACCORDION TREE UI
-// ========================================================
+// 2. PEMBARUAN FUNGSI TAMPILAN (Menampilkan Label Kategori di UI)
 function muatTampilanPohonBuku() {
     const kontainerPohon = document.getElementById("pohonBuku");
     if (!kontainerPohon) return;
 
-    const dataBuku = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    kontainerPohon.innerHTML = ""; // Bersihkan tampilan lama
+    const dataBuku = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || templateDataBuku;
+    kontainerPohon.innerHTML = ""; 
 
     Object.keys(dataBuku).forEach(key => {
         const item = dataBuku[key];
@@ -371,9 +357,14 @@ function muatTampilanPohonBuku() {
         const divItem = document.createElement("div");
         divItem.className = "accordion-item";
         divItem.setAttribute("data-key", key);
+        // Simpan data kategori di elemen untuk mempermudah pencarian
+        divItem.setAttribute("data-kategori", item.kategori || ""); 
 
         divItem.innerHTML = `
-            <div class="accordion-header" onclick="pilihBab('${key}')">${item.judul}</div>
+            <div class="accordion-header" onclick="pilihBab('${key}')">
+                <div>${item.judul}</div>
+                <span class="tag-kategori tag-${item.kategori}">${item.kategori}</span>
+            </div>
             <div class="accordion-content">
                 <textarea class="textarea-catatan" onkeyup="pemicuAutosave('${key}', this)">${item.catatan}</textarea>
             </div>
@@ -382,107 +373,7 @@ function muatTampilanPohonBuku() {
     });
 }
 
-function pilihBab(key) {
-    idBabTerpilih = key;
-}
-
-// ========================================================
-// 2. MODUL SINKRONISASI DATA (AUTOSAVE DENGAN DEBOUNCE)
-// ========================================================
-function pemicuAutosave(key, elemenTextarea) {
-    perbaruiStatusSimpan("⏳ Sedang mengetik...");
-    clearTimeout(timerAutosave);
-
-    timerAutosave = setTimeout(() => {
-        eksekusiAutosave(key, elemenTextarea.value);
-    }, 1000); // Menyimpan otomatis setelah berhenti mengetik 1 detik
-}
-
-function eksekusiAutosave(key, isiTeksBaru) {
-    try {
-        const dataBuku = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-        if (dataBuku[key]) {
-            dataBuku[key].catatan = isiTeksBaru;
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataBuku));
-            perbaruiStatusSimpan("✅ Semua perubahan disimpan otomatis");
-        }
-    } catch (error) {
-        perbaruiStatusSimpan("❌ Gagal menyimpan otomatis: " + error.message);
-    }
-}
-
-function perbaruiStatusSimpan(pesan) {
-    const elemenStatus = document.getElementById("statusAutosave");
-    if (elemenStatus) elemenStatus.textContent = pesan;
-}
-
-// ========================================================
-// 3. MODUL EKSPOR DATA (.JSON)
-// ========================================================
-function eksporDataJSON() {
-    try {
-        const dataMentah = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (!dataMentah) {
-            alert("Tidak ada data untuk diekspor!");
-            return;
-        }
-
-        const blob = new Blob([dataMentah], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        
-        const tautanUnduh = document.createElement("a");
-        tautanUnduh.href = url;
-        tautanUnduh.download = `Buku_Digital_${new Date().toISOString().slice(0,10)}.json`;
-        
-        document.body.appendChild(tautanUnduh);
-        tautanUnduh.click();
-        
-        document.body.removeChild(tautanUnduh);
-        URL.revokeObjectURL(url);
-    } catch (error) {
-        alert("Gagal mengekspor data: " + error.message);
-    }
-}
-
-// ========================================================
-// 4. MODUL IMPOR DATA AMAN (.JSON)
-// ========================================================
-function imporDataJSON(input) {
-    const berkas = input.files[0];
-    if (!berkas) return;
-
-    if (!berkas.name.endsWith('.json')) {
-        alert("🚨 Keamanan Ditolak: Berkas harus berformat .json!");
-        input.value = '';
-        return;
-    }
-
-    const pembacaBerkas = new FileReader();
-    pembacaBerkas.onload = function(e) {
-        try {
-            const dataHasilParsing = JSON.parse(e.target.result);
-            
-            if (typeof dataHasilParsing !== 'object' || dataHasilParsing === null || Array.isArray(dataHasilParsing)) {
-                throw new Error("Struktur dokumen JSON rusak atau tidak valid.");
-            }
-
-            if (confirm("⚠️ Perhatian!\nMengimpor data baru akan menghapus seluruh data lama Anda secara permanen. Lanjutkan?")) {
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataHasilParsing));
-                alert("✅ Data berhasil diimpor dengan aman!");
-                location.reload();
-            }
-        } catch (error) {
-            alert("❌ Gagal Membaca Berkas: " + error.message);
-        } finally {
-            input.value = '';
-        }
-    };
-    pembacaBerkas.readAsText(berkas);
-}
-
-// ========================================================
-// 5. FITUR PENCARIAN REAL-TIME GLOBAL
-// ========================================================
+// 3. PEMBARUAN FUNGSI PENCARIAN (Bisa Cari Berdasarkan Judul, Isi, ATAU Kategori)
 function cariKontenBuku() {
     const kataKunci = document.getElementById('inputCari').value.toLowerCase();
     const seluruhItem = document.querySelectorAll('.accordion-item');
@@ -490,14 +381,17 @@ function cariKontenBuku() {
     seluruhItem.forEach(item => {
         const header = item.querySelector('.accordion-header').textContent.toLowerCase();
         const isiTextarea = item.querySelector('.textarea-catatan').value.toLowerCase();
+        const kategori = item.getAttribute('data-kategori').toLowerCase();
 
-        if (header.includes(kataKunci) || isiTextarea.includes(kataKunci)) {
+        // Jika cocok dengan judul, isi catatan, ATAU teks kategori
+        if (header.includes(kataKunci) || isiTextarea.includes(kataKunci) || kategori.includes(kataKunci)) {
             item.style.display = ""; 
         } else {
             item.style.display = "none"; 
         }
     });
 }
+
 
 
 function simpanKeLocalStorage() {
